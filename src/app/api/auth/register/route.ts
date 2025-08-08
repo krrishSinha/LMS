@@ -1,14 +1,15 @@
 import connectDB from "@/db/dbConfig";
 import { User } from "@/models/user.model";
 import { createToken } from "@/utils/createToken";
+import ErrorHandler from "@/utils/ErrorHandler";
 import sendEmail from "@/utils/sendMail";
 import { NextRequest, NextResponse } from "next/server";
 
 
 export async function POST(request: NextRequest) {
     await connectDB()
+
     try {
-        // Handle GET request logic here
         const body = await request.json();
 
         const { name, email, password } = body;
@@ -26,12 +27,18 @@ export async function POST(request: NextRequest) {
 
         const activationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const activationToken = await createToken(email, activationCode)
+        const user = {
+            name,
+            email,
+            password,
+            activationCode,
+        }
+
+        const activationToken = await createToken({user});
 
         try {
 
             await sendEmail(email, activationCode);
-            console.log("Activation email sent successfully");
 
             return NextResponse.json({
                 success: true,
@@ -39,15 +46,22 @@ export async function POST(request: NextRequest) {
                 activationToken
             });
 
-        } catch (error) {
-            console.log("Error creating activation token:", error);
-            process.exit(1);
+        } catch (error: any) {
+            // const res = ErrorHandler(error.messgage, 500);
+            return NextResponse.json({
+                success: false,
+                error: "Failed to send activation email. Please try again later."
+            });
         }
 
 
 
 
-    } catch (error) {
-
+    } catch (error: any) {
+        // const res = ErrorHandler(error.messgage, 500);
+        return NextResponse.json({
+            error: error.message || "Internal Server Error",
+            success: false
+        })
     }
 }

@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 
 
-export const createToken = async (email: string, activationCode: any) => {
+export const createToken = async ({ user }: any) => {
 
     const token = jwt.sign(
-        { email, activationCode },
+        user,
         process.env.ACTIVATION_TOKEN_SECRET!,
         { expiresIn: '5m' })
 
