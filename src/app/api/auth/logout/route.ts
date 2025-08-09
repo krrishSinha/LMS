@@ -1,17 +1,23 @@
+import redis from "@/db/redis";
+import { isAuthenticated } from "@/middlewares/isAuthenticated";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest,) {
 
     try {
+
+        const response = NextResponse.json({
+            success: true,
+            message: "Logout successful",
+        });
 
         response.cookies.set('accessToken', '', { maxAge: 1 })
         response.cookies.set('refreshToken', '', { maxAge: 1 })
 
-        return NextResponse.json({
-            success: true,
-            message: "Logout successful",
-        });
+        // await redis.del(JSON.stringify(isUserAuthenticated._id), '')
+
+        return response
 
     } catch (error) {
         console.error("Logout error:", error);

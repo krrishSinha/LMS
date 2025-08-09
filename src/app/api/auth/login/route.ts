@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
     try {
         const { email, password } = await request.json();
 
-
         if (!email || !password) {
             // const err = await ErrorHandler("Email and Password are required", 400);
             return NextResponse.json({
@@ -43,6 +42,7 @@ export async function POST(request: NextRequest) {
 
         // generate access token
         const accessToken: any = user.generateAccessToken();
+        
         // generate refresh token
         const refreshToken: any = user.generateRefreshToken();
 
@@ -76,7 +76,6 @@ export async function POST(request: NextRequest) {
         response.cookies.set("refreshToken", refreshToken, refreshTokenOptions);
 
         return response;
-
 
     } catch (error: any) {
         console.log(error);

@@ -61,13 +61,20 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
 
 // generate Access Token 
 userSchema.methods.generateAccessToken = function () {
-    return jwt.sign({ _id: this._id, }, process.env.ACCESS_TOKEN!)
+    return jwt.sign(
+        { _id: this._id, email: this.email, role: this.role },
+        process.env.ACCESS_TOKEN!,
+        { expiresIn: '5m' }
+    )
 }
-
 
 // generate Refresh Token
 userSchema.methods.generateRefreshToken = function () {
-    return jwt.sign({ _id: this._id, }, process.env.REFRESH_TOKEN!)
+    return jwt.sign(
+        { _id: this._id, email: this.email, role: this.role },
+        process.env.REFRESH_TOKEN!,
+        { expiresIn: '5m' }
+    )
 }
 
 
