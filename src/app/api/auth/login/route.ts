@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
 
         // generate access token
         const accessToken: any = user.generateAccessToken();
-        
+
         // generate refresh token
         const refreshToken: any = user.generateRefreshToken();
 
         // set user to redis 
-        // await redis.set(user._id, JSON.stringify(user))
+        await redis.set(user._id, JSON.stringify(user))
 
         const acessTokenExpiry = 5 * 10 * 1000; // 5 minutes 
         const refreshTokenExpiry = 59 * 10000; //  59 minutes

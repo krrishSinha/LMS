@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN || '');
-    const { payload } = await jwtVerify(token, secret);
+    const { payload }: any = await jwtVerify(token, secret);
 
     if (!payload) {
         console.log('Invalid Token or Token has expired');
@@ -34,10 +34,17 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(`/`, request.url));
     }
 
-    return NextResponse.next()
+    const response = NextResponse.next();
+    response.headers.set('userId', payload._id);
+    return response;
 }
 
 // Apply middleware only to certain paths
 export const config = {
-    matcher: ['/api/auth/logout'] // protected routes
+    matcher: [
+        '/api/auth/logout',
+        '/api/user/info',
+        '/api/user/update-info',
+        '/api/user/update-password'
+    ] // protected routes
 };

@@ -54,8 +54,8 @@ userSchema.pre('save', async function (next) {
 
 
 // Method to compare password
-userSchema.methods.comparePassword = async function (enteredPassword: string) {
-    return await bcrypt.compare(enteredPassword, this.password);
+userSchema.methods.comparePassword = async function (oldPassword: string) {
+    return await bcrypt.compare(oldPassword, this.password);
 }
 
 
@@ -73,7 +73,7 @@ userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         { _id: this._id, email: this.email, role: this.role },
         process.env.REFRESH_TOKEN!,
-        { expiresIn: '5m' }
+        { expiresIn: '1d' }
     )
 }
 
