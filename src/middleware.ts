@@ -12,7 +12,8 @@ export async function middleware(request: NextRequest) {
 
     const protectedAdminPath = [
         `/api/course/add-course`,
-        `/api/course/get-course`
+        '/api/course/edit-course/:path*',
+        '/api/course/reply-review'
     ]
 
     const token: any = request.cookies.get('accessToken')?.value;
@@ -56,9 +57,13 @@ export const config = {
         '/api/video/add-comment',
         '/api/video/add-comment-reply',
 
+        //Course
+        '/api/course/add-review',
+
         //admin protected Route
         '/api/course/add-course',
         '/api/course/edit-course/:path*',
-        '/api/course/purchase/:path*'
+        '/api/course/purchase/:path*',
+        '/api/course/reply-review',
     ] // protected routes
 };
