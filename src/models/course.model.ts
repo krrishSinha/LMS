@@ -1,7 +1,6 @@
 
 
 import mongoose from "mongoose";
-import { prerender } from "react-dom/static";
 
 
 const reviewSchema = new mongoose.Schema({
@@ -18,27 +17,6 @@ const linkSchema = new mongoose.Schema({
     title: String,
     url: String
 });
-
-const commentSchema = new mongoose.Schema({
-    user: Object,
-    comment: String,
-    commetReplies: [Object]
-});
-
-
-const courseDataSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    videoUrl: String,
-    videoThumbnail: String,
-    videoSection: String,
-    videoLength: Number,
-    videoPlayer: String,
-    links: [linkSchema],
-    suggestion: String,
-    questions: [commentSchema],
-});
-
 
 const courseSchema = new mongoose.Schema({
     title: {
@@ -59,11 +37,9 @@ const courseSchema = new mongoose.Schema({
     thumbnail: {
         public_id: {
             type: String,
-            required: true
         },
         url: {
             type: String,
-            required: true
         },
     },
     tags: {
@@ -85,12 +61,16 @@ const courseSchema = new mongoose.Schema({
     ],
     prerequisites: [
         {
-            type: String,
-            required: true
+            title: String,
         }
     ],
     reviews: [reviewSchema],
-    courseData: [courseDataSchema],
+    sections: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Course_Section'
+        }
+    ],
     ratings: {
         type: Number,
         default: 0,
@@ -99,7 +79,7 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-});
+}, { timestamps: true });
 
 
 export const Course = mongoose.models.Course || mongoose.model('Course', courseSchema)

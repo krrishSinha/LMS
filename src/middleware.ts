@@ -10,7 +10,10 @@ export async function middleware(request: NextRequest) {
 
     const publicPath = [`${baseAuthUrl}/login`, `${baseAuthUrl}/register`];
 
-    const protectedPath = [`${baseAuthUrl}/logout`]
+    const protectedAdminPath = [
+        `/api/course/add-course`,
+        `/api/course/get-course`
+    ]
 
     const token: any = request.cookies.get('accessToken')?.value;
 
@@ -29,7 +32,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(`/login`, request.url));
     }
 
-    if (protectedPath.includes(pathname) && payload.role !== 'admin') {
+    if (protectedAdminPath.includes(pathname) && payload.role !== 'admin') {
         console.log('Unauthorised. Admin only');
         return NextResponse.redirect(new URL(`/`, request.url));
     }
@@ -45,6 +48,17 @@ export const config = {
         '/api/auth/logout',
         '/api/user/info',
         '/api/user/update-info',
-        '/api/user/update-password'
+        '/api/user/update-password',
+
+        '/api/course/get-course-content/:path*',
+
+        // video 
+        '/api/video/add-comment',
+        '/api/video/add-comment-reply',
+
+        //admin protected Route
+        '/api/course/add-course',
+        '/api/course/edit-course/:path*',
+        '/api/course/purchase/:path*'
     ] // protected routes
 };
