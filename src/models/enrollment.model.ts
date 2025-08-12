@@ -3,12 +3,12 @@
 import mongoose from "mongoose";
 
 const enrollmentSchema = new mongoose.Schema({
-    user:{
+    userId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    course: {
+    courseId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
         required: true
@@ -16,6 +16,9 @@ const enrollmentSchema = new mongoose.Schema({
     purchasedAt: {
         type: Date,
         default: Date.now()
+    },
+    payment_info: {
+        type: Object
     }
 });
 

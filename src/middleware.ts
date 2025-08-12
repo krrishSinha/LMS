@@ -40,6 +40,7 @@ export async function middleware(request: NextRequest) {
 
     const response = NextResponse.next();
     response.headers.set('userId', payload._id);
+    response.headers.set('userEmail', payload.email);
     return response;
 }
 
@@ -59,6 +60,7 @@ export const config = {
 
         //Course
         '/api/course/add-review',
+        '/api/course/purchase',
 
         //admin protected Route
         '/api/course/add-course',

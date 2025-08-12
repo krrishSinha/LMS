@@ -15,6 +15,7 @@ const sendEmail = async (email: string, activationCode: any) => {
         },
     });
 
+
     // Send email
     await transporter.sendMail({
         from: `"LMS App" <${process.env.SMTP_MAIL}>`,
@@ -30,7 +31,35 @@ const sendEmail = async (email: string, activationCode: any) => {
                 </html>`,
     });
 
-
 };
+
+
+export const sendNewEnrollmentMail = async (email: string, courseName: string) => {
+    // Create a transporter
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.SMTP_MAIL,
+            pass: process.env.SMTP_PASSWORD,
+        },
+    });
+
+
+    // Send email
+    const result = await transporter.sendMail({
+        from: `"LMS App" <${process.env.SMTP_MAIL}>`,
+        to: email,
+        subject: 'Course Confirmation Email ',
+        text: 'Course purchased Successfully',
+        html: ` <html>
+                  <body>
+                       <p>Hi, ${email} </p>
+                       <p> Thanks for purchasing our Course: ${courseName} </p>
+                  </body>
+                </html>`,
+    });
+
+    return result;
+}
 
 export default sendEmail;
