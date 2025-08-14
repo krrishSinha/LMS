@@ -13,7 +13,8 @@ export async function middleware(request: NextRequest) {
     const protectedAdminPath = [
         `/api/course/add-course`,
         '/api/course/edit-course/:path*',
-        '/api/course/reply-review'
+        '/api/course/reply-review',
+        "api/notifications/get-all-notifications"
     ]
 
     const token: any = request.cookies.get('accessToken')?.value;
@@ -41,6 +42,7 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next();
     response.headers.set('userId', payload._id);
     response.headers.set('userEmail', payload.email);
+    response.headers.set('username', payload.name);
     return response;
 }
 
@@ -67,5 +69,6 @@ export const config = {
         '/api/course/edit-course/:path*',
         '/api/course/purchase/:path*',
         '/api/course/reply-review',
+        '/api/notifications/get-all-notifications',
     ] // protected routes
 };

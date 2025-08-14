@@ -57,7 +57,7 @@ export async function POST(request: NextRequest, context: { params: { courseId: 
             { new: true }).select('-password')
 
         // Create entry in Notification Model
-        const newNotification = await Notification.create({
+         await Notification.create({
             title: 'New Enrollemnt',
             message: `You have a new Enrollemnt from ${UpdatedUser.name}`,
             userId

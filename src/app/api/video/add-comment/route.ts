@@ -1,5 +1,5 @@
 import connectDB from "@/db/dbConfig";
-import { Comment, Video } from "@/models";
+import { Comment, Notification, Video } from "@/models";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -10,13 +10,14 @@ export async function PUT(request:NextRequest){
     try {
 
         const userId  = request.headers.get('userId')
+        const username  = request.headers.get('username')
 
         const {comment, videoId} =   await request.json()
 
-        if(!comment) {
+        if(!comment || videoId) {
             return NextResponse.json({
                 success: false,
-                message: 'Comment should not be empty'
+                message: 'Comment & VideoId should not be empty'
             })
         };
 
@@ -28,14 +29,21 @@ export async function PUT(request:NextRequest){
         });
 
         // push savedComment _id in  Video Model comments Array
-        const updatedVideoComments = await Video.findByIdAndUpdate(videoId, {
+        const updatedVideo = await Video.findByIdAndUpdate(videoId, {
             $push: {comments: savedComment._id}
+        },{new:true})
+
+        // send Notification to Admin that User commented on Video in Notification Model
+        await Notification.create({
+            title: 'New Comment',
+            message: `You have a new comment on ${updatedVideo.title} from ${username}`,
+            userId
         })
 
         return NextResponse.json({
             success: true,
             message: 'Comment Created Successfully...',
-            updatedVideoComments
+            updatedVideo
         })
 
         
