@@ -2,7 +2,6 @@ import connectDB from "@/db/dbConfig";
 import redis from "@/db/redis";
 import { Course } from "@/models/course.model";
 import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
 
 
 export async function GET(request: NextRequest){

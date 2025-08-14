@@ -14,7 +14,14 @@ export async function middleware(request: NextRequest) {
         `/api/course/add-course`,
         '/api/course/edit-course/:path*',
         '/api/course/reply-review',
-        "api/notifications/get-all-notifications"
+        "/api/notifications/get-all-notifications",
+        '/api/course/get-all-courses-data',
+        '/api/user/get-all-users',
+        '/api/enrollment/get-all-enrollments',
+        '/api/user/update-user-role',
+        '/api/user/delete-user',
+        '/api/course/delete-course',
+        '/api/layout/create-layout',
     ]
 
     const token: any = request.cookies.get('accessToken')?.value;
@@ -68,7 +75,18 @@ export const config = {
         '/api/course/add-course',
         '/api/course/edit-course/:path*',
         '/api/course/purchase/:path*',
+        '/api/course/get-all-courses-data',
         '/api/course/reply-review',
+        '/api/course/delete-course',
+
         '/api/notifications/get-all-notifications',
+        '/api/enrollment/get-all-enrollments',
+
+        '/api/user/get-all-users',
+        '/api/user/update-user-role',
+        '/api/user/delete-user',
+
+        // layout 
+        '/api/layout/create-layout',
     ] // protected routes
 };
