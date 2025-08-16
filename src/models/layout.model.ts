@@ -12,15 +12,17 @@ const layoutSchema = new mongoose.Schema({
         }
     ],
     categories: [
-        { type: String }
+        {
+            title: { type: String }
+        }
     ],
     banner: {
         image: {
-            public_id: {type: String},
-            url : {type: String}
+            public_id: { type: String },
+            url: { type: String }
         },
-        title: {type: String},
-        description: {type: String}
+        title: { type: String },
+        description: { type: String }
     }
 })
 

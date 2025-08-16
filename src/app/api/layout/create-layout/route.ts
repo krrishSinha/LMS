@@ -8,30 +8,29 @@ export async function POST(request: NextRequest) {
 
     try {
 
-        const { type, faqData } = await request.json()
+        const { type, faqData, bannerData, categoriesData } = await request.json()
 
-        // const isTypeExist = await Layout.findOne({ type })
+        const isTypeExist = await Layout.findOne({ type })
 
-        // if (isTypeExist) {
-        //     return NextResponse.json({
-        //         success: false,
-        //         message: `${type} is already exists.`
-        //     })
-        // };
+        if (isTypeExist) {
+            return NextResponse.json({
+                success: false,
+                message: `${type} is already exists.`
+            })
+        };
 
         if (type == 'Banner') {
-            const { image, title, description } = await request.json()
-            const imageResult: any = await uploadToCloudinary(image, 'Layout')
+            // const imageResult: any = await uploadToCloudinary(bannerData.image, 'Layout')
 
             const banner = await Layout.create({
                 type,
                 banner: {
                     image: {
-                        public_id: imageResult.public_id,
-                        url: imageResult.url
+                        public_id: bannerData.image.public_id,
+                        url: bannerData.image.url
                     },
-                    title,
-                    description
+                    title: bannerData.title,
+                    description: bannerData.description
                 }
             })
 
@@ -56,14 +55,11 @@ export async function POST(request: NextRequest) {
             })
         };
 
-        if (type == 'categories') {
-            const { categoryData }: any = await request.json()
-
-            console.log(categoryData);
+        if (type == 'Categories') {
 
             const categories = await Layout.create({
                 type,
-                categories: categoryData
+                categories: categoriesData
             })
 
             return NextResponse.json({
