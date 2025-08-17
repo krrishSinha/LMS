@@ -1,18 +1,21 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import Header from "@/components/Header";
+import { useState } from "react";
+
 
 export default function Home() {
 
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  if (!hasMounted) return null;
-
+  const [open, setOpen] = useState(false)
+  const [activeIem, setActiveItem] = useState(0)
 
   return (
-    <h1> hello </h1>
+    <>
+      <Header
+        open={open}
+        setOpen={setOpen}
+        activeItem={activeIem}
+      />
+    </>
   );
 }
