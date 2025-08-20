@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from 'react-hot-toast';
+import { Provider } from "react-redux";
+import { store } from '../redux/store'
 
 
 export const metadata: Metadata = {
@@ -18,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning  >
       <body className={`  font-poppins  bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem > 
-          <Toaster />
-          {children}
-        </ThemeProvider>
+        <Provider store={store}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
+            <Toaster />
+            {children}
+          </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );
