@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from 'react-hot-toast';
+
 
 export const metadata: Metadata = {
   title: "ELearning",
@@ -16,7 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning  >
       <body className={`  font-poppins  bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem > 
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>

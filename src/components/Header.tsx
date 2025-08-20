@@ -5,8 +5,12 @@ import { useState } from "react";
 import NavItems from "./NavItems";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
+import CustomModal from "./CustomModal";
+import Login from "./Auth/Login";
+import Signup from "./Auth/Signup";
+import Verification from "./Auth/Verification";
 
-export default function Header({ open, setOpen, activeItem }: any) {
+export default function Header({ open, setOpen, activeItem, route, setRoute }: any) {
 
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
@@ -72,6 +76,41 @@ export default function Header({ open, setOpen, activeItem }: any) {
                     }
 
                 </div>
+
+                {/* Auth Model  */}
+                {
+                    route == 'Login' && (
+                        <>
+                        {
+                            open && (
+                                <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Login} activeItem={activeItem} />
+                            )
+                        }
+                        </>
+                    )
+                }
+                {
+                    route == 'Signup' && (
+                        <>
+                        {
+                            open && (
+                                <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Signup} activeItem={activeItem} />
+                            )
+                        }
+                        </>
+                    )
+                }
+                {
+                    route == 'Verification' && (
+                        <>
+                        {
+                            open && (
+                                <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Verification} activeItem={activeItem} />
+                            )
+                        }
+                        </>
+                    )
+                }
             </div>
         </>
     );
