@@ -16,13 +16,21 @@ export async function POST(request: NextRequest) {
 
         const { activationToken, activationCode } = body;
 
-
         const decode: any = jwt.verify(activationToken, process.env.ACTIVATION_TOKEN_SECRET!);
 
-        if (decode.activationCode !== activationCode || !decode) {
+        if (!decode) {
             return NextResponse.json(
                 {
-                    error: "Invalid activation token",
+                    error: "JWT Expired",
+                    success: false
+                },
+                { status: 400 });
+        }
+
+        if (decode.activationCode !== activationCode) {
+            return NextResponse.json(
+                {
+                    error: "Invalid OTP",
                     success: false
                 },
                 { status: 400 });
@@ -43,7 +51,8 @@ export async function POST(request: NextRequest) {
             name: decode.name,
             email: decode.email,
             password: decode.password,
-            activationCode: activationCode
+            activationCode: activationCode,
+            isVerified: true
         });
 
         await user.save();

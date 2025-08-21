@@ -4,7 +4,9 @@ import * as Yup from 'yup'
 import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../app/styles/style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRegisterMutation } from "@/redux/features/api/authApi";
+import toast from "react-hot-toast";
 
 
 const schema = Yup.object().shape({
@@ -14,16 +16,37 @@ const schema = Yup.object().shape({
 });
 
 
-export default function Signup({route,setRoute}:any) {
+export default function Signup({ route, setRoute }: any) {
+
+    const [register, { data, error, isSuccess }] = useRegisterMutation()
 
     const [show, setShow] = useState(false)
+
+    useEffect(() => {
+        if(isSuccess){
+            const message = data?.message || 'Register Successfull.'
+            toast.success(message)
+            setRoute('Verification')
+        }
+
+        if(error){
+            const errorData = error as any
+            toast.error(errorData.data.error)
+        }
+
+    }, [isSuccess, error])
+    
 
     const formik = useFormik({
         initialValues: { name: '', email: '', password: '' },
         validationSchema: schema,
-        onSubmit: async ({ name,email, password }) => {
-            setRoute('Verification')
-            console.log(name,email, password);
+        onSubmit: async ({ name, email, password }) => {
+            const data = {
+                name,
+                email,
+                password
+            }
+            await register(data)
         }
     })
 
@@ -87,7 +110,7 @@ export default function Signup({route,setRoute}:any) {
 
                     <p className="flex justify-center gap-1" >
                         Already have any account?
-                        <span className="text-[#2190ff] cursor-pointer underline" onClick={()=>setRoute('Login')} >
+                        <span className="text-[#2190ff] cursor-pointer underline" onClick={() => setRoute('Login')} >
                             Login
                         </span>
                     </p>

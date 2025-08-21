@@ -1,12 +1,33 @@
+import { useActivationMutation } from "@/redux/features/api/authApi";
 import { styles } from "../../app/styles/style";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
+import { useSelector } from "react-redux";
 
 
 export default function Verification({ route, setRoute }: any) {
 
     const [invalidError, setInvalidError] = useState(false);
+    const [activation, { data, error, isSuccess }] = useActivationMutation()
+    const { token } = useSelector((state: any) => state.auth)
+
+    useEffect(() => {
+
+        if (isSuccess) {
+            const message = data?.message || 'Email Activate Successfull.'
+            toast.success(message)
+            setRoute('Login')
+        }
+
+        if (error) {
+            setInvalidError(true)
+            const errorData = error as any
+            toast.error(errorData.data.error)
+        }
+
+    }, [isSuccess, error])
+
 
     const inputRefs = [
         useRef<HTMLInputElement>(null),
@@ -35,7 +56,12 @@ export default function Verification({ route, setRoute }: any) {
     };
 
     const verificationHandler = async () => {
-        setInvalidError(true)
+        const activationCode = Object.values(verifyNumber).join('')
+        const data = {
+            activationToken: token,
+            activationCode
+        }
+        await activation(data)
     };
 
 

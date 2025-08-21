@@ -1,3 +1,5 @@
+'use client'
+
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
@@ -6,11 +8,11 @@ import { Provider } from "react-redux";
 import { store } from '../redux/store'
 
 
-export const metadata: Metadata = {
-  title: "ELearning",
-  description: "ELearning is a platorm for students to learn and get help from teachers.",
-  keywords: 'Programming, MERN, React, NextJs, Redux, Machine Learning'
-};
+// export const metadata: Metadata = {
+//   title: "ELearning",
+//   description: "ELearning is a platorm for students to learn and get help from teachers.",
+//   keywords: 'Programming, MERN, React, NextJs, Redux, Machine Learning'
+// };
 
 export default function RootLayout({
   children,

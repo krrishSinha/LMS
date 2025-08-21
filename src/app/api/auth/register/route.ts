@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "User already exists" }, { status: 400 });
         }
 
-        const activationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
 
         const user = {
             name,
