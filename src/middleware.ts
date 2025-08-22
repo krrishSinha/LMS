@@ -1,7 +1,7 @@
 // middleware.ts
 import { NextResponse, type NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken'
-import { jwtVerify } from 'jose';
+import * as jose from 'jose'
 import { User } from './models/user.model';
 
 export async function middleware(request: NextRequest) {
@@ -29,28 +29,44 @@ export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     if (!token) {
-        console.log('Unauthorised, Please Login first.');
-        return NextResponse.redirect(new URL(`/login`, request.url));
+        // console.log('Unauthorised, Please Login first.');
+        // return NextResponse.redirect(new URL(`/`, request.url));
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'token not found'
+            },
+            { status: 401 }
+        )
     }
 
-    const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN || '');
-    const { payload }: any = await jwtVerify(token, secret);
+    const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN);
 
-    if (!payload) {
-        console.log('Invalid Token or Token has expired');
-        return NextResponse.redirect(new URL(`/login`, request.url));
+    try {
+
+        const {payload}: any = await jose.jwtVerify(token, secret);
+
+        if (protectedAdminPath.includes(pathname) && payload.role !== 'admin') {
+            console.log('Unauthorised. Admin only');
+            return NextResponse.redirect(new URL(`/`, request.url));
+        }
+
+        const response = NextResponse.next();
+        response.headers.set('userId', payload._id);
+        response.headers.set('userEmail', payload.email);
+        response.headers.set('username', payload.name);
+        return response;
+
+    } catch (error) {
+        return NextResponse.json(
+            {
+                success: true,
+                message: "JWT verify failed"
+            },
+            { status: 401 }
+        )
     }
 
-    if (protectedAdminPath.includes(pathname) && payload.role !== 'admin') {
-        console.log('Unauthorised. Admin only');
-        return NextResponse.redirect(new URL(`/`, request.url));
-    }
-
-    const response = NextResponse.next();
-    response.headers.set('userId', payload._id);
-    response.headers.set('userEmail', payload.email);
-    response.headers.set('username', payload.name);
-    return response;
 }
 
 // Apply middleware only to certain paths

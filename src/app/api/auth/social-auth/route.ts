@@ -1,45 +1,70 @@
+import connectDB from "@/db/dbConfig";
+import redis from "@/db/redis";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function POST(request: NextRequest){
+export async function POST(request: NextRequest) {
 
+    await connectDB()
     try {
+        const { email, name, avatar } = await request.json()
+        console.log(email, name)
 
-        const {email, name, password, avatar} = await request.json()
-
-        const existingUser = await User.findOne({email})
+        const user = await User.findOne({ email })
 
         // check if user already exists
-        if(existingUser){
-            return NextResponse.json({
-                success: false,
-                message: "Email Already Exists. please login"
-            })
+        if (user) {
+            const accessToken = await user.generateAccessToken()
+            await redis.set(user._id, JSON.stringify(user))
+            const response = NextResponse.json(
+                {
+                    success: true,
+                    message: "Login Successfully...",
+                    user,
+                    accessToken
+                },
+                { status: 201 }
+            )
+            response.cookies.set("accessToken", accessToken);
+            return response
         }
 
-        const user = await User.create({
+        const newUser = await User.create({
             email,
-            password,
             name,
-            avatar
+            avatar,
+            isVerified: true
         });
 
-        await user.save()
+        await newUser.save()
+        await redis.set(newUser._id, JSON.stringify(newUser))
 
-        return NextResponse.json({
-            success: true,
-            message: "Email Registered. Please Login",
-        })
-        
-        
-    } catch (error:any) {
+        const accessToken = await newUser.generateAccessToken()
+
+        const response = NextResponse.json(
+            {
+                success: true,
+                message: "Congrats, Login Successfully",
+                newUser,
+                accessToken
+            },
+            { status: 201 }
+        );
+
+        response.cookies.set("accessToken", accessToken);
+        return response
+
+    } catch (error: any) {
         console.log('error in social auth');
-        return NextResponse.json({
-            success: true,
-            message: error.message
-        })
-        
+        return NextResponse.json(
+            {
+                success: true,
+                message: error.message
+            },
+            { status: 400 }
+        )
+
     }
 
 }

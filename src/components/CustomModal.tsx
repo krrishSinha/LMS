@@ -2,7 +2,7 @@ import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 
 
-export default function CustomModal({ open, setOpen, route,setRoute, component: Component, activeItem }: any) {
+export default function CustomModal({ open, setOpen, route, setRoute, component: Component, activeItem }: any) {
 
     return (
         <Modal

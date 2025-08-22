@@ -8,6 +8,15 @@ export const store = configureStore({
         [apiSlice.reducerPath]: apiSlice.reducer,
         auth: authSlice
     },
-    devTools: false,
+    // devTools: false,
     middleware: (getdefaultMiddleWare) => getdefaultMiddleWare().concat(apiSlice.middleware)
 })
+
+
+const initializeApp = async ()=>{
+    await store.dispatch( apiSlice.endpoints.refreshToken.initiate({}, {forceRefetch: true}));
+
+    await store.dispatch(apiSlice.endpoints.loadUser.initiate({}, {forceRefetch: true}));
+}
+
+initializeApp()

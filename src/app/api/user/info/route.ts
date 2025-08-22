@@ -4,12 +4,13 @@ import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest){
+export async function GET(request: NextRequest) {
     try {
 
-        const userId = await getAuthenticatedUser(request)
+        const userId = request.headers.get('userId');
+        const accessToken = request.cookies.get('accessToken')?.value
 
-        if(!userId){
+        if (!userId) {
             return NextResponse.json({
                 success: false,
                 message: 'Unauthorised'
@@ -17,11 +18,11 @@ export async function GET(request: NextRequest){
         }
 
         // get user info from redis DB
-        const redisUser:any = await redis.get(JSON.stringify(userId))
+        const redisUser: any = await redis.get(JSON.stringify(userId))
 
-        const user = JSON.parse(redisUser)
+        const user = redisUser
 
-        if(!user){
+        if (!user) {
             return NextResponse.json({
                 success: false,
                 message: 'User not found'
@@ -30,9 +31,10 @@ export async function GET(request: NextRequest){
 
         return NextResponse.json({
             success: true,
-            user
+            user,
+            accessToken
         })
-        
+
     } catch (error) {
         console.log(error);
         return NextResponse.json({

@@ -9,11 +9,16 @@ import CustomModal from "./CustomModal";
 import Login from "./Auth/Login";
 import Signup from "./Auth/Signup";
 import Verification from "./Auth/Verification";
+import { useSelector } from "react-redux";
+import Image from "next/image";
 
 export default function Header({ open, setOpen, activeItem, route, setRoute }: any) {
 
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
+    const { user } = useSelector((state: any) => state.auth)
+
+    console.log(user)
 
     if (typeof window !== 'undefined') {
         window.addEventListener('scroll', () => {
@@ -51,7 +56,16 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
 
                                 {/* menu icon for mobile  */}
                                 <HiOutlineMenuAlt3 size={25} className="md:hidden" onClick={() => setOpenSidebar(true)} />
-                                <HiOutlineUserCircle className="hidden md:block cursor-pointer" size={25} onClick={() => setOpen(true)} />
+
+                                {
+                                    user ? (
+                                        <Link href={'/profile'}>
+                                            <Image src={'/assets/avatar.png'} alt="avatar" width={30} height={30} className="flex items-center" />
+                                        </Link>
+                                    ) : (
+                                        <HiOutlineUserCircle className="hidden md:block cursor-pointer" size={25} onClick={() => setOpen(true)} />
+                                    )
+                                }
                             </div>
                         </div>
 
@@ -81,33 +95,33 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
                 {
                     route == 'Login' && (
                         <>
-                        {
-                            open && (
-                                <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Login} activeItem={activeItem} />
-                            )
-                        }
+                            {
+                                open && (
+                                    <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Login} activeItem={activeItem} />
+                                )
+                            }
                         </>
                     )
                 }
                 {
                     route == 'Signup' && (
                         <>
-                        {
-                            open && (
-                                <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Signup} activeItem={activeItem} />
-                            )
-                        }
+                            {
+                                open && (
+                                    <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Signup} activeItem={activeItem} />
+                                )
+                            }
                         </>
                     )
                 }
                 {
                     route == 'Verification' && (
                         <>
-                        {
-                            open && (
-                                <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Verification} activeItem={activeItem} />
-                            )
-                        }
+                            {
+                                open && (
+                                    <CustomModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} component={Verification} activeItem={activeItem} />
+                                )
+                            }
                         </>
                     )
                 }

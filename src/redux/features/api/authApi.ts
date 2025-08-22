@@ -1,4 +1,4 @@
-import { userRegistration } from "../auth/authSlice";
+import { userLoggedIn, userRegistration } from "../auth/authSlice";
 import { apiSlice } from "./apiSlice";
 
 
@@ -16,7 +16,6 @@ export const authApi = apiSlice.injectEndpoints({
             async onQueryStarted(arg, {queryFulfilled, dispatch}){
                 try {
                     const result = await queryFulfilled;
-                    console.log(result);
                     dispatch(
                         userRegistration({token: result.data.activationToken})
                     )
@@ -34,7 +33,33 @@ export const authApi = apiSlice.injectEndpoints({
             })
         }),
 
+        login: builder.mutation({
+            query: ({email, password})=>({
+                url: '/auth/login',
+                method: 'POST',
+                body: {email,password},
+                credentials: 'include'
+            })
+        }),
+
+        socialLogin: builder.mutation({
+            query: ({email,name,avatar})=>({
+                url: '/auth/social-auth',
+                method: 'POST',
+                body: {email,name,avatar},
+                credentials: 'include'
+            }),
+            async onQueryStarted(arg, {queryFulfilled, dispatch}){
+                try {
+                    const result = await queryFulfilled;
+                    dispatch(userLoggedIn({accessToken:result.data?.accessToken, user: result.data?.user}))            
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }),
+
     })
 });
 
-export const {useRegisterMutation, useActivationMutation} = authApi
+export const {useRegisterMutation, useActivationMutation, useLoginMutation, useSocialLoginMutation} = authApi

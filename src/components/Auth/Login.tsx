@@ -4,7 +4,11 @@ import * as Yup from 'yup'
 import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../app/styles/style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLoginMutation, useSocialLoginMutation } from "@/redux/features/api/authApi";
+import toast from "react-hot-toast";
+import { useSession, signIn, signOut } from "next-auth/react"
+import { useSelector } from "react-redux";
 
 
 const schema = Yup.object().shape({
@@ -13,15 +17,62 @@ const schema = Yup.object().shape({
 });
 
 
-export default function Login({route,setRoute}:any) {
+export default function Login({ setRoute, setOpen }: any) {
 
     const [show, setShow] = useState(false)
+    const [login, { data, error, isSuccess, isError }] = useLoginMutation()
+    const [socialLogin, { isSuccess: socialIsSuccess, error: socialError, data: SocialData }] = useSocialLoginMutation()
+    const { user } = useSelector((state: any) => state.auth)
+
+    // console.log(user)
+    const { data: session }: any = useSession()
+    // console.log(session)
+
+    //login
+    useEffect(() => {
+
+        if (isSuccess) {
+            const message = data?.message || 'Login Successfull.'
+            toast.success(message)
+            setOpen(false)
+        }
+
+        if (isError) {
+            const errorData = error as any
+            toast.error(errorData.data.message)
+        }
+
+
+    }, [isSuccess, error])
+
+    // google login 
+    useEffect(() => {
+        const socialLoginHandler = async () => {
+            if (!user) {
+                if (session) {
+                    await socialLogin({
+                        email: session?.user?.email,
+                        name: session?.user?.name,
+                        avatar: session?.avatar?.avatar || ''
+                    })
+                    if (socialIsSuccess) {
+                        toast.success('Login Successfull')
+                    }
+                }
+            }
+
+            if (socialError) {
+                toast.error('Error')
+            }
+        }
+        socialLoginHandler()
+    }, [user, session])
 
     const formik = useFormik({
         initialValues: { email: '', password: '' },
         validationSchema: schema,
         onSubmit: async ({ email, password }) => {
-            console.log(email, password);
+            await login({ email, password })
         }
     })
 
@@ -71,13 +122,13 @@ export default function Login({route,setRoute}:any) {
                     <p className="text-center mt-2" >Or join with</p>
 
                     <div className="flex justify-center gap-3" >
-                        <FcGoogle size={25} />
-                        <AiFillGithub size={25} />
+                        <FcGoogle size={25} onClick={() => signIn('google')} className="cursor-pointer" />
+                        <AiFillGithub size={25} className="cursor-pointer" />
                     </div>
 
                     <p className="flex justify-center gap-1" >
                         Not have any account?
-                        <span className="text-[#2190ff] cursor-pointer underline" onClick={()=>setRoute('Signup')} >
+                        <span className="text-[#2190ff] cursor-pointer underline" onClick={() => setRoute('Signup')} >
                             Sign Up
                         </span>
                     </p>

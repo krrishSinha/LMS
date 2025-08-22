@@ -6,6 +6,9 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from 'react-hot-toast';
 import { Provider } from "react-redux";
 import { store } from '../redux/store'
+import { SessionProvider } from "next-auth/react"
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+
 
 
 // export const metadata: Metadata = {
@@ -23,12 +26,27 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning  >
       <body className={`  font-poppins  bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black`}>
         <Provider store={store}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
-            <Toaster />
-            {children}
-          </ThemeProvider>
+          <SessionProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
+              <Toaster />
+              <Custom> {children} </Custom>
+            </ThemeProvider>
+          </SessionProvider>
         </Provider>
       </body>
     </html>
   );
+}
+
+
+
+const Custom = ({ children }: any) => {
+  const { isLoading } = useLoadUserQuery({})
+  return (
+    <>
+      {
+        isLoading ? <p>loading...</p> : <> {children}</>
+      }
+    </>
+  )
 }

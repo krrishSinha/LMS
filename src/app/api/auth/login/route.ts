@@ -24,20 +24,26 @@ export async function POST(request: NextRequest) {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return NextResponse.json({
-                success: false,
-                message: "Invalid email or password",
-            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Invalid email or password",
+                },
+                { status: 401 } // 🔴 Unauthorized
+            );
         }
 
         // check if password is correct
         const isPasswordValid = await user.comparePassword(password);
 
         if (!isPasswordValid) {
-            return NextResponse.json({
+            return NextResponse.json(
+                {
                 success: false,
                 message: "Invalid email or password",
-            });
+            },
+            {status: 401}
+        );
         }
 
         // generate access token
@@ -72,17 +78,20 @@ export async function POST(request: NextRequest) {
             user
         });
 
-        response.cookies.set("accessToken", accessToken, accessTokenOptions);
-        response.cookies.set("refreshToken", refreshToken, refreshTokenOptions);
+        // response.cookies.set("accessToken", accessToken, accessTokenOptions);
+        // response.cookies.set("refreshToken", refreshToken, refreshTokenOptions);
+
+        response.cookies.set("accessToken", accessToken);
+        response.cookies.set("refreshToken", refreshToken);
 
         return response;
 
     } catch (error: any) {
         console.log(error);
-        return NextResponse.json({
-            success: false,
-            message: error.message || "Internal Server Error",
-        });
+        return NextResponse.json(
+            { success: false, message: error.message || "Server error" },
+            { status: 500 } // ✅ explicit status in catch
+        );
     }
 
 } 
