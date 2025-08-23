@@ -52,6 +52,9 @@ export async function POST(request: NextRequest) {
         // generate refresh token
         const refreshToken: any = user.generateRefreshToken();
 
+        user.refreshToken = refreshToken
+        await user.save()
+
         // set user to redis 
         await redis.set(user._id, JSON.stringify(user))
 
@@ -75,7 +78,8 @@ export async function POST(request: NextRequest) {
         const response = NextResponse.json({
             success: true,
             message: "Login successful",
-            user
+            user,
+            accessToken
         });
 
         // response.cookies.set("accessToken", accessToken, accessTokenOptions);

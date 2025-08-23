@@ -18,8 +18,6 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
     const [openSidebar, setOpenSidebar] = useState(false)
     const { user } = useSelector((state: any) => state.auth)
 
-    console.log(user)
-
     if (typeof window !== 'undefined') {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 100) {
@@ -60,7 +58,7 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
                                 {
                                     user ? (
                                         <Link href={'/profile'}>
-                                            <Image src={'/assets/avatar.png'} alt="avatar" width={30} height={30} className="flex items-center" />
+                                            <Image src={ user?.avatar?.url || `/assets/avatar.png` } alt="avatar" width={30} height={30} className="flex items-center border-[2px] border-[#37a39a] rounded-full " />
                                         </Link>
                                     ) : (
                                         <HiOutlineUserCircle className="hidden md:block cursor-pointer" size={25} onClick={() => setOpen(true)} />
@@ -80,7 +78,9 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
                                         <Link href={'/'} className="text-black dark:text-white font-[600] text-2xl" >ELearning</Link>
                                     </div>
                                     <NavItems isMobile={true} activeItem={0} />
-                                    <HiOutlineUserCircle className="mt-6 mx-auto cursor-pointer" size={25} onClick={() => setOpen(true)} />
+                                    {
+                                        !user && <HiOutlineUserCircle className="mt-6 mx-auto cursor-pointer" size={25} onClick={() => setOpen(true)} />
+                                    }
                                     <div className="text-center mt-6" >
                                         Copyright &copy; 2025 ELearing
                                     </div>

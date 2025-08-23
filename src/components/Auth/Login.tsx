@@ -4,11 +4,12 @@ import * as Yup from 'yup'
 import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../app/styles/style";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLoginMutation, useSocialLoginMutation } from "@/redux/features/api/authApi";
 import toast from "react-hot-toast";
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useSelector } from "react-redux";
+import { redirect } from "next/navigation";
 
 
 const schema = Yup.object().shape({
@@ -20,30 +21,39 @@ const schema = Yup.object().shape({
 export default function Login({ setRoute, setOpen }: any) {
 
     const [show, setShow] = useState(false)
-    const [login, { data, error, isSuccess, isError }] = useLoginMutation()
+    const [login, { data, error, isSuccess, isError, isLoading }] = useLoginMutation()
     const [socialLogin, { isSuccess: socialIsSuccess, error: socialError, data: SocialData }] = useSocialLoginMutation()
     const { user } = useSelector((state: any) => state.auth)
+    const toastId: any = useRef(null); // store toast id
 
-    // console.log(user)
     const { data: session }: any = useSession()
-    // console.log(session)
 
     //login
     useEffect(() => {
-
+        if (isLoading) {
+            if (!toastId.current) {
+                toastId.current = toast.loading('please wait...')
+            }
+        }
         if (isSuccess) {
-            const message = data?.message || 'Login Successfull.'
-            toast.success(message)
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            toast.success('Logged In ✔')
             setOpen(false)
         }
 
         if (isError) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
             const errorData = error as any
             toast.error(errorData.data.message)
         }
 
-
-    }, [isSuccess, error])
+    }, [isSuccess, error, isLoading])
 
     // google login 
     useEffect(() => {
@@ -72,7 +82,7 @@ export default function Login({ setRoute, setOpen }: any) {
         initialValues: { email: '', password: '' },
         validationSchema: schema,
         onSubmit: async ({ email, password }) => {
-            await login({ email, password })
+            await login({ email, password }).unwrap();
         }
     })
 

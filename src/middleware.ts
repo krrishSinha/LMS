@@ -75,6 +75,7 @@ export const config = {
         '/api/auth/logout',
         '/api/user/info',
         '/api/user/update-info',
+        '/api/user/update-avatar',
         '/api/user/update-password',
 
         '/api/course/get-course-content/:path*',

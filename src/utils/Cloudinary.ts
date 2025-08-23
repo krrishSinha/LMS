@@ -8,12 +8,13 @@ cloudinary.config({
 });
 
 
-export const uploadToCloudinary = async (image: any, folderName: any) => {
+export const uploadToCloudinary = async (image: any, folderName: any, width?:any) => {
 
     try {
 
         const result = await cloudinary.uploader.upload(image, {
             folder: folderName,
+            width
         });
 
         console.log(result);

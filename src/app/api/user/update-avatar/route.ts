@@ -2,13 +2,18 @@ import redis from "@/db/redis";
 import { getAuthenticatedUser } from "@/helpers/getAuthenticatedUser";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
+import { v2 as cloudinary } from 'cloudinary';
+import { destroyImageFromCloudinary, uploadToCloudinary } from "@/utils/Cloudinary";
+import connectDB from "@/db/dbConfig";
 
 
 export async function POST(request: NextRequest) {
 
+    await connectDB()
+
     try {
 
-        const userId: any = await getAuthenticatedUser(request)
+        const userId: any = request.headers.get('userId');
 
         const { avatar } = await request.json()
 
@@ -17,37 +22,28 @@ export async function POST(request: NextRequest) {
         // if user have already avatar then destroy previous public_id
         if (user.avatar?.public_id) {
 
-            // await cloudinary.v2.uploader.destroy(avatar,{
-            //     folder: 'avatars',
-            //     width: 150,
-            // })
+            await destroyImageFromCloudinary(user.avatar.public_id)
 
-            // const myCloud = await  cloudinary.v2.uploader.upload(avatar, {
-            //     folder: 'avatars',
-            //     width: 150,
-            // })
+            const myCloud: any = await uploadToCloudinary(avatar, 'avatars')
 
-            // user.avatar = {
-            //     public_id: myCloud.public_id,
-            //     url: myCloud.secure_url
-            // }
+            user.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url
+            }
 
         } else {
 
-            // const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-            //     folder: 'avatars',
-            //     width: 150,
-            // });
+            const myCloud: any = await uploadToCloudinary(avatar, 'avatars')
 
-            // user.avatar = {
-            //     public_id: myCloud.public_id,
-            //     url: myCloud.secure_url
-            // }
+            user.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url
+            }
 
         }
 
         await user.save()
-        await redis.set(userId, JSON.stringify(user))
+        await redis.set(JSON.stringify(userId), JSON.stringify(user))
 
         return NextResponse.json({
             success: true,

@@ -1,62 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
 import redis from "@/db/redis";
+import { User } from "@/models";
 
 export async function GET(request: NextRequest) {
 
     try {
 
-        const token: any = request.cookies.get('accessToken')?.value;
+        const incomingRefreshToken: any = request.cookies.get('refreshToken')?.value;
 
-        let user;
+
 
         try {
-            const decode: any = jwt.verify(token, process.env.ACCESS_TOKEN as any);
+            const decode: any = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN as any);
 
-            const session: any = await redis.get(JSON.stringify(decode._id))
+            let user = await User.findOne({ refreshToken: incomingRefreshToken })
 
-            if (!session) {
+            if (!user) {
                 return NextResponse.json({
                     success: false,
-                    message: 'User not found in redis'
+                    message: 'Invalid Refresh Token'
                 })
             }
 
-            user = session;
+            const accessToken = jwt.sign(
+                { _id: user._id, name: user.name, email: user.email, role: user.role },
+                process.env.ACCESS_TOKEN!,
+                { expiresIn: '1h' }
+            )
+
+            const refreshToken = jwt.sign(
+                { _id: user._id, name: user.name, email: user.email, role: user.role },
+                process.env.REFRESH_TOKEN!,
+                { expiresIn: '10d' }
+            )
+
+            user.refreshToken = refreshToken;
+            await user.save()
+
+            await redis.set(JSON.stringify(user._id), JSON.stringify(user))
+
+            const response = NextResponse.json({
+                success: true,
+                message: 'Access Token Updated',
+                accessToken
+            })
+
+            response.cookies.set('accessToken', accessToken)
+            response.cookies.set('refreshToken', refreshToken)
+
+            return response
 
         } catch (error) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: 'Invalid Token'
+                    message: 'Refresh Token Expired'
                 },
                 { status: 401 }
             )
         }
-
-        const accessToken = jwt.sign(
-            { _id: user._id, name: user.name, email: user.email, role: user.role },
-            process.env.ACCESS_TOKEN!,
-            { expiresIn: '5m' }
-        )
-
-        const refreshToken = jwt.sign(
-            { _id: user._id, name: user.name, email: user.email, role: user.role },
-            process.env.ACCESS_TOKEN!,
-            { expiresIn: '1d' }
-        )
-
-
-        const response = NextResponse.json({
-            success: true,
-            message: 'Access Token Updated',
-            accessToken
-        })
-
-        response.cookies.set('accessToken', accessToken)
-        response.cookies.set('refreshToken', refreshToken)
-
-        return response
 
     } catch (error: any) {
 

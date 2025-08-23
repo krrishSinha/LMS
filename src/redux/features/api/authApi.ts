@@ -1,23 +1,23 @@
-import { userLoggedIn, userRegistration } from "../auth/authSlice";
+import { userLoggedIn, userLoggedOut, userRegistration } from "../auth/authSlice";
 import { apiSlice } from "./apiSlice";
 
 
 
 export const authApi = apiSlice.injectEndpoints({
-    endpoints: (builder)=>({
+    endpoints: (builder) => ({
         //endpoints 
         register: builder.mutation({
-            query: (data)=>({
+            query: (data) => ({
                 url: '/auth/register',
                 method: 'POST',
                 body: data,
                 credentials: 'include'
             }),
-            async onQueryStarted(arg, {queryFulfilled, dispatch}){
+            async onQueryStarted(arg, { queryFulfilled, dispatch }) {
                 try {
                     const result = await queryFulfilled;
                     dispatch(
-                        userRegistration({token: result.data.activationToken})
+                        userRegistration({ token: result.data.activationToken })
                     )
                 } catch (error) {
                     console.log(error);
@@ -26,40 +26,61 @@ export const authApi = apiSlice.injectEndpoints({
         }),
 
         activation: builder.mutation({
-            query: ({activationToken, activationCode })=>({
+            query: ({ activationToken, activationCode }) => ({
                 url: '/auth/activate-user',
                 method: 'POST',
-                body: {activationToken,activationCode}
+                body: { activationToken, activationCode }
             })
         }),
 
         login: builder.mutation({
-            query: ({email, password})=>({
+            query: ({ email, password }) => ({
                 url: '/auth/login',
                 method: 'POST',
-                body: {email,password},
-                credentials: 'include'
-            })
-        }),
-
-        socialLogin: builder.mutation({
-            query: ({email,name,avatar})=>({
-                url: '/auth/social-auth',
-                method: 'POST',
-                body: {email,name,avatar},
+                body: { email, password },
                 credentials: 'include'
             }),
-            async onQueryStarted(arg, {queryFulfilled, dispatch}){
+            async onQueryStarted(arg, { queryFulfilled, dispatch }) {
                 try {
                     const result = await queryFulfilled;
-                    dispatch(userLoggedIn({accessToken:result.data?.accessToken, user: result.data?.user}))            
+                    dispatch(
+                        userLoggedIn({ accessToken: result.data.accessToken, user: result.data.user })
+                    )
                 } catch (error) {
                     console.log(error);
                 }
             }
         }),
 
+        socialLogin: builder.mutation({
+            query: ({ email, name, avatar }) => ({
+                url: '/auth/social-auth',
+                method: 'POST',
+                body: { email, name, avatar },
+                credentials: 'include'
+            }),
+            async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+                try {
+                    const result = await queryFulfilled;
+                    dispatch(userLoggedIn({ accessToken: result.data?.accessToken, user: result.data?.user }))
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }),
+
+        logout: builder.query({
+            query: () => ({
+                url: '/auth/logout',
+                method: 'GET',
+                credentials: 'include'
+            }),
+            async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+                dispatch(userLoggedOut({}))
+            }
+        })
+
     })
 });
 
-export const {useRegisterMutation, useActivationMutation, useLoginMutation, useSocialLoginMutation} = authApi
+export const { useRegisterMutation, useActivationMutation, useLoginMutation, useSocialLoginMutation, useLazyLogoutQuery } = authApi

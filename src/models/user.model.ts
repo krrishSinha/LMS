@@ -38,7 +38,10 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Course"
         }
-    ]
+    ],
+    refreshToken: {
+        type: String
+    }
 }, { timestamps: true });
 
 
@@ -61,9 +64,9 @@ userSchema.methods.comparePassword = async function (oldPassword: string) {
 // generate Access Token 
 userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
-        { _id: this._id, name:this.name, email: this.email, role: this.role },
+        { _id: this._id, name: this.name, email: this.email, role: this.role },
         process.env.ACCESS_TOKEN!,
-        { expiresIn: '5m' }
+        { expiresIn: '1h' }
     )
 }
 
@@ -72,7 +75,7 @@ userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         { _id: this._id, email: this.email, role: this.role },
         process.env.REFRESH_TOKEN!,
-        { expiresIn: '1d' }
+        { expiresIn: '10d' }
     )
 }
 
