@@ -11,12 +11,13 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
         <div className="dark:bg-[#101524] border border-slate-800 shadow-md max-h-fit " >
 
             <div
-                className={` ${active == 1 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
+                className={` ${active == 1 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 cursor-pointer`}
                 onClick={() => setActive(1)}
             >
 
-                <div>
-                    <Image src={user?.avatar?.url  || `/assets/avatar.png`} alt="avatar" height={25} width={25} className="rounded-full" />
+                <div className="w-10 h-10 overflow-hidden rounded-full flex items-center "
+                    style={{ minWidth: 30, minHeight: 30 }}  >
+                    <Image src={user?.avatar?.url || `/assets/avatar.png`} alt="avatar" height={30} width={30} className="object-cover rounded-full" />
                 </div>
 
                 <h5>
@@ -44,7 +45,7 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
             >
 
                 <div>
-                <SiCoursera size={20} className="dark:text-white text-black" />
+                    <SiCoursera size={20} className="dark:text-white text-black" />
                 </div>
                 <h5>
                     Enrolled Courses
@@ -53,7 +54,7 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
 
             <div
                 className={` ${active == 4 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
-                onClick={() => logOutHandler() }
+                onClick={() => logOutHandler()}
             >
 
                 <div>

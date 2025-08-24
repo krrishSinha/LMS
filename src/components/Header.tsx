@@ -58,7 +58,10 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
                                 {
                                     user ? (
                                         <Link href={'/profile'}>
-                                            <Image src={ user?.avatar?.url || `/assets/avatar.png` } alt="avatar" width={30} height={30} className="flex items-center border-[2px] border-[#37a39a] rounded-full " />
+                                            <div className="w-10 h-10 overflow-hidden border-2 border-[#37a39a] rounded-full flex items-center justify-center"
+                                                style={{ minWidth: 40, minHeight: 40 }} >
+                                                <Image src={user?.avatar?.url || `/assets/avatar.png`} alt="avatar" width={40} height={40} className="object-cover rounded-full" />
+                                            </div>
                                         </Link>
                                     ) : (
                                         <HiOutlineUserCircle className="hidden md:block cursor-pointer" size={25} onClick={() => setOpen(true)} />

@@ -2,14 +2,18 @@
 import { AiOutlineCamera } from "react-icons/ai";
 import { useLoadUserQuery, useRefreshTokenQuery } from "@/redux/features/api/apiSlice"
 import Image from "next/image"
-import { useUpdateAvatarMutation } from "@/redux/features/user/userApi";
-import { useEffect, useRef } from "react";
+import { useEditInfoMutation, useUpdateAvatarMutation } from "@/redux/features/user/userApi";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function ProfileInfo({ user }: any) {
 
+
     const [updateAvatar, { data, isSuccess, error, isLoading }] = useUpdateAvatarMutation()
-    const toastId:any = useRef(null); // store toast id
+    const [editInfo, { data: editinfoData, isSuccess: editInfoIsSuccess, error: editInfoError, isLoading: editinfoIsLoading }] = useEditInfoMutation()
+    const [name, setName] = useState(user?.name || '')
+
+    const toastId: any = useRef(null); // store toast id
 
     const imageHandler = async (e: any) => {
         const fileReader = new FileReader();
@@ -30,13 +34,44 @@ export default function ProfileInfo({ user }: any) {
             }
         }
         if (isSuccess) {
-            if(toastId.current){
+            if (toastId.current) {
                 toast.dismiss(toastId.current)
                 toastId.current = null
             }
-            toast.success('Avatar Updated Successfully...')
+            toast.success('Avatar Updated ✔')
         }
-    }, [isLoading, isSuccess])
+
+        if (editinfoIsLoading) {
+            if (!toastId.current) {
+                toastId.current = toast.loading('please wait...')
+            }
+        }
+
+        if (editInfoIsSuccess) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            toast.success('Profile Updated ✔')
+        }
+
+        if (editInfoError) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            toast.error('Error...')
+            console.log(editInfoError)
+        }
+
+    }, [isLoading, isSuccess, editInfoIsSuccess, editinfoIsLoading, editInfoError])
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault()
+        if (name !== '') {
+            await editInfo({ name })
+        }
+    }
 
 
     return (
@@ -47,13 +82,15 @@ export default function ProfileInfo({ user }: any) {
                 <div className="flex justify-center " >
                     <div className="relative" >
                         <label htmlFor="avatar " className="" >
-                            <Image
-                                src={user?.avatar?.url || '/assets/avatar.png'}
-                                alt="avatar"
-                                height={150}
-                                width={150}
-                                className="cursor-pointer border-[3px] border-[#37a39a] rounded-full"
-                            />
+                            <div className=" w-30 h-30 flex items-center  cursor-pointer border-[3px] border-[#37a39a] rounded-full overflow-hidden " >
+                                <Image
+                                    src={user?.avatar?.url || '/assets/avatar.png'}
+                                    alt="avatar"
+                                    height={200}
+                                    width={200}
+                                    className="object-contain rounded-full"
+                                />
+                            </div>
                             <input
                                 type="file"
                                 name=""
@@ -74,11 +111,11 @@ export default function ProfileInfo({ user }: any) {
 
                 <div className="w-[50%] " >
 
-                    <form action="" className="grid gap-4"  >
+                    <form onSubmit={handleSubmit} className="grid gap-4"  >
 
                         <div className="flex flex-col gap-2" >
                             <label htmlFor="fullname">Full Name</label>
-                            <input type="text" id="fullname" value={user?.name} readOnly className="border outline-none px-2 py-1" />
+                            <input type="text" id="fullname" value={name} onChange={(e: any) => setName(e.target.value)} className="border outline-none px-2 py-1" />
                         </div>
 
                         <div className="flex flex-col gap-2">

@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
 import redis from "@/db/redis";
 import { User } from "@/models";
+import connectDB from "@/db/dbConfig";
 
 export async function GET(request: NextRequest) {
+    await connectDB()
 
     try {
 
         const incomingRefreshToken: any = request.cookies.get('refreshToken')?.value;
-
-
 
         try {
             const decode: any = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN as any);

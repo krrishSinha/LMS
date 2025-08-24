@@ -7,35 +7,17 @@ import redis from "@/db/redis";
 export async function PUT(request: NextRequest) {
 
     try {
-        const { name, email } = await request.json()
-
-        // check if user is authenticated or not
-        const userId = await getAuthenticatedUser(request)
-
-        if (!userId) {
-            console.log('Unauthorised');
-            return NextResponse.json({
-                success: false,
-                message: 'Unauthorised'
-            })
-        }
+        const { name } = await request.json()
+        const userId: any = request.headers.get('userId');
 
         /// get user from DB
         const user = await User.findById(userId)
 
-        if (email && user) {
-
-            // check if email already exists in DB
-            const isEmailExists = await User.findOne({ email })
-
-            if (isEmailExists) {
-                return NextResponse.json({
-                    success: false,
-                    message: 'Email Already Exists'
-                })
-            }
-
-            user.email = email;
+        if (!user) {
+            return NextResponse.json({
+                success: false,
+                message: 'User not found'
+            })
         }
 
         if (name && user) {
@@ -44,7 +26,7 @@ export async function PUT(request: NextRequest) {
 
         await user.save()
 
-        await redis.set(userId, JSON.stringify(user))
+        await redis.set(JSON.stringify(userId), JSON.stringify(user))
 
         return NextResponse.json({
             success: true,

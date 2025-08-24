@@ -1,5 +1,6 @@
 // middleware.ts
 import { NextResponse, type NextRequest } from 'next/server';
+import axios from 'axios';
 import jwt from 'jsonwebtoken'
 import * as jose from 'jose'
 import { User } from './models/user.model';
@@ -24,49 +25,37 @@ export async function middleware(request: NextRequest) {
         '/api/layout/create-layout',
     ]
 
-    const token: any = request.cookies.get('accessToken')?.value;
+    const accessToken: any = request.cookies.get('accessToken')?.value;
+    const refreshToken: any = request.cookies.get('refreshToken')?.value;
 
     const pathname = request.nextUrl.pathname;
 
-    if (!token) {
-        // console.log('Unauthorised, Please Login first.');
-        // return NextResponse.redirect(new URL(`/`, request.url));
-        return NextResponse.json(
-            {
-                success: false,
-                message: 'token not found'
-            },
-            { status: 401 }
-        )
+    if (!accessToken) {
+        return NextResponse.redirect(new URL(`/`, request.url));
     }
 
     const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN);
 
+    let payload
+
     try {
-
-        const {payload}: any = await jose.jwtVerify(token, secret);
-
-        if (protectedAdminPath.includes(pathname) && payload.role !== 'admin') {
-            console.log('Unauthorised. Admin only');
-            return NextResponse.redirect(new URL(`/`, request.url));
-        }
-
-        const response = NextResponse.next();
-        response.headers.set('userId', payload._id);
-        response.headers.set('userEmail', payload.email);
-        response.headers.set('username', payload.name);
-        return response;
-
+        const { payload:decode }: any = await jose.jwtVerify(accessToken, secret);
+        payload = decode
     } catch (error) {
-        return NextResponse.json(
-            {
-                success: true,
-                message: "JWT verify failed"
-            },
-            { status: 401 }
-        )
+        console.log('Session Expired');
+        return NextResponse.redirect(new URL(`/`, request.url));
     }
 
+    if (protectedAdminPath.includes(pathname) && payload.role !== 'admin') {
+        console.log('Unauthorised. Admin only');
+        return NextResponse.redirect(new URL(`/`, request.url));
+    }
+
+    const response = NextResponse.next();
+    response.headers.set('userId', payload._id);
+    response.headers.set('userEmail', payload.email);
+    response.headers.set('username', payload.name);
+    return response;
 }
 
 // Apply middleware only to certain paths

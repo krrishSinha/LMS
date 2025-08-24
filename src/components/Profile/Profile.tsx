@@ -5,6 +5,7 @@ import SideBarProfile from "./SideBarProfile";
 import { useLazyLogoutQuery } from "@/redux/features/api/authApi";
 import toast from "react-hot-toast";
 import ProfileInfo from "./ProfileInfo";
+import UpdatePassword from "./UpdatePassword";
 
 
 export default function Profile({ user }: any) {
@@ -58,7 +59,7 @@ export default function Profile({ user }: any) {
                 }
 
                 {
-                    active == 2 && <div>update password</div>
+                    active == 2 && <UpdatePassword user={user}  />
                 }
 
 
