@@ -62,6 +62,10 @@ export default function Profile({ user }: any) {
                     active == 2 && <UpdatePassword user={user}  />
                 }
 
+                 {
+                    active == 3 && <div>Enrolled Courses</div> 
+                }
+
 
             </div>
 

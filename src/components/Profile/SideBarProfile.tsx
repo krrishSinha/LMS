@@ -2,6 +2,7 @@ import Image from "next/image";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { SiCoursera } from "react-icons/si";
 import { AiOutlineLogout } from "react-icons/ai";
+import Link from "next/link";
 
 export default function SideBarProfile({ user, active, avatar, setActive, logOutHandler }: any) {
 
@@ -10,10 +11,8 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
         // main div 
         <div className="dark:bg-[#101524] border border-slate-800 shadow-md max-h-fit " >
 
-            <div
-                className={` ${active == 1 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 cursor-pointer`}
-                onClick={() => setActive(1)}
-            >
+            <div className={` ${active == 1 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 cursor-pointer`}
+                onClick={() => setActive(1)}>
 
                 <div className="w-10 h-10 overflow-hidden rounded-full flex items-center "
                     style={{ minWidth: 30, minHeight: 30 }}  >
@@ -25,10 +24,8 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
                 </h5>
             </div>
 
-            <div
-                className={` ${active == 2 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`}  flex items-center px-3 py-5 gap-2 cursor-pointer`}
-                onClick={() => setActive(2)}
-            >
+            <div className={` ${active == 2 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`}  flex items-center px-3 py-5 gap-2 cursor-pointer`}
+                onClick={() => setActive(2)}>
 
                 <div>
                     <RiLockPasswordLine size={20} className="dark:text-white text-black" />
@@ -39,10 +36,8 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
                 </h5>
             </div>
 
-            <div
-                className={` ${active == 3 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
-                onClick={() => setActive(3)}
-            >
+            <div className={` ${active == 3 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
+                onClick={() => setActive(3)}>
 
                 <div>
                     <SiCoursera size={20} className="dark:text-white text-black" />
@@ -52,10 +47,23 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
                 </h5>
             </div>
 
-            <div
-                className={` ${active == 4 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
-                onClick={() => logOutHandler()}
-            >
+            {
+                user?.role == 'admin' && (
+                    <Link className={` ${active == 5 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
+                        href={'/admin'}>
+
+                        <div>
+                            <SiCoursera size={20} className="dark:text-white text-black" />
+                        </div>
+                        <h5>
+                            Admin Dashboard
+                        </h5>
+                    </Link>
+                )
+            }
+
+            <div className={` ${active == 4 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 gap-2 cursor-pointer`}
+                onClick={() => logOutHandler()}>
 
                 <div>
                     <AiOutlineLogout size={20} className="dark:text-white text-black" />

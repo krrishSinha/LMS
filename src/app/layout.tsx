@@ -8,8 +8,9 @@ import { Provider } from "react-redux";
 import { store } from '../redux/store'
 import { SessionProvider } from "next-auth/react"
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
-
-
+import React from "react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import AdminSidebar from "@/components/Admin/AdminSidebar"
 
 // export const metadata: Metadata = {
 //   title: "ELearning",
@@ -29,7 +30,15 @@ export default function RootLayout({
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
               <Toaster />
-              <Custom> {children} </Custom>
+              <Custom>
+                <SidebarProvider>
+                  <AdminSidebar />
+                  <main>
+                    <SidebarTrigger />
+                    {children}
+                  </main>
+                </SidebarProvider>
+              </Custom>
             </ThemeProvider>
           </SessionProvider>
         </Provider>
