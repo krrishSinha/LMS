@@ -6,19 +6,12 @@ const CourseSectionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
-        type: String,
-    },
     videos: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Video'
         }
     ],
-    courseId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
-    }
 }, { timestamps: true });
 
 

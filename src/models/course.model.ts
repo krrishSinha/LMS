@@ -65,8 +65,16 @@ const courseSchema = new mongoose.Schema({
     ],
     sections: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Course_Section'
+            title: {
+                type: String,
+                required: true
+            },
+            videos: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Video'
+                }
+            ]
         }
     ],
     ratings: {

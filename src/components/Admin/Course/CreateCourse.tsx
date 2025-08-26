@@ -7,7 +7,7 @@ import CoursePreview from './CoursePreview'
 import CourseOptions from './CourseOptions'
 
 function CreateCourse() {
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(2)
   
   const [courseInfo, setCourseInfo] = useState({
     title: "",
@@ -60,7 +60,7 @@ function CreateCourse() {
           }
 
           {
-            active == 2 && <CourseContent />
+            active == 2 && <CourseContent  active={active} setActive={setActive}  />
           }
 
           {

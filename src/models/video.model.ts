@@ -21,10 +21,10 @@ const videoSchema = new mongoose.Schema({
     videoPlayer: {
         type: String,
     },
-    links: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Link'
-    },
+    links: [{
+        title: { type: String },
+        url: { type: String }
+    }],
     suggestions: {
         type: String,
     },
