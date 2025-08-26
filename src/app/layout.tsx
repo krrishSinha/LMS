@@ -31,13 +31,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
               <Toaster />
               <Custom>
-                <SidebarProvider>
-                  <AdminSidebar />
-                  <main>
-                    <SidebarTrigger />
-                    {children}
-                  </main>
-                </SidebarProvider>
+                  {children}
               </Custom>
             </ThemeProvider>
           </SessionProvider>

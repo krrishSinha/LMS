@@ -1,9 +1,10 @@
-import React from 'react'
-import useAdminProtected from '@/hooks/useAdminProtected'
-import AdminProtected from '@/hooks/useAdminProtected'
 import AdminSidebar from '@/components/Admin/AdminSidebar'
+import CourseOptions from '@/components/Admin/Course/CourseOptions'
+import CreateCourse from '@/components/Admin/Course/CreateCourse'
+import DashboardHeader from '@/components/Admin/DashboardHeader'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import DashboardHero from '@/components/Admin/DashboardHero'
+import AdminProtected from '@/hooks/useAdminProtected'
+import React from 'react'
 
 function page() {
     return (
@@ -22,8 +23,9 @@ function page() {
                         </SidebarProvider>
                     </div>
 
-                    <div className='py-10 w-full px-10' >
-                        <DashboardHero />
+                    <div className='py-10 w-full px-5' >
+                        <DashboardHeader />
+                        <CreateCourse />
                     </div>
 
                 </div>

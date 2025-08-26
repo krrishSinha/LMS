@@ -84,9 +84,9 @@ export default function AdminSidebar() {
     const { user } = useSelector((state: any) => state.auth)
 
     return (
-        <div  >
+        <div>
             <Sidebar collapsible="icon"  >
-                <SidebarContent className="bg-[#121A3A]   " >
+                <SidebarContent className="bg-[#121A3A] text-white  " >
                     <SidebarGroup>
                         <SidebarGroupLabel className="text-2xl mb-5 text-white font-bold  flex justify-center" >ELearning</SidebarGroupLabel>
 
@@ -96,8 +96,8 @@ export default function AdminSidebar() {
                             {
                                 open && (
                                     <>
-                                        <h3>Krrish Sinha</h3>
-                                        <h4 className="text-sm" >- Admin</h4>
+                                        <h3 className="text-white " >Krrish Sinha</h3>
+                                        <h4 className="text-sm text-white" >- Admin</h4>
                                     </>
                                 )
                             }
@@ -109,7 +109,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin'}>
                                             <Home />
                                             <span> Dashboard </span>
                                         </Link>
@@ -120,8 +120,8 @@ export default function AdminSidebar() {
                             {
                                 open && <SidebarMenu>
                                     <SidebarMenuItem >
-                                        <SidebarMenuButton className="hover:bg-transparent " >
-                                            <div className=" -mb-2" >Data</div>
+                                        <SidebarMenuButton className="hover:bg-transparent hover:text-white " >
+                                            <div className=" -mb-2 " >Data</div>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 </SidebarMenu>
@@ -133,7 +133,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <IoIosPeople />
-                                            <span className="text-zinc-400" > Users </span>
+                                            <span className="dark:text-zinc-400 " > Users </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -144,7 +144,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <FaFileInvoice />
-                                            <span className="text-zinc-400"> Invoices </span>
+                                            <span className="dark:text-zinc-400"> Invoices </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -153,8 +153,8 @@ export default function AdminSidebar() {
                             {
                                 open && <SidebarMenu>
                                     <SidebarMenuItem >
-                                        <SidebarMenuButton className="hover:bg-transparent " >
-                                            <div className=" -mb-2" >Content</div>
+                                        <SidebarMenuButton className="hover:bg-transparent hover:text-white  " >
+                                            <div className=" -mb-2 " >Content</div>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 </SidebarMenu>
@@ -164,9 +164,9 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/create-course'}>
                                             <FaVideo />
-                                            <span className="text-zinc-400" > Create Course </span>
+                                            <span className="dark:text-zinc-400" > Create Course </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -177,7 +177,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <MdOutlineOndemandVideo />
-                                            <span className="text-zinc-400"> Live Course </span>
+                                            <span className="dark:text-zinc-400"> Live Course </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -186,7 +186,7 @@ export default function AdminSidebar() {
                             {
                                 open && <SidebarMenu>
                                     <SidebarMenuItem >
-                                        <SidebarMenuButton className="hover:bg-transparent " >
+                                        <SidebarMenuButton className="hover:bg-transparent hover:text-white " >
                                             <div className=" -mb-2" >Customization</div>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
@@ -199,7 +199,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <MdOutlineFeaturedVideo />
-                                            <span className="text-zinc-400" > Hero  </span>
+                                            <span className="dark:text-zinc-400" > Hero  </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -210,7 +210,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <FaClipboardQuestion />
-                                            <span className="text-zinc-400"> FAQ</span>
+                                            <span className="dark:text-zinc-400"> FAQ</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -221,7 +221,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <TbCategoryFilled />
-                                            <span className="text-zinc-400"> Categories</span>
+                                            <span className="dark:text-zinc-400"> Categories</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -230,7 +230,7 @@ export default function AdminSidebar() {
                             {
                                 open && <SidebarMenu>
                                     <SidebarMenuItem >
-                                        <SidebarMenuButton className="hover:bg-transparent " >
+                                        <SidebarMenuButton className="hover:bg-transparent hover:text-white  " >
                                             <div className=" -mb-2" >Controllers</div>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
@@ -243,7 +243,7 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <FaUserGroup />
-                                            <span className="text-zinc-400" > Manage Team  </span>
+                                            <span className="dark:text-zinc-400" > Manage Team  </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -252,7 +252,7 @@ export default function AdminSidebar() {
                             {
                                 open && <SidebarMenu>
                                     <SidebarMenuItem >
-                                        <SidebarMenuButton className="hover:bg-transparent " >
+                                        <SidebarMenuButton className="hover:bg-transparent hover:text-white " >
                                             <div className=" -mb-2" >Analytics</div>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
@@ -265,7 +265,62 @@ export default function AdminSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={'#'}>
                                             <SiSimpleanalytics />
-                                            <span className="text-zinc-400" > Course Analytics  </span>
+                                            <span className="dark:text-zinc-400" > Courses Analytics  </span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+
+                            <SidebarMenu>
+                                <SidebarMenuItem >
+                                    <SidebarMenuButton asChild>
+                                        <Link href={'#'}>
+                                            <SiSimpleanalytics />
+                                            <span className="dark:text-zinc-400" > Orders Analytics  </span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+
+                            <SidebarMenu>
+                                <SidebarMenuItem >
+                                    <SidebarMenuButton asChild>
+                                        <Link href={'#'}>
+                                            <SiSimpleanalytics />
+                                            <span className="dark:text-zinc-400" > Users Analytics  </span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+
+                            {
+                                open && <SidebarMenu>
+                                    <SidebarMenuItem >
+                                        <SidebarMenuButton className="hover:bg-transparent hover:text-white " >
+                                            <div className=" -mb-2" >Extras</div>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                </SidebarMenu>
+                            }
+
+
+                            <SidebarMenu>
+                                <SidebarMenuItem >
+                                    <SidebarMenuButton asChild>
+                                        <Link href={'#'}>
+                                            <SiSimpleanalytics />
+                                            <span className="dark:text-zinc-400" > Setting  </span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+
+                            <SidebarMenu>
+                                <SidebarMenuItem >
+                                    <SidebarMenuButton asChild>
+                                        <Link href={'#'}>
+                                            <SiSimpleanalytics />
+                                            <span className="dark:text-zinc-400" > Logout  </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>

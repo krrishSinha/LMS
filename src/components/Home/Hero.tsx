@@ -14,7 +14,7 @@ export default function Hero() {
 
                 {/* hero image div  */}
                 <div className="relative w-full h-[40vh] lg:h-full">
-                    <Image src={'/assets/banner-img-1.png'} alt="hero image" fill className="object-contain border" />
+                    <Image src={'/assets/banner-img-1.png'} alt="hero image" fill className="object-contain" />
                 </div>  
 
                 <div className="flex flex-col gap-3 lg:gap-6 " >
