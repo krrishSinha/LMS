@@ -25,7 +25,7 @@ const courseSchema = new mongoose.Schema({
     },
     categories: {
         type: String,
-        required: true,
+        // required: true,
     },
     thumbnail: {
         public_id: {

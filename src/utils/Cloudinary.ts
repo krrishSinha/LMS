@@ -17,7 +17,6 @@ export const uploadToCloudinary = async (image: any, folderName: any, width?:any
             width
         });
 
-        console.log(result);
         return result
 
     } catch (error) {
