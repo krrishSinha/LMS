@@ -7,16 +7,9 @@ import toast from 'react-hot-toast';
 
 
 
-export default function CourseContent({active,setActive}:any) {
+export default function CourseContent({active,setActive,sections, setSections, handleCourseSubmit}:any) {
 
   const [isReadOnly, setIsReadOnly] = useState(true)
-
-  const [sections, setSections]: any = useState([
-    {
-      sectionTitle: 'Untitled Section',
-      videos: []
-    }
-  ]);
 
   const [videoOpenStates, setVideoOpenStates] = useState<boolean[][]>(
     sections.map((section: any) => section.videos.map(() => true))
@@ -123,9 +116,7 @@ export default function CourseContent({active,setActive}:any) {
   const handleSubmit = () => {
     if (!isCourseContentValid()) return;
 
-    setActive(active + 1);
-    console.log('Final Course Structure:', sections);
-    // You can send this to your backend via fetch/axios
+    handleCourseSubmit()
   };
 
 
@@ -212,11 +203,10 @@ export default function CourseContent({active,setActive}:any) {
 
                       {video.links.map((link: any, linkIndex: any) => (
 
-                        <div className='flex items-center justify-between gap-4 ' >
+                        <div key={linkIndex} className='flex items-center justify-between gap-4 ' >
 
                           <div className='flex w-full gap-4'   >
                             <input
-                              key={linkIndex}
                               type="text"
                               value={link.title}
                               onChange={(e) => handleVideoLinkChange(sectionIndex, videoIndex, linkIndex, 'title', e.target.value)}
@@ -225,7 +215,6 @@ export default function CourseContent({active,setActive}:any) {
                             />
 
                             <input
-                              key={linkIndex}
                               type="text"
                               value={link.url}
                               onChange={(e) => handleVideoLinkChange(sectionIndex, videoIndex, linkIndex, 'url', e.target.value)}
