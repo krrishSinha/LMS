@@ -1,3 +1,4 @@
+import redis from "@/db/redis";
 import { Video } from "@/models";
 import { Course } from "@/models/course.model";
 import { uploadToCloudinary } from "@/utils/Cloudinary";
@@ -34,6 +35,18 @@ export async function POST(request: NextRequest) {
         data.sections = updatedSection;
 
         const course = await Course.create(data)
+
+        // Fetch old courses and append
+        const existingCourses: any = await redis.get("AllCourses");
+
+        if (!existingCourses) {
+            // First time, create array with only the new course
+            await redis.set("AllCourses", JSON.stringify([course]));
+        } else {
+            const courses = JSON.parse(existingCourses);
+            courses.push(course);
+            await redis.set("AllCourses", JSON.stringify(courses));
+        }
 
         return NextResponse.json({
             success: true,

@@ -14,10 +14,9 @@ export async function GET(request: NextRequest){
         const cachedCourses = await redis.get("AllCourses")
 
         if(cachedCourses){
-            const courses = cachedCourses
             return NextResponse.json({
                 success:true,
-                cachedCourses: courses
+                courses: cachedCourses
             })
         }
 

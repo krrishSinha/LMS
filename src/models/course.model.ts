@@ -84,7 +84,15 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-}, { timestamps: true });
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    }
+});
 
 
 export const Course = mongoose.models.Course || mongoose.model('Course', courseSchema)

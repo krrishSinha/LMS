@@ -11,6 +11,7 @@ import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import React from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import AdminSidebar from "@/components/Admin/AdminSidebar"
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 
 // export const metadata: Metadata = {
 //   title: "ELearning",
@@ -30,9 +31,11 @@ export default function RootLayout({
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
               <Toaster />
-              <Custom>
+              <PrimeReactProvider>
+                <Custom>
                   {children}
-              </Custom>
+                </Custom>
+              </PrimeReactProvider>
             </ThemeProvider>
           </SessionProvider>
         </Provider>

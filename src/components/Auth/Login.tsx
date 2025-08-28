@@ -9,7 +9,6 @@ import { useLoginMutation, useSocialLoginMutation } from "@/redux/features/api/a
 import toast from "react-hot-toast";
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useSelector } from "react-redux";
-import { redirect } from "next/navigation";
 
 
 const schema = Yup.object().shape({

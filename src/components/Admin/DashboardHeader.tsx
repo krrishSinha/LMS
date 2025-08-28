@@ -18,7 +18,7 @@ function DashboardHeader() {
                     <IoMdNotifications size={25} className='relative cursor-pointer' onClick={() => setOpen(!open)} />
                     <div className='absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center text-[8px] bg-teal-600 rounded-full select-none' > 10 </div>
                     {
-                        open && <div className='w-[350px] max-h-[350px] overflow-scroll absolute top-10 right-0 bg-[#121A3A] text-white ' >
+                        open && <div className='w-[350px] max-h-[350px] overflow-scroll absolute top-10 right-0 bg-[#121A3A] text-white z-[999] ' >
                             <div className='text-center text-xl py-3' >Notifications</div>
 
                             <div className='bg-[#1E2A40] px-2 py-2 border-b grid space-y-1 ' >

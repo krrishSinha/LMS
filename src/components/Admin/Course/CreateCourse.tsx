@@ -103,7 +103,7 @@ export default function CreateCourse() {
         toastId.current = null
       }
       toast.success('Course Created ✔')
-      redirect('/admin/all-courses')
+      redirect('/admin/courses')
     }
 
     if (error) {
@@ -120,7 +120,6 @@ export default function CreateCourse() {
 
   const handleCourseCreate = async () => {
     const data = courseData
-    console.log('jfh')
     await createCourse(data)
   }
 

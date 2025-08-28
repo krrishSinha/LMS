@@ -175,9 +175,9 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/courses'}>
                                             <MdOutlineOndemandVideo />
-                                            <span className="dark:text-zinc-400"> Live Course </span>
+                                            <span className="dark:text-zinc-400"> Live Courses </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
