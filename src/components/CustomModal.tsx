@@ -2,7 +2,7 @@ import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 
 
-export default function CustomModal({ open, setOpen, route, setRoute, component: Component, activeItem }: any) {
+export default function CustomModal({ open, setOpen, route, setRoute, component: Component, activeItem, handleAction }: any) {
 
     return (
         <Modal
@@ -13,7 +13,7 @@ export default function CustomModal({ open, setOpen, route, setRoute, component:
         >
 
             <Box className='absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[400px] bg-white dark:bg-slate-900 rounded-lg shadow p-4 outline-none ' >
-                <Component setOpen={setOpen} setRoute={setRoute} />
+                <Component open={open} setOpen={setOpen} setRoute={setRoute} handleAction={handleAction} />
             </Box>
              
 

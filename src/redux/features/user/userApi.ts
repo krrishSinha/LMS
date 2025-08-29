@@ -38,8 +38,27 @@ export const authApi = apiSlice.injectEndpoints({
                 method: 'GET',
                 credentials: 'include'
             }),
+            providesTags: ['getAllUsers'],
+        }),
+        updateUserRole: builder.mutation({
+            query: ({ email, role }) => ({
+                url: '/user/update-user-role',
+                method: 'PUT',
+                body: { email, role },
+                credentials: 'include'
+            }),
+            invalidatesTags: ['getAllUsers']
+        }),
+        deleteUser: builder.mutation({
+            query: ({email}) => ({
+                url: '/user/delete-user',
+                method: 'DELETE',
+                body: { email },
+                credentials: 'include'
+            }),
+            invalidatesTags: ['getAllUsers']
         }),
     })
 });
 
-export const { useUpdateAvatarMutation, useEditInfoMutation, useChangePasswordMutation, useGetAllUsersQuery } = authApi
+export const { useUpdateAvatarMutation, useEditInfoMutation, useChangePasswordMutation, useGetAllUsersQuery, useUpdateUserRoleMutation, useDeleteUserMutation } = authApi

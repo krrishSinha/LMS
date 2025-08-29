@@ -1,8 +1,11 @@
+import connectDB from "@/db/dbConfig";
 import { User } from "@/models";
 import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(request: NextRequest){
+
+    await connectDB()
 
     try {
 

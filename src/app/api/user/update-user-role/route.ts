@@ -7,17 +7,22 @@ export async function PUT(request: NextRequest) {
 
     try {
 
-        const { userId, role } = await request.json()
+        const { email, role } = await request.json()
 
-        if (!userId || !role) {
+        console.log(email, role)
+
+        if (!email || !role) {
             return NextResponse.json({
                 success: false,
                 message: 'All feild required'
             })
         }
 
-        const updatedUser = await User.findByIdAndUpdate(userId, { role }, { new: true })
-
+        const updatedUser = await User.findOneAndUpdate(
+            {email},
+            {$set: {role}},
+            {new: true}
+        );
 
         return NextResponse.json({
             success: true,

@@ -7,16 +7,16 @@ export async function DELETE(request: NextRequest) {
 
     try {
 
-        const { userId } = await request.json()
+        const { email } = await request.json()
 
-        const user = await User.findById(userId)
-
-         if (!userId) {
+        if (!email) {
             return NextResponse.json({
                 success: false,
-                message: 'Invalid Request, userId Required'
+                message: 'Invalid Request, email Required'
             })
         }
+
+        const user = await User.findOne()
 
         if (!user) {
             return NextResponse.json({

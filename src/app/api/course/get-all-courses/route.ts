@@ -11,18 +11,18 @@ export async function GET(request: NextRequest){
     try {
 
         // check if course data available in redis
-        const cachedCourses = await redis.get("AllCourses")
+        // const cachedCourses = await redis.get("AllCourses")
 
-        if(cachedCourses){
-            return NextResponse.json({
-                success:true,
-                courses: cachedCourses
-            })
-        }
+        // if(cachedCourses){
+        //     return NextResponse.json({
+        //         success:true,
+        //         courses: cachedCourses
+        //     })
+        // }
 
         const courses = await Course.find().select('-reviews -courseData')
 
-        await redis.set('AllCourses', JSON.stringify(courses))
+        // await redis.set('AllCourses', JSON.stringify(courses))
 
         return NextResponse.json({
             success: true,

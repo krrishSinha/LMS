@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useEffect, useState, useMemo } from 'react'
-import { useGetAllCoursesQuery } from '@/redux/features/course/courseApi';
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { format } from 'timeago.js';
 import { MdDelete, MdEmail } from "react-icons/md";
-import { useGetAllUsersQuery } from '@/redux/features/user/userApi';
+import { useDeleteUserMutation, useGetAllUsersQuery, useUpdateUserRoleMutation } from '@/redux/features/user/userApi';
 import toast from 'react-hot-toast';
-
+import CustomModal from '@/components/CustomModal';
+import AddMember from '@/components/AddMember';
+import Confirmation from '@/components/Confirmation';
 
 
 type Course = {
@@ -17,8 +18,20 @@ type Course = {
     createdAt: string
 }
 
-export default function AllUsers({type}:any) {
+export default function AllUsers({ type }: any) {
+
     const { data, isSuccess, error, isLoading } = useGetAllUsersQuery({})
+    const [updateUserRole,
+        { data: updateUserData, isSuccess: updateUserIsSuccess, isLoading: updateUserIsLoading, error: updateUserError }] = useUpdateUserRoleMutation({})
+
+    const [deleteUser, { isSuccess: deleteUserIsSuccess, isLoading: deleteUserIsLoading, error: deleteUserError }] = useDeleteUserMutation({})
+
+    const [openRemoveMemberConfirmation, setOpenRemoveMemberConfirmation] = useState(false)
+    const [openDeleteUserConfirmation, setOpenDeleteUserConfirmation] = useState(false)
+
+    const [open, setOpen] = useState(false)
+    const [email, setEmail] = useState('')
+    const toastId: any = useRef(null);
 
     const [users, setUsers] = useState([])
 
@@ -27,8 +40,6 @@ export default function AllUsers({type}:any) {
     const rowsPerPage = 5;
 
     useEffect(() => {
-
-        console.log(data)
 
         if (isSuccess && data?.users) {
 
@@ -65,7 +76,32 @@ export default function AllUsers({type}:any) {
             toast.error('Error')
         }
 
-    }, [data, isLoading, isSuccess, error])
+        if (updateUserIsLoading || deleteUserIsLoading) {
+            if (!toastId.current) {
+                toastId.current = toast.loading('please wait...')
+            }
+        }
+
+        if (updateUserIsSuccess || deleteUserIsSuccess) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            toast.success(updateUserIsSuccess ? 'Member Removed ✔' : 'User Deleted ✔')
+            setOpen(false)
+        }
+
+        if (updateUserError || deleteUserError) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            const errorData = error as any
+            toast.error('Error')
+        }
+
+
+    }, [data, isLoading, isSuccess, error, updateUserIsSuccess, updateUserIsLoading, updateUserError, deleteUserIsLoading, deleteUserIsSuccess])
 
     // Apply global search
     const filteredData = useMemo(() => {
@@ -89,6 +125,28 @@ export default function AllUsers({type}:any) {
         );
     }
 
+    const handleRemove = (email: any) => {
+        setEmail(email)
+        setOpenRemoveMemberConfirmation(!openRemoveMemberConfirmation)
+    }
+
+    const handleRemoveMember = async () => {
+        const role = 'user'
+        await updateUserRole({ email, role })
+        setOpenRemoveMemberConfirmation(!openRemoveMemberConfirmation)
+    }
+
+    const handleDelete = (email: any) => {
+        setEmail(email)
+        setOpenDeleteUserConfirmation(!openDeleteUserConfirmation)
+    }
+
+    const handleDeleteUser = async () => {
+        // console.log('delete user')
+        await deleteUser({ email })
+        setOpenDeleteUserConfirmation(!openDeleteUserConfirmation)
+    }
+
 
     return (
         <div>
@@ -96,7 +154,9 @@ export default function AllUsers({type}:any) {
             <div className="p-6 bg-[#121A3A] text-white rounded-xl shadow-lg mt-10">
                 {/* Header with Global Search */}
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Users</h2>
+                    <h2 className="text-xl font-bold">
+                        {type ? 'Members' : 'Users'}
+                    </h2>
 
                     <div >
                         <input
@@ -113,6 +173,22 @@ export default function AllUsers({type}:any) {
                         <button onClick={() => setSearch("")} className="ml-2 px-3 py-2 text-sm bg-[crimson] text-white font-bold  hover:scale-[1.05] transition-all duration-300 ease-in-out rounded-md cursor-pointer">
                             Clear Filters
                         </button>
+
+                        {
+                            type && (
+                                <button onClick={() => setOpen(!open)} className="ml-2 px-3 py-2 text-sm bg-gray-200 text-black font-bold  hover:scale-[1.05] transition-all duration-300 ease-in-out rounded-md cursor-pointer">
+                                    Add Member
+                                </button>
+                            )
+                        }
+
+                        {/* Add Member Modal  */}
+                        {
+                            open && (
+                                <CustomModal open={open} setOpen={setOpen} component={AddMember} />
+                            )
+                        }
+
                     </div>
 
                 </div>
@@ -126,7 +202,7 @@ export default function AllUsers({type}:any) {
                             <th className="p-3 border text-left">Role</th>
                             <th className="p-3 border text-left">Purchased Courses</th>
                             <th className="p-3 border text-left">Joined At</th>
-                            <th className="p-3 border text-left">Delete</th>
+                            {type ? (<th className="p-3 border text-left">Remove</th>) : (<th className="p-3 border text-left">Delete</th>)}
                             <th className="p-3 border text-left">Email</th>
                         </tr>
                     </thead>
@@ -139,8 +215,26 @@ export default function AllUsers({type}:any) {
                                 <td className="p-3">{user.role}</td>
                                 <td className="p-3">{user.purchased_courses}</td>
                                 <td className="p-3">{user.joined_at}</td>
-                                <td className="p-3 text-center cursor-pointer " onClick={() => console.log(user.id)}> <MdDelete size={20} className='text-red-500' /> </td>
-                                <td className="p-3 text-center cursor-pointer " onClick={() => console.log(user.id)}> <MdEmail size={20} /> </td>
+                                {
+                                    type ?
+                                        (
+                                            <td className="p-3 text-center cursor-pointer ">
+                                                <button onClick={() => handleRemove(user.email)} className="ml-2 px-3 py-2 text-sm bg-[crimson] text-white font-bold rounded-md cursor-pointer">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        )
+                                        :
+                                        (
+                                            <td className="p-3 text-center cursor-pointer " onClick={() => handleDelete(user.email)}> <MdDelete size={20} className='text-red-500' /> </td>
+                                        )
+                                }
+
+                                <td className="p-3 text-center cursor-pointer ">
+                                    <a href={`mailto:${user.email}`} target='_blank' >
+                                        <MdEmail size={20} />
+                                    </a>
+                                </td>
                             </tr>
                         ))}
                         {paginatedData.length === 0 && (
@@ -176,6 +270,20 @@ export default function AllUsers({type}:any) {
             </div>
 
 
+            {/* Remove Member Confirmation  */}
+            {
+                openRemoveMemberConfirmation && (
+                    <CustomModal open={openRemoveMemberConfirmation} setOpen={setOpenRemoveMemberConfirmation} component={Confirmation} handleAction={handleRemoveMember} />
+                )
+            }
+
+
+            {/* Delete User Confirmation  */}
+            {
+                openDeleteUserConfirmation && (
+                    <CustomModal open={openDeleteUserConfirmation} setOpen={setOpenDeleteUserConfirmation} component={Confirmation} handleAction={handleDeleteUser} />
+                )
+            }
 
         </div>
     )

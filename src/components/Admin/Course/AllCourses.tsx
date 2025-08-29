@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useEffect, useState, useMemo } from 'react'
-import { useGetAllCoursesQuery } from '@/redux/features/course/courseApi';
+import React, { useEffect, useState, useMemo, useRef } from 'react'
+import { useDeleteCourseMutation, useGetAllCoursesQuery } from '@/redux/features/course/courseApi';
 import { format } from 'timeago.js';
 import { MdEdit, MdDelete } from "react-icons/md";
-
-
+import CustomModal from '@/components/CustomModal';
+import Confirmation from '@/components/Confirmation';
+import toast from 'react-hot-toast';
 
 type Course = {
     id: string
@@ -17,8 +18,12 @@ type Course = {
 
 export default function AllCourses() {
     const { data, isSuccess, error, isLoading } = useGetAllCoursesQuery({})
+    const [deleteCourse, { isSuccess: deleteCourseIsSuccess, isLoading: deleteCourseIsLoading, error: deleteCourseError }] = useDeleteCourseMutation()
+    const toastId: any = useRef(null);
 
     const [courses, setCourses] = useState([])
+    const [courseId, setCourseId] = useState('')
+    const [openDeleteCourseConfirmation, setOpenDeleteCourseConfirmation] = useState(false)
 
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -37,10 +42,32 @@ export default function AllCourses() {
             }))
 
             setCourses(selectedCourse)
-
         }
 
-    }, [data, isLoading, isSuccess])
+        if (deleteCourseIsLoading) {
+            if (!toastId.current) {
+                toastId.current = toast.loading('please wait...')
+            }
+        }
+
+        if (deleteCourseIsSuccess) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            toast.success('Course Deleted ✔')
+        }
+
+        if (deleteCourseError) {
+            if (toastId.current) {
+                toast.dismiss(toastId.current)
+                toastId.current = null
+            }
+            const errorData = error as any
+            toast.error('Error')
+        }
+
+    }, [data, isLoading, isSuccess, deleteCourseIsLoading, deleteCourseIsSuccess, deleteCourseError])
 
     // Apply global search
     const filteredData = useMemo(() => {
@@ -62,6 +89,16 @@ export default function AllCourses() {
                 Loading courses...
             </div>
         );
+    }
+
+    const deleteCourseTrigger = (id: any) => {
+        setOpenDeleteCourseConfirmation(!openDeleteCourseConfirmation)
+        setCourseId(id)
+    }
+
+    const handleDeleteCourse = async () => {
+        await deleteCourse({ courseId })
+        setOpenDeleteCourseConfirmation(false)
     }
 
 
@@ -112,8 +149,8 @@ export default function AllCourses() {
                                 <td className="p-3">{course.ratings}</td>
                                 <td className="p-3">{course.purchased}</td>
                                 <td className="p-3">{course.createdAt}</td>
-                                <td className="p-3  text-center cursor-pointer " onClick={()=>console.log(course.id)} > <MdEdit size={20} /> </td>
-                                <td className="p-3 text-center cursor-pointer " onClick={()=>console.log(course.id)}> <MdDelete size={20} className='text-red-500' /> </td>
+                                <td className="p-3  text-center cursor-pointer " onClick={() => console.log(course.id)} > <MdEdit size={20} /> </td>
+                                <td className="p-3 text-center cursor-pointer " onClick={() => deleteCourseTrigger(course.id)}> <MdDelete size={20} className='text-red-500' /> </td>
                             </tr>
                         ))}
                         {paginatedData.length === 0 && (
@@ -148,7 +185,12 @@ export default function AllCourses() {
                 </div>
             </div>
 
-
+            {/* Delete Course Model  */}
+            {
+                openDeleteCourseConfirmation && (
+                    <CustomModal open={openDeleteCourseConfirmation} setOpen={setOpenDeleteCourseConfirmation} component={Confirmation} handleAction={handleDeleteCourse} />
+                )
+            }
 
         </div>
     )
