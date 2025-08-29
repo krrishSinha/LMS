@@ -31,8 +31,15 @@ export const authApi = apiSlice.injectEndpoints({
                 credentials: 'include'
             }),
             invalidatesTags: ['LoadUser']
-        })
+        }),
+        getAllUsers: builder.query({
+            query: () => ({
+                url: '/user/get-all-users',
+                method: 'GET',
+                credentials: 'include'
+            }),
+        }),
     })
 });
 
-export const { useUpdateAvatarMutation, useEditInfoMutation, useChangePasswordMutation } = authApi
+export const { useUpdateAvatarMutation, useEditInfoMutation, useChangePasswordMutation, useGetAllUsersQuery } = authApi

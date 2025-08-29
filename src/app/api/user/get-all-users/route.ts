@@ -6,7 +6,7 @@ export async function GET(request: NextRequest){
 
     try {
 
-        const users = await User.find()
+        const users = await User.find().select('-password')
 
         return NextResponse.json({
             success: true,

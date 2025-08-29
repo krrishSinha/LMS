@@ -131,7 +131,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/users'}>
                                             <IoIosPeople />
                                             <span className="dark:text-zinc-400 " > Users </span>
                                         </Link>
@@ -241,7 +241,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/team'}>
                                             <FaUserGroup />
                                             <span className="dark:text-zinc-400" > Manage Team  </span>
                                         </Link>
