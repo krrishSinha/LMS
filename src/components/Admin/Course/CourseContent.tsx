@@ -7,9 +7,11 @@ import toast from 'react-hot-toast';
 
 
 
-export default function CourseContent({active,setActive,sections, setSections, handleCourseSubmit}:any) {
+export default function CourseContent({ active, setActive, sections, setSections, handleCourseSubmit }: any) {
 
-  const [isReadOnly, setIsReadOnly] = useState(true)
+  // const [isReadOnly, setIsReadOnly] = useState(true)
+
+  console.log(sections)
 
   const [videoOpenStates, setVideoOpenStates] = useState<boolean[][]>(
     sections.map((section: any) => section.videos.map(() => true))
@@ -20,30 +22,38 @@ export default function CourseContent({active,setActive,sections, setSections, h
   };
 
   const handleSectionTitleChange = (index: number, value: string) => {
-    const updatedSections = [...sections];
-    updatedSections[index].sectionTitle = value;
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === index ? { ...section, sectionTitle: value } : section
+    );
     setSections(updatedSections);
   };
 
   const handleDeleteSection = (sectionIndex: number) => {
     const updatedSections = sections.filter((_: any, index: any) => index !== sectionIndex);
-    setSections(updatedSections);
+    setSections(updatedSections); 
 
     const updatedOpenStates = videoOpenStates.filter((_, index) => index !== sectionIndex);
     setVideoOpenStates(updatedOpenStates);
   };
 
   const handleAddVideo = (sectionIndex: number) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].videos.push({
-      title: '',
-      description: '',
-      url: '',
-      links: [{
-        title: '',
-        url: ''
-      }],
-    });
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === sectionIndex
+        ? {
+          ...section,
+          videos: [
+            ...section.videos,
+            {
+              title: "",
+              description: "",
+              videoUrl: "",
+              links: [{ title: "", url: "" }],
+            },
+          ],
+        }
+        : section
+    );
+
     setSections(updatedSections);
 
     const updatedOpenStates = [...videoOpenStates];
@@ -62,33 +72,81 @@ export default function CourseContent({active,setActive,sections, setSections, h
 
 
   const handleVideoChange = (sectionIndex: number, videoIndex: number, field: any, value: string) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].videos[videoIndex][field] = value;
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === sectionIndex
+        ? {
+          ...section,
+          videos: section.videos.map((video: any, j: number) =>
+            j === videoIndex ? { ...video, [field]: value } : video
+          ),
+        }
+        : section
+    );
     setSections(updatedSections);
   };
 
   const handleVideoLinkChange = (sectionIndex: number, videoIndex: number, linkIndex: number, field: 'title' | 'url', value: string) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].videos[videoIndex].links[linkIndex][field] = value;
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === sectionIndex
+        ? {
+          ...section,
+          videos: section.videos.map((video: any, j: number) =>
+            j === videoIndex
+              ? {
+                ...video,
+                links: video.links.map((link: any, k: number) =>
+                  k === linkIndex ? { ...link, [field]: value } : link
+                ),
+              }
+              : video
+          ),
+        }
+        : section
+    );
     setSections(updatedSections);
   };
 
   const handleAddVideoLink = (sectionIndex: number, videoIndex: number) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].videos[videoIndex].links.push({ title: '', url: '' });
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === sectionIndex
+        ? {
+          ...section,
+          videos: section.videos.map((video: any, j: number) =>
+            j === videoIndex
+              ? { ...video, links: [...video.links, { title: "", url: "" }] }
+              : video
+          ),
+        }
+        : section
+    );
     setSections(updatedSections);
   };
 
   const handleDeleteVideoLink = (sectionIndex: number, videoIndex: number, linkIndex: number) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].videos[videoIndex].links =
-      updatedSections[sectionIndex].videos[videoIndex].links.filter((_: any, i: any) => i !== linkIndex);
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === sectionIndex
+        ? {
+          ...section,
+          videos: section.videos.map((video: any, j: number) =>
+            j === videoIndex
+              ? { ...video, links: video.links.filter((_: any, k: number) => k !== linkIndex) }
+              : video
+          ),
+        }
+        : section
+    );
     setSections(updatedSections);
   };
 
   const handleDeleteVideo = (sectionIndex: number, videoIndex: number) => {
-    const updatedSections = [...sections];
-    updatedSections[sectionIndex].videos = updatedSections[sectionIndex].videos.filter((_: any, index: any) => index !== videoIndex);
+    const updatedSections = sections.map((section: any, i: number) =>
+      i === sectionIndex
+        ? {
+          ...section,
+          videos: section.videos.filter((_: any, j: number) => j !== videoIndex),
+        }
+        : section
+    );
     setSections(updatedSections);
 
     const updatedOpenStates = [...videoOpenStates];
@@ -100,7 +158,7 @@ export default function CourseContent({active,setActive,sections, setSections, h
     const hasEmptyField = sections.some((section: any) =>
       !section.sectionTitle.trim() ||
       section.videos.some((video: any) =>
-        !video.title.trim() || !video.description.trim() || !video.url.trim() ||
+        !video.title.trim() || !video.description.trim() || !video.videoUrl.trim() ||
         video.links.some((link: any) => !link.title.trim() || !link.url.trim())
       )
     );
@@ -135,12 +193,11 @@ export default function CourseContent({active,setActive,sections, setSections, h
                 onChange={(e) =>
                   handleSectionTitleChange(sectionIndex, e.target.value)
                 }
-                readOnly={isReadOnly ? true : false}
-                className="border-none text-xl w-fit outline-none "
+                className="border-2 border-slate-300 text-xl w-fit  "
               />
-              <div className='' onClick={() => setIsReadOnly(!isReadOnly)} >
+              {/* <div className='' onClick={() => setIsReadOnly(!isReadOnly)} >
                 <MdEdit size={20} />
-              </div>
+              </div> */}
             </div>
             <div onClick={() => handleDeleteSection(sectionIndex)}>
               <MdDelete size={25} className='text-red-700 cursor-pointer ' />
@@ -190,9 +247,9 @@ export default function CourseContent({active,setActive,sections, setSections, h
                     />
                     <input
                       type="text"
-                      value={video.url}
+                      value={video.videoUrl}
                       onChange={(e) =>
-                        handleVideoChange(sectionIndex, videoIndex, 'url', e.target.value)
+                        handleVideoChange(sectionIndex, videoIndex, 'videoUrl', e.target.value)
                       }
                       className="w-full border px-3 py-2 mb-2"
                       placeholder="Video URL"
@@ -262,7 +319,7 @@ export default function CourseContent({active,setActive,sections, setSections, h
       </button>
 
       <div className='flex justify-between mt-10' >
-        <div className='bg-[#37a39a] p-2 px-16 w-fit rounded-sm cursor-pointer text-white' onClick={()=> setActive(active - 1)}  > Previous </div>
+        <div className='bg-[#37a39a] p-2 px-16 w-fit rounded-sm cursor-pointer text-white' onClick={() => setActive(active - 1)}  > Previous </div>
         <div className='bg-[#37a39a] p-2 px-16 w-fit rounded-sm cursor-pointer text-white' onClick={handleSubmit}  > Next </div>
       </div>
 

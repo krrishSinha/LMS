@@ -1,5 +1,4 @@
 import AdminSidebar from '@/components/Admin/AdminSidebar'
-import CourseOptions from '@/components/Admin/Course/CourseOptions'
 import CreateCourse from '@/components/Admin/Course/CreateCourse'
 import DashboardHeader from '@/components/Admin/DashboardHeader'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'

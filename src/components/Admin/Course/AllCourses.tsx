@@ -7,6 +7,7 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import CustomModal from '@/components/CustomModal';
 import Confirmation from '@/components/Confirmation';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 type Course = {
     id: string
@@ -149,7 +150,11 @@ export default function AllCourses() {
                                 <td className="p-3">{course.ratings}</td>
                                 <td className="p-3">{course.purchased}</td>
                                 <td className="p-3">{course.createdAt}</td>
-                                <td className="p-3  text-center cursor-pointer " onClick={() => console.log(course.id)} > <MdEdit size={20} /> </td>
+                                <td className="p-3  text-center cursor-pointer ">
+                                    <Link href={`/admin/edit-course/${course.id}`} >
+                                        <MdEdit size={20} />
+                                    </Link>
+                                </td>
                                 <td className="p-3 text-center cursor-pointer " onClick={() => deleteCourseTrigger(course.id)}> <MdDelete size={20} className='text-red-500' /> </td>
                             </tr>
                         ))}

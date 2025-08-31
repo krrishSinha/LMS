@@ -1,4 +1,5 @@
-import { Course } from "@/models";
+import { Course, Video } from "@/models";
+import { destroyImageFromCloudinary } from "@/utils/Cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -10,8 +11,8 @@ export async function DELETE(request: NextRequest) {
         const { courseId } = await request.json()
 
         const course = await Course.findById(courseId)
-        
-         if (!courseId) {
+
+        if (!courseId) {
             return NextResponse.json({
                 success: false,
                 message: 'Invalid Request, courseId Required'
@@ -23,15 +24,19 @@ export async function DELETE(request: NextRequest) {
                 success: false,
                 message: 'course not found'
             })
-        }
+        };
 
-        await course.deleteOne()
+        await destroyImageFromCloudinary(course.thumbnail.public_id);   
 
-        const updatedCourse = await Course.find()
+        const videoIds = course.sections.flatMap((section: any) => section.videos);
+
+        // await Video.deleteMany({ _id: videoIds})
+
+        // await course.deleteOne()
 
         return NextResponse.json({
             success: true,
-            updatedCourse
+            message: 'Course Deleted Successfully.'
         })
 
     } catch (error: any) {

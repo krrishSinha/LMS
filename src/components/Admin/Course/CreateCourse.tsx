@@ -32,7 +32,14 @@ export default function CreateCourse() {
   const [sections, setSections]: any = useState([
     {
       sectionTitle: 'Untitled Section',
-      videos: []
+      videos: [
+        {
+          title: "t",
+          description: "t",
+          videoUrl: "rf",
+          links: [{ title: "rf", url: "rf" }],
+        }
+      ]
     }
   ]);
 
@@ -56,7 +63,7 @@ export default function CreateCourse() {
       videos: section.videos.map((video: any) => ({
         title: video.title,
         description: video.description,
-        videoUrl: video.url,
+        videoUrl: video.videoUrl,
         links: video.links.map((link: any) => ({
           title: link.title,
           url: link.url
@@ -102,6 +109,7 @@ export default function CreateCourse() {
         toast.dismiss(toastId.current)
         toastId.current = null
       }
+      console.log(data)
       toast.success('Course Created ✔')
       redirect('/admin/courses')
     }
@@ -120,6 +128,7 @@ export default function CreateCourse() {
 
   const handleCourseCreate = async () => {
     const data = courseData
+    console.log(data)
     await createCourse(data)
   }
 

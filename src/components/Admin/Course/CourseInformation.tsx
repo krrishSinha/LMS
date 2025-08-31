@@ -8,6 +8,8 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0]
 
+    console.log(file)
+
     if (file) {
       const reader = new FileReader()
 
@@ -21,10 +23,6 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
     }
   }
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    setActive(active + 1 )
-  }
 
   const handleDragOver = (e: any) => {
     e.preventDefault()
@@ -36,6 +34,12 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
 
   const handleDrop = (e: any) => {
     e.preventDefault()
+  }
+
+  
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    setActive(active + 1 )
   }
 
   return (
@@ -91,7 +95,7 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
           </div>
 
           <div className='w-full min-h-[30vh]  '  >
-            <input required type="file" accept='image/*' className='hidden' id='file' onChange={handleFileChange} />
+            <input type="file" accept='image/*' className='hidden' id='file' onChange={handleFileChange} />
             <label 
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -99,7 +103,7 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
               htmlFor="file" className='h-full w-full flex items-center justify-center border rounded-sm border-zinc-300 p-2'>
               {
                 courseInfo.thumbnail ? (
-                  <img src={courseInfo.thumbnail} alt="eew" className='h-full w-full object-cover' />
+                  <img src={courseInfo.thumbnail?.url ? courseInfo.thumbnail?.url : courseInfo.thumbnail } alt="eew" className='h-full w-full object-cover' />
                 ) : (
                   <span>Drag and drop your thumbnail or click here to browse</span>
                 )
@@ -108,7 +112,7 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
           </div>
 
           <div className='flex justify-end' >
-            <input type="submit" value="Next" className='bg-[#37a39a] p-2 px-20 w-fit rounded-sm text-white ' />
+            <input type="submit" value="Next" className='bg-[#37a39a] p-2 px-20 w-fit rounded-sm text-white cursor-pointer ' />
           </div>
 
         </form>

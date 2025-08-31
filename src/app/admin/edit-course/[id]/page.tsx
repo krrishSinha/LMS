@@ -1,11 +1,13 @@
 import AdminSidebar from '@/components/Admin/AdminSidebar'
-import AllCourses from '@/components/Admin/Course/AllCourses'
+import EditCourse from '@/components/Admin/Course/EditCourse'
 import DashboardHeader from '@/components/Admin/DashboardHeader'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import AdminProtected from '@/hooks/useAdminProtected'
 import React from 'react'
 
-export default function page() {
+
+export default async function page({ params }: any) {
+    const id = await params.id
     return (
         <>
             <AdminProtected>
@@ -24,7 +26,7 @@ export default function page() {
 
                     <div className='py-10  w-full px-18' >
                         <DashboardHeader />
-                        <AllCourses />
+                        <EditCourse id={id} />
                     </div>
 
                 </div>

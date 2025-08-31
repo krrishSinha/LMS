@@ -7,7 +7,7 @@ export const apiSlice = createApi({
         baseUrl: process.env.NEXT_PUBLIC_SERVER_URI,
     }),
 
-    tagTypes: ['LoadUser', 'getAllUsers', 'getAllCourses'],
+    tagTypes: ['LoadUser', 'getAllUsers', 'getAllCourses', 'getAllCoursesWithData'],
 
     endpoints: (builder) => ({
 
