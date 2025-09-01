@@ -6,12 +6,10 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from 'react-hot-toast';
 import { Provider } from "react-redux";
 import { store } from '../redux/store'
-import { SessionProvider } from "next-auth/react"
+// import { SessionProvider } from "next-auth/react"
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import React from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import AdminSidebar from "@/components/Admin/AdminSidebar"
-import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
+import { PrimeReactProvider} from 'primereact/api';
 
 // export const metadata: Metadata = {
 //   title: "ELearning",
@@ -28,7 +26,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning  >
       <body className={`  font-poppins  bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black`}>
         <Provider store={store}>
-          <SessionProvider>
+          {/* <SessionProvider> */}
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
               <Toaster />
               <PrimeReactProvider>
@@ -37,7 +35,7 @@ export default function RootLayout({
                 </Custom>
               </PrimeReactProvider>
             </ThemeProvider>
-          </SessionProvider>
+          {/* </SessionProvider> */}
         </Provider>
       </body>
     </html>

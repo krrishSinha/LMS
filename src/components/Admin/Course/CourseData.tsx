@@ -8,7 +8,7 @@ function CourseData({ active, setActive, benefits, setBenefits, prerequisites, s
 
   const handleBenefitChange = (index: number, value: any) => {
     const updatedBenefits = [...benefits];
-    updatedBenefits[index].title = value;
+    updatedBenefits[index] = {...updatedBenefits[index], title: value}
     setBenefits(updatedBenefits);
   };
 
@@ -19,7 +19,7 @@ function CourseData({ active, setActive, benefits, setBenefits, prerequisites, s
 
   const handlePrerequisitesChange = (index: any, value: any) => {
     const updatedPrerequisites = [...prerequisites];
-    updatedPrerequisites[index].title = value
+    updatedPrerequisites[index] = {...updatedPrerequisites[index], title: value}
     setPrerequisites(updatedPrerequisites)
   }
 

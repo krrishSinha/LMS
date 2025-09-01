@@ -1,5 +1,4 @@
 import connectDB from "@/db/dbConfig";
-import { Video } from "@/models";
 import { Course } from "@/models/course.model";
 import { destroyImageFromCloudinary, uploadToCloudinary } from "@/utils/Cloudinary";
 import { NextRequest, NextResponse } from "next/server";
@@ -23,62 +22,40 @@ export async function POST(request: NextRequest) {
             })
         };
 
-        // Process sections & videos
-        if (data.sections) {
-            for (let section of data.sections) {
-                if (section.videos && section.videos.length > 0) {
-                    const videoIds = [];
+        if (!data.thumbnail.public_id) {
 
-                    for (let vid of section.videos) {
-                        // ✅ Update existing video
-                        const updated = await Video.findById(existingCourse)
-                        videoIds.push(updated._id);
-                        // ✅ Create new video
-                        const created = await Video.create(vid);
-                        videoIds.push(created._id);
-                    }
-                }
+            const thumbnail = data.thumbnail
 
-                // Replace videos array with their ObjectIds
-                section.videos = videoIds;
-            }
-        }
-    };
+            await destroyImageFromCloudinary(existingCourse.thumbnail.public_id)
 
-    if (!data.thumbnail.public_id) {
+            const ImageResult: any = await uploadToCloudinary(thumbnail, 'courses')
 
-        const thumbnail = data.thumbnail
+            data.thumbnail = {
+                public_id: ImageResult.public_id,
+                url: ImageResult.url
+            };
 
-        await destroyImageFromCloudinary(existingCourse.thumbnail.public_id)
-
-        const ImageResult: any = await uploadToCloudinary(thumbnail, 'courses')
-
-        data.thumbnail = {
-            public_id: ImageResult.public_id,
-            url: ImageResult.url
         };
 
-    };
+        const updatedCourse = await Course.findByIdAndUpdate(
+            courseId,
+            { $set: data },
+            { new: true }
+        )
 
-    const updatedCourse = await Course.findByIdAndUpdate(
-        courseId,
-        { $set: data },
-        { new: true }
-    )
-
-    return NextResponse.json({
-        success: true,
-        message: 'Course Updated Successfully',
-        updatedCourse
-    })
+        return NextResponse.json({
+            success: true,
+            message: 'Course Updated Successfully',
+            updatedCourse
+        })
 
 
 
-} catch (error: any) {
-    console.log('error in edit course');
-    return NextResponse.json({
-        success: false,
-        message: error.message
-    })
-}
+    } catch (error: any) {
+        console.log('error in edit course');
+        return NextResponse.json({
+            success: false,
+            message: error.message
+        })
+    }
 }

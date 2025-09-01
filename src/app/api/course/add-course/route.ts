@@ -1,6 +1,5 @@
 import connectDB from "@/db/dbConfig";
 import redis from "@/db/redis";
-import { Video } from "@/models";
 import { Course } from "@/models/course.model";
 import { uploadToCloudinary } from "@/utils/Cloudinary";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,22 +21,6 @@ export async function POST(request: NextRequest) {
             public_id: ImageResult.public_id,
             url: ImageResult.url
         };
-
-        let updatedSection = []
-
-        for (const section of data?.sections) {
-            // insert all videos of this section in one go
-            const createdVideos = await Video.insertMany(section.videos);
-
-            const videoIds = createdVideos.map((video) => video._id);
-
-            updatedSection.push({
-                title: section.title,
-                videos: videoIds
-            })
-        };
-
-        data.sections = updatedSection;
 
         const course = await Course.create(data)
 

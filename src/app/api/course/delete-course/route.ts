@@ -1,5 +1,5 @@
 import connectDB from "@/db/dbConfig";
-import { Course, Video } from "@/models";
+import { Course} from "@/models";
 import { destroyImageFromCloudinary } from "@/utils/Cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,11 +29,7 @@ export async function DELETE(request: NextRequest) {
             })
         };
 
-        await destroyImageFromCloudinary(course.thumbnail.public_id);   
-
-        const videoIds = course.sections.flatMap((section: any) => section.videos);
-
-        await Video.deleteMany({ _id: videoIds})
+        await destroyImageFromCloudinary(course.thumbnail.public_id);
 
         await course.deleteOne()
 

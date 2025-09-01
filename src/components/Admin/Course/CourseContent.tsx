@@ -16,12 +16,12 @@ export default function CourseContent({ active, setActive, sections, setSections
   );
 
   const handleAddSection = () => {
-    setSections([...sections, { sectionTitle: 'Untitled Section', videos: [] }]);
+    setSections([...sections, { title: 'Untitled Section', videos: [] }]);
   };
 
   const handleSectionTitleChange = (index: number, value: string) => {
     const updatedSections = sections.map((section: any, i: number) =>
-      i === index ? { ...section, sectionTitle: value } : section
+      i === index ? { ...section, title: value } : section
     );
     setSections(updatedSections);
   };
@@ -154,7 +154,7 @@ export default function CourseContent({ active, setActive, sections, setSections
 
   const isCourseContentValid = () => {
     const hasEmptyField = sections.some((section: any) =>
-      !section.sectionTitle.trim() ||
+      !section.title.trim() ||
       section.videos.some((video: any) =>
         !video.title.trim() || !video.description.trim() || !video.videoUrl.trim() ||
         video.links.some((link: any) => !link.title.trim() || !link.url.trim())
@@ -187,7 +187,7 @@ export default function CourseContent({ active, setActive, sections, setSections
             <div className='flex items-center' >
               <input
                 type="text"
-                value={section.sectionTitle}
+                value={section.title}
                 onChange={(e) =>
                   handleSectionTitleChange(sectionIndex, e.target.value)
                 }

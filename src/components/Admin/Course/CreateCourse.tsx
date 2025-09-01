@@ -19,11 +19,11 @@ export default function CreateCourse() {
     description: "",
     price: "",
     estimatedPrice: "",
+    categories: "",
+    thumbnail: "",
     tags: "",
     level: "",
-    categories: "",
     demoUrl: "",
-    thumbnail: "",
   });
 
   const [benefits, setBenefits] = useState([{ title: "" }]);
@@ -31,7 +31,7 @@ export default function CreateCourse() {
 
   const [sections, setSections]: any = useState([
     {
-      sectionTitle: 'Untitled Section',
+      title: 'Untitled Section',
       videos: [
         {
           title: "",
@@ -47,19 +47,9 @@ export default function CreateCourse() {
 
   const handleCourseSubmit = () => {
 
-    // format= benefits array
-    const formatedBenefits = benefits.map((benefit) => ({
-      title: benefit.title
-    }));
-
-    // format prerequisites array
-    const formatedPrerequisites = prerequisites.map((prerequisite) => ({
-      title: prerequisite.title
-    }));
-
     // format sections array 
     const formatedSections = sections.map((section: any) => ({
-      title: section.sectionTitle,
+      title: section.title,
       videos: section.videos.map((video: any) => ({
         title: video.title,
         description: video.description,
@@ -85,8 +75,8 @@ export default function CreateCourse() {
       tags: courseInfo.tags,
       level: courseInfo.level,
       demoUrl: courseInfo.demoUrl,
-      benefits: formatedBenefits,
-      prerequisites: formatedPrerequisites,
+      benefits,
+      prerequisites,
       sections: formatedSections,
     }
 

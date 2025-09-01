@@ -20,11 +20,11 @@ export default function EditCourse({ id }: any) {
         description: "",
         price: "",
         estimatedPrice: "",
+        categories: "",
+        thumbnail: "",
         tags: "",
         level: "",
-        categories: "",
         demoUrl: "",
-        thumbnail: "",
     });
 
     const [benefits, setBenefits] = useState([{ title: "" }]);
@@ -32,7 +32,7 @@ export default function EditCourse({ id }: any) {
 
     const [sections, setSections]: any = useState([
         {
-            sectionTitle: 'Untitled Section',
+            title: 'Untitled Section',
             videos: [
                 {
                     title: "",
@@ -42,25 +42,15 @@ export default function EditCourse({ id }: any) {
                 }
             ]
         }
-    ]);
+    ])
 
     const [courseData, setCourseData] = useState();
 
     const handleCourseSubmit = () => {
 
-        // format= benefits array
-        const formatedBenefits = benefits.map((benefit) => ({
-            title: benefit.title
-        }));
-
-        // format prerequisites array
-        const formatedPrerequisites = prerequisites.map((prerequisite) => ({
-            title: prerequisite.title
-        }));
-
         // format sections array 
         const formatedSections = sections.map((section: any) => ({
-            title: section.sectionTitle,
+            title: section.title,
             videos: section.videos.map((video: any) => ({
                 title: video.title,
                 description: video.description,
@@ -86,15 +76,14 @@ export default function EditCourse({ id }: any) {
             tags: courseInfo.tags,
             level: courseInfo.level,
             demoUrl: courseInfo.demoUrl,
-            benefits: formatedBenefits,
-            prerequisites: formatedPrerequisites,
+            benefits,
+            prerequisites,
             sections: formatedSections,
         }
 
         setCourseData(data)
         setActive(active + 1);
-
-    }
+    };
 
     const toastId: any = useRef(null); // store toast id
 
@@ -134,7 +123,7 @@ export default function EditCourse({ id }: any) {
             setPrerequisites(selectedCourse[0].prerequisites)
 
             const mappedSection = selectedCourse[0].sections.map((section: any) => ({
-                sectionTitle: section.title,
+                title: section.title,
                 videos: section.videos.map((video: any) => ({
                     title: video.title,
                     description: video.description,
@@ -145,8 +134,6 @@ export default function EditCourse({ id }: any) {
                     }))
                 }))
             }))
-
-            console.log(mappedSection)
 
             setSections(mappedSection)
         }

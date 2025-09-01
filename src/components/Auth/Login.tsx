@@ -130,10 +130,10 @@ export default function Login({ setRoute, setOpen }: any) {
                     <input type="submit" className={`${styles.button}`} value='Login' />
                     <p className="text-center mt-2" >Or join with</p>
 
-                    <div className="flex justify-center gap-3" >
+                    {/* <div className="flex justify-center gap-3" >
                         <FcGoogle size={25} onClick={() => signIn('google')} className="cursor-pointer" />
                         <AiFillGithub size={25} className="cursor-pointer" />
-                    </div>
+                    </div> */}
 
                     <p className="flex justify-center gap-1" >
                         Not have any account?

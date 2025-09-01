@@ -27,10 +27,10 @@ const videoSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     videoUrl: { type: String, required: true },
+    links: [linkSchema],
     videoThumbnail: { type: Object },
     videoLength: { type: Number },
     videoPlayer: { type: String, },
-    links: [linkSchema],
     suggestions: { type: String, },
     comments: [commentSchema],
 });
