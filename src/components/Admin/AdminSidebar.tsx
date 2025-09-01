@@ -197,7 +197,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/hero'}>
                                             <MdOutlineFeaturedVideo />
                                             <span className="dark:text-zinc-400" > Hero  </span>
                                         </Link>

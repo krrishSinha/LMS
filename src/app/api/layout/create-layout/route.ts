@@ -1,3 +1,4 @@
+import connectDB from "@/db/dbConfig";
 import { Layout } from "@/models";
 import { uploadToCloudinary } from "@/utils/Cloudinary";
 import { NextRequest, NextResponse } from "next/server";
@@ -5,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function POST(request: NextRequest) {
+
+    await connectDB()
 
     try {
 
@@ -19,15 +22,15 @@ export async function POST(request: NextRequest) {
             })
         };
 
-        if (type == 'Banner') {
-            // const imageResult: any = await uploadToCloudinary(bannerData.image, 'Layout')
+        if (type == 'banner') {
+            const imageResult: any = await uploadToCloudinary(bannerData.image, 'Layout')
 
             const banner = await Layout.create({
                 type,
                 banner: {
                     image: {
-                        public_id: bannerData.image.public_id,
-                        url: bannerData.image.url
+                        public_id: imageResult?.public_id,
+                        url: imageResult?.url
                     },
                     title: bannerData.title,
                     description: bannerData.description
@@ -55,7 +58,7 @@ export async function POST(request: NextRequest) {
             })
         };
 
-        if (type == 'Categories') {
+        if (type == 'categories') {
 
             const categories = await Layout.create({
                 type,

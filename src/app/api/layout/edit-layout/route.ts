@@ -22,28 +22,43 @@ export async function PUT(request: NextRequest) {
             })
         };
 
-        if (type == 'Banner') {
+        if (type == 'banner') {
 
-            // delete previous banner image from cloudinary
-            // const deletedImageResult  = await destroyImageFromCloudinary(layout.image.public_id)
+            let imageData = layout.banner.image;
 
-            // upload new banner image into cloudinary 
-            // const imageResult: any = await uploadToCloudinary(bannerData.image, 'Layout')
+            if (!bannerData.image.startsWith('http')) {
 
-            layout.banner.image = {
-                public_id: bannerData.image.public_id,
-                url: bannerData.image.url
-            }
+                // delete previous banner image from cloudinary
+                await destroyImageFromCloudinary(layout.banner.image.public_id)
 
-            layout.banner.title = bannerData.title,
-                layout.banner.description = bannerData.description
+                // upload new banner image into cloudinary 
+                const imageResult: any = await uploadToCloudinary(bannerData.image, 'Layout')
 
-            await layout.save()
+                imageData = {
+                    public_id: imageResult.public_id,
+                    url: imageResult.url
+                }
+
+            };
+
+            const updatedBanner = await Layout.findByIdAndUpdate(
+                layout._id,
+                {
+                    $set: {
+                        banner: {
+                            image: imageData,
+                            title: bannerData.title,
+                            description: bannerData.description
+                        }
+                    }
+                },
+                { new: true }
+            )
 
             return NextResponse.json({
                 success: true,
                 message: `${type} is updated `,
-                layout
+                updatedBanner
             })
 
         };
@@ -60,7 +75,7 @@ export async function PUT(request: NextRequest) {
             })
         };
 
-        if (type == 'Categories') {
+        if (type == 'categories') {
 
             layout.categories = categoriesData
             await layout.save()
@@ -73,7 +88,7 @@ export async function PUT(request: NextRequest) {
         }
 
     } catch (error: any) {
-        console.log('error in creating layout');
+        // console.log(error);
         return NextResponse.json({
             success: false,
             message: error

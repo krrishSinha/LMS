@@ -25,7 +25,7 @@ export default function Login({ setRoute, setOpen }: any) {
     const { user } = useSelector((state: any) => state.auth)
     const toastId: any = useRef(null); // store toast id
 
-    const { data: session }: any = useSession()
+    // const { data: session }: any = useSession()
 
     //login
     useEffect(() => {
@@ -55,27 +55,27 @@ export default function Login({ setRoute, setOpen }: any) {
     }, [isSuccess, error, isLoading])
 
     // google login 
-    useEffect(() => {
-        const socialLoginHandler = async () => {
-            if (!user) {
-                if (session) {
-                    await socialLogin({
-                        email: session?.user?.email,
-                        name: session?.user?.name,
-                        avatar: session?.avatar?.avatar || ''
-                    })
-                    if (socialIsSuccess) {
-                        toast.success('Login Successfull')
-                    }
-                }
-            }
+    // useEffect(() => {
+    //     const socialLoginHandler = async () => {
+    //         if (!user) {
+    //             if (session) {
+    //                 await socialLogin({
+    //                     email: session?.user?.email,
+    //                     name: session?.user?.name,
+    //                     avatar: session?.avatar?.avatar || ''
+    //                 })
+    //                 if (socialIsSuccess) {
+    //                     toast.success('Login Successfull')
+    //                 }
+    //             }
+    //         }
 
-            if (socialError) {
-                toast.error('Error')
-            }
-        }
-        socialLoginHandler()
-    }, [user, session])
+    //         if (socialError) {
+    //             toast.error('Error')
+    //         }
+    //     }
+    //     socialLoginHandler()
+    // }, [user, session])
 
     const formik = useFormik({
         initialValues: { email: '', password: '' },
