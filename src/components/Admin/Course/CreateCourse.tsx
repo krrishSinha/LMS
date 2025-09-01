@@ -34,10 +34,10 @@ export default function CreateCourse() {
       sectionTitle: 'Untitled Section',
       videos: [
         {
-          title: "t",
-          description: "t",
-          videoUrl: "rf",
-          links: [{ title: "rf", url: "rf" }],
+          title: "",
+          description: "",
+          videoUrl: "",
+          links: [{ title: "", url: "" }],
         }
       ]
     }

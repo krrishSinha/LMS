@@ -1,3 +1,4 @@
+import connectDB from "@/db/dbConfig";
 import { Course, Video } from "@/models";
 import { destroyImageFromCloudinary } from "@/utils/Cloudinary";
 import { NextRequest, NextResponse } from "next/server";
@@ -5,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function DELETE(request: NextRequest) {
+
+    await connectDB()
 
     try {
 
@@ -30,9 +33,9 @@ export async function DELETE(request: NextRequest) {
 
         const videoIds = course.sections.flatMap((section: any) => section.videos);
 
-        // await Video.deleteMany({ _id: videoIds})
+        await Video.deleteMany({ _id: videoIds})
 
-        // await course.deleteOne()
+        await course.deleteOne()
 
         return NextResponse.json({
             success: true,

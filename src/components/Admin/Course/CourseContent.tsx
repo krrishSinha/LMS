@@ -11,8 +11,6 @@ export default function CourseContent({ active, setActive, sections, setSections
 
   // const [isReadOnly, setIsReadOnly] = useState(true)
 
-  console.log(sections)
-
   const [videoOpenStates, setVideoOpenStates] = useState<boolean[][]>(
     sections.map((section: any) => section.videos.map(() => true))
   );

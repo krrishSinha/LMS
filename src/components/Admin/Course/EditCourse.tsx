@@ -15,7 +15,7 @@ export default function EditCourse({ id }: any) {
 
     const [active, setActive] = useState(0)
 
-    const [courseInfo, setCourseInfo]:any = useState({
+    const [courseInfo, setCourseInfo]: any = useState({
         title: "",
         description: "",
         price: "",
@@ -33,7 +33,14 @@ export default function EditCourse({ id }: any) {
     const [sections, setSections]: any = useState([
         {
             sectionTitle: 'Untitled Section',
-            videos: []
+            videos: [
+                {
+                    title: "",
+                    description: "",
+                    videoUrl: "",
+                    links: [{ title: "", url: "" }],
+                }
+            ]
         }
     ]);
 
@@ -53,7 +60,7 @@ export default function EditCourse({ id }: any) {
 
         // format sections array 
         const formatedSections = sections.map((section: any) => ({
-            title: section.title,
+            title: section.sectionTitle,
             videos: section.videos.map((video: any) => ({
                 title: video.title,
                 description: video.description,
@@ -126,7 +133,22 @@ export default function EditCourse({ id }: any) {
 
             setPrerequisites(selectedCourse[0].prerequisites)
 
-            setSections(selectedCourse[0].sections)
+            const mappedSection = selectedCourse[0].sections.map((section: any) => ({
+                sectionTitle: section.title,
+                videos: section.videos.map((video: any) => ({
+                    title: video.title,
+                    description: video.description,
+                    videoUrl: video.videoUrl,
+                    links: video.links.map((link: any) => ({
+                        title: link.title,
+                        url: link.url
+                    }))
+                }))
+            }))
+
+            console.log(mappedSection)
+
+            setSections(mappedSection)
         }
 
         if (error) {
@@ -171,7 +193,7 @@ export default function EditCourse({ id }: any) {
     const handleCourseCreate = async () => {
         const data = courseData
         console.log(data)
-        await updateCourse({ data, courseId:id })
+        await updateCourse({ data, courseId: id })
     }
 
     return (
