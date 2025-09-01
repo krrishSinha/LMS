@@ -1,6 +1,6 @@
 'use client'
 
-import { useEditLayoutMutation, useGetHeroLayoutQuery } from '@/redux/features/layout/layoutApi'
+import { useEditLayoutMutation, useGetLayoutByTypeQuery } from '@/redux/features/layout/layoutApi'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 
 export default function Hero() {
 
-    const { data, isSuccess, isLoading, refetch }: any = useGetHeroLayoutQuery('banner', { refetchOnMountOrArgChange: true })
+    const { data, isSuccess, isLoading, refetch }: any = useGetLayoutByTypeQuery('banner', { refetchOnMountOrArgChange: true })
     const [editLayout, { data: editLayoutData, isSuccess: editLayoutIsSuccess, isLoading: editLayoutIsLoading, error }] = useEditLayoutMutation({})
 
     const [title, setTitle] = useState('')

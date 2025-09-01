@@ -208,7 +208,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/faqs'}>
                                             <FaClipboardQuestion />
                                             <span className="dark:text-zinc-400"> FAQ</span>
                                         </Link>

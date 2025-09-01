@@ -5,7 +5,7 @@ export const layoutApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
 
         //endpoints 
-        getHeroLayout: builder.query({
+        getLayoutByType: builder.query({
             query: (type) => ({
                 url: `/layout/get-layout-by-type/${type}`,
                 method: 'GET',
@@ -26,4 +26,4 @@ export const layoutApi = apiSlice.injectEndpoints({
 });
 
 
-export const { useGetHeroLayoutQuery, useEditLayoutMutation } = layoutApi
+export const { useGetLayoutByTypeQuery, useEditLayoutMutation } = layoutApi
