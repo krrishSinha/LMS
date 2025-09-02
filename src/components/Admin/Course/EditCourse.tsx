@@ -71,7 +71,7 @@ export default function EditCourse({ id }: any) {
             description: courseInfo.description,
             price: courseInfo.price,
             estimatedPrice: courseInfo.estimatedPrice,
-            categories: courseInfo.categories,
+            category: courseInfo.category,
             thumbnail: courseInfo.thumbnail,
             tags: courseInfo.tags,
             level: courseInfo.level,
@@ -110,7 +110,7 @@ export default function EditCourse({ id }: any) {
                 estimatedPrice: selectedCourse[0].estimatedPrice,
                 tags: selectedCourse[0].tags,
                 level: selectedCourse[0].level,
-                categories: selectedCourse[0].categories,
+                category: selectedCourse[0].category,
                 demoUrl: selectedCourse[0].demoUrl,
                 thumbnail: {
                     public_id: selectedCourse[0].thumbnail?.public_id,

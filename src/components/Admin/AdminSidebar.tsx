@@ -263,7 +263,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/course-analytics'}>
                                             <SiSimpleanalytics />
                                             <span className="dark:text-zinc-400" > Courses Analytics  </span>
                                         </Link>
@@ -274,9 +274,9 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/enrollment-analytics'}>
                                             <SiSimpleanalytics />
-                                            <span className="dark:text-zinc-400" > Orders Analytics  </span>
+                                            <span className="dark:text-zinc-400" > Enrollments Analytics  </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -285,7 +285,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/users-analytics'}>
                                             <SiSimpleanalytics />
                                             <span className="dark:text-zinc-400" > Users Analytics  </span>
                                         </Link>

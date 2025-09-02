@@ -1,14 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles'
+import { useGetLayoutByTypeQuery } from '@/redux/features/layout/layoutApi'
 
 function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any) {
 
   const [dragging, setDragging] = useState(false)
+  const { data: categoriesData, isSuccess: categoriesIsSuccess, isLoading: categoriesIsLoading } = useGetLayoutByTypeQuery('categories')
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+
+    if (categoriesData) {
+      setCategories(categoriesData.layout.categories)
+    }
+
+  }, [categoriesData])
 
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0]
-
-    console.log(file)
 
     if (file) {
       const reader = new FileReader()
@@ -36,10 +45,10 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
     e.preventDefault()
   }
 
-  
+
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    setActive(active + 1 )
+    setActive(active + 1)
   }
 
   return (
@@ -62,7 +71,7 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
 
           <div className='flex justify-between gap-10 ' >
             <div className='flex flex-col gap-2 w-full ' >
-              <label  htmlFor="price">Course Price</label>
+              <label htmlFor="price">Course Price</label>
               <input required value={courseInfo.price} onChange={(e) => setCourseInfo({ ...courseInfo, price: e.target.value })}
                 type="number" id='price' placeholder='199' className={styles.input} />
             </div>
@@ -74,10 +83,31 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
             </div>
           </div>
 
-          <div className='flex flex-col gap-2' >
-            <label htmlFor="tags">Course Tags</label>
-            <input required value={courseInfo.tags} onChange={(e) => setCourseInfo({ ...courseInfo, tags: e.target.value })}
-              id='tags' placeholder='MERN,React,Next,Full Stack' className={styles.input} />
+          <div className='flex justify-between gap-10 ' >
+            <div className='flex flex-col gap-2 w-full' >
+              <label htmlFor="tags">Course Tags</label>
+              <input required value={courseInfo.tags} onChange={(e) => setCourseInfo({ ...courseInfo, tags: e.target.value })}
+                id='tags' placeholder='MERN,React,Next,Full Stack' className={styles.input} />
+            </div>
+
+            <div className='flex flex-col gap-2 w-full' >
+              <label htmlFor="tags">Course Category</label>
+
+              <select
+                id="category"
+                value={courseInfo.category}
+                onChange={(e: any) => setCourseInfo({ ...courseInfo, category: e.target.value })}
+                className="w-full border border-gray-300 rounded-md p-2  focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                <option value="" className='bg-[#000] text-[#fff]' >-- Choose Category --</option>
+                {categories.map((cat: any) => (
+                  <option key={cat._id} value={cat.title} className='bg-[#000] text-[#fff] ' >
+                    {cat.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
           </div>
 
           <div className='flex justify-between gap-10 ' >
@@ -96,14 +126,14 @@ function CourseInformation({ active, setActive, courseInfo, setCourseInfo }: any
 
           <div className='w-full min-h-[30vh]  '  >
             <input type="file" accept='image/*' className='hidden' id='file' onChange={handleFileChange} />
-            <label 
+            <label
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               htmlFor="file" className='h-full w-full flex items-center justify-center border rounded-sm border-zinc-300 p-2'>
               {
                 courseInfo.thumbnail ? (
-                  <img src={courseInfo.thumbnail?.url ? courseInfo.thumbnail?.url : courseInfo.thumbnail } alt="eew" className='h-full w-full object-cover' />
+                  <img src={courseInfo.thumbnail?.url ? courseInfo.thumbnail?.url : courseInfo.thumbnail} alt="eew" className='h-full w-full object-cover' />
                 ) : (
                   <span>Drag and drop your thumbnail or click here to browse</span>
                 )

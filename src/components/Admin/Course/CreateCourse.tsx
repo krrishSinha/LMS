@@ -19,7 +19,7 @@ export default function CreateCourse() {
     description: "",
     price: "",
     estimatedPrice: "",
-    categories: "",
+    category: "",
     thumbnail: "",
     tags: "",
     level: "",
@@ -70,7 +70,7 @@ export default function CreateCourse() {
       description: courseInfo.description,
       price: courseInfo.price,
       estimatedPrice: courseInfo.estimatedPrice,
-      categories: courseInfo.categories,
+      category: courseInfo.category,
       thumbnail: courseInfo.thumbnail,
       tags: courseInfo.tags,
       level: courseInfo.level,
@@ -87,6 +87,7 @@ export default function CreateCourse() {
 
   const toastId: any = useRef(null); // store toast id
 
+
   useEffect(() => {
 
     if (isLoading) {
@@ -99,7 +100,6 @@ export default function CreateCourse() {
         toast.dismiss(toastId.current)
         toastId.current = null
       }
-      console.log(data)
       toast.success('Course Created ✔')
       redirect('/admin/courses')
     }
@@ -111,7 +111,7 @@ export default function CreateCourse() {
       }
       const errorData = error as any
       toast.error(errorData.data.message)
-    }
+    };
 
   }, [isLoading, isSuccess, error, data])
 
