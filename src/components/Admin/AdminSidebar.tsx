@@ -219,7 +219,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/categories'}>
                                             <TbCategoryFilled />
                                             <span className="dark:text-zinc-400"> Categories</span>
                                         </Link>

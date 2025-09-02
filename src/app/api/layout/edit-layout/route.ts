@@ -65,25 +65,48 @@ export async function PUT(request: NextRequest) {
 
         if (type == 'faqs') {
 
-            layout.faqs = faqData
-            await layout.save()
+            const cleanFaqs = faqData.map((faq: any) => ({
+                question: faq.question,
+                answer: faq.answer
+            }));
+
+            const updatedFaqs = await Layout.findByIdAndUpdate(
+                layout._id,
+                {
+                    $set: {
+                        faqs: cleanFaqs
+                    }
+                },
+                { new: true }
+            );
 
             return NextResponse.json({
                 success: true,
                 message: `${type} is updated`,
-                layout
+                updatedFaqs
             })
         };
 
         if (type == 'categories') {
 
-            layout.categories = categoriesData
-            await layout.save()
+            const cleanCategories = categoriesData.map((category: any) => ({
+                title: category.title,
+            }));
+
+            const updatedCategories = await Layout.findByIdAndUpdate(
+                layout._id,
+                {
+                    $set: {
+                        categories: cleanCategories
+                    }
+                },
+                { new: true }
+            )
 
             return NextResponse.json({
                 success: true,
                 message: `${type} is updated`,
-                layout
+                updatedCategories
             })
         }
 
