@@ -17,37 +17,53 @@ export default function UsersAnalytics() {
 
     const { data: usersAnalyticsData, isLoading } = useGetUsersAnalyticsQuery({})
 
-    const [data, setData] = useState([]);
+    const [data, setData]: any = useState([]);
 
     useEffect(() => {
 
         if (usersAnalyticsData) {
-            setData(usersAnalyticsData.data)
+
+            const formatedData = usersAnalyticsData.data.map((user: any) => ({
+                month: user.month,
+                users: user.count
+            }))
+
+            setData(formatedData)
         }
 
-    }, [usersAnalyticsData])
+    }, [usersAnalyticsData, isLoading])
 
-    console.log(data)
+    // sample data 
+    // const userData = [
+    //     { month: "Sep 2023", users: 120 },
+    //     { month: "Oct 2023", users: 200 },
+    //     { month: "Nov 2023", users: 150 },
+    //     { month: "Dec 2023", users: 180 },
+    //     { month: "Jan 2024", users: 220 },
+    //     { month: "Feb 2024", users: 170 },
+    //     { month: "Mar 2024", users: 260 },
+    //     { month: "Apr 2024", users: 300 },
+    //     { month: "May 2024", users: 250 },
+    //     { month: "Jun 2024", users: 320 },
+    //     { month: "Jul 2024", users: 280 },
+    //     { month: "Aug 2024", users: 350 },
+    // ];
 
-    const userData = [
-        { month: "Sep 2023", users: 120 },
-        { month: "Oct 2023", users: 200 },
-        { month: "Nov 2023", users: 150 },
-        { month: "Dec 2023", users: 180 },
-        { month: "Jan 2024", users: 220 },
-        { month: "Feb 2024", users: 170 },
-        { month: "Mar 2024", users: 260 },
-        { month: "Apr 2024", users: 300 },
-        { month: "May 2024", users: 250 },
-        { month: "Jun 2024", users: 320 },
-        { month: "Jul 2024", users: 280 },
-        { month: "Aug 2024", users: 350 },
-    ];
+    let totalUsers = 0;
+    let highest = { month: "-", users: 0 };
+    let lowest = { month: "-", users: 0 };
 
-    const totalUsers = userData.reduce((acc, item) => acc + item.users, 0);
-    const highest = userData.reduce((a, b) => (a.users > b.users ? a : b));
-    const lowest = userData.reduce((a, b) => (a.users < b.users ? a : b));
+    if (data.length > 0) {
+        totalUsers = data.reduce((acc: number, item: any) => acc + item.users, 0);
+        highest = data.reduce((a: any, b: any) => (a.users > b.users ? a : b));
+        lowest = data.reduce((a: any, b: any) => (a.users < b.users ? a : b));
+    }
 
+    if (isLoading) {
+        return (
+            <div>loading...</div>
+        )
+    }
 
     return (
         <div>
@@ -57,7 +73,7 @@ export default function UsersAnalytics() {
 
                 <div className="h-96" >
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={userData}>
+                        <AreaChart data={data}>
                             <defs>
                                 <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />

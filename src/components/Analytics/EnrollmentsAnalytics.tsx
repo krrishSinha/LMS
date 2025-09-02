@@ -15,20 +15,23 @@ import {
 
 export default function EnrollmentsAnalytics() {
 
-    const { data: enrollmentsAnalyticsData, isLoading } = useGetEnrollmentsAnalyticsQuery({})
+    const { data: enrollmentsAnalyticsData, isLoading }: any = useGetEnrollmentsAnalyticsQuery({})
 
-    const [data, setData] = useState([]);
+    const [data, setData]: any = useState([])
 
     useEffect(() => {
 
         if (enrollmentsAnalyticsData) {
-            setData(enrollmentsAnalyticsData.data)
+            const formatedData = enrollmentsAnalyticsData.data.map((enrollment: any) => ({
+                month: enrollment.month,
+                enrollments: enrollment.count
+            }))
+            setData(formatedData)
         }
 
     }, [enrollmentsAnalyticsData])
 
-    console.log(data)
-
+    // sample data 
     const enrollmentData = [
         { month: "Sep 2023", enrollments: 80 },
         { month: "Oct 2023", enrollments: 120 },
@@ -44,10 +47,22 @@ export default function EnrollmentsAnalytics() {
         { month: "Aug 2024", enrollments: 180 },
     ];
 
-    const totalEnrollments = enrollmentData.reduce((acc, item) => acc + item.enrollments, 0);
-    const highest = enrollmentData.reduce((a, b) => a.enrollments > b.enrollments ? a : b);
-    const lowest = enrollmentData.reduce((a, b) => a.enrollments < b.enrollments ? a : b);
 
+    let totalEnrollments = 0;
+    let highest = { month: "-", enrollments: 0 };
+    let lowest = { month: "-", enrollments: 0 };
+
+    if (data.length > 0) {
+        totalEnrollments = data.reduce((acc: number, item: any) => acc + item.enrollments, 0);
+        highest = data.reduce((a: any, b: any) => (a.enrollments > b.enrollments ? a : b));
+        lowest = data.reduce((a: any, b: any) => (a.enrollments < b.enrollments ? a : b));
+    }
+
+    if (isLoading) {
+        return (
+            <div>loading...</div>
+        )
+    }
 
     return (
         <div>
@@ -57,7 +72,7 @@ export default function EnrollmentsAnalytics() {
 
                 <div className="h-96" >
                     <ResponsiveContainer width="100%" height="90%">
-                        <BarChart data={enrollmentData}>
+                        <BarChart data={data}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                             <XAxis dataKey="month" />
                             <YAxis />
@@ -66,7 +81,7 @@ export default function EnrollmentsAnalytics() {
                                 dataKey="enrollments"
                                 fill="#6366f1"
                                 radius={[6, 6, 0, 0]}
-                                barSize={50}
+                                barSize={30}
                             />
                         </BarChart>
                     </ResponsiveContainer>

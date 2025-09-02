@@ -9,37 +9,50 @@ export default function CourseAnalytics() {
 
     const { data: courseAnalyticsData, isLoading } = useGetCoursesAnalyticsQuery({})
 
-    const [data, setData] = useState([]);
+    const [data, setData]: any = useState([]);
 
     useEffect(() => {
 
         if (courseAnalyticsData) {
-            setData(courseAnalyticsData.data)
+            const formatedData = courseAnalyticsData.data.map((course: any) => ({
+                month: course.month,
+                courses: course.count
+            }))
+            setData(formatedData)
         }
 
     }, [courseAnalyticsData])
 
-    console.log(data)
+    // const sampleData = [
+    //     { month: "Sep 2023", courses: 3 },
+    //     { month: "Oct 2023", courses: 7 },
+    //     { month: "Nov 2023", courses: 5 },
+    //     { month: "Dec 2023", courses: 2 },
+    //     { month: "Jan 2024", courses: 9 },
+    //     { month: "Feb 2024", courses: 4 },
+    //     { month: "Mar 2024", courses: 6 },
+    //     { month: "Apr 2024", courses: 3 },
+    //     { month: "May 2024", courses: 8 },
+    //     { month: "Jun 2024", courses: 10 },
+    //     { month: "Jul 2024", courses: 7 },
+    //     { month: "Aug 2024", courses: 12 },
+    // ];
 
-    const sampleData = [
-        { month: "Sep 2023", count: 3 },
-        { month: "Oct 2023", count: 7 },
-        { month: "Nov 2023", count: 5 },
-        { month: "Dec 2023", count: 2 },
-        { month: "Jan 2024", count: 9 },
-        { month: "Feb 2024", count: 4 },
-        { month: "Mar 2024", count: 6 },
-        { month: "Apr 2024", count: 3 },
-        { month: "May 2024", count: 8 },
-        { month: "Jun 2024", count: 10 },
-        { month: "Jul 2024", count: 7 },
-        { month: "Aug 2024", count: 12 },
-    ];
+    let totalCourses = 0;
+    let highest = { month: "-", courses: 0 };
+    let lowest = { month: "-", courses: 0 };
 
-    const totalCourses = sampleData.reduce((acc, item) => acc + item.count, 0);
-    const highest = sampleData.reduce((a, b) => (a.count > b.count ? a : b));
-    const lowest = sampleData.reduce((a, b) => (a.count < b.count ? a : b));
+    if (data.length > 0) {
+        totalCourses = data.reduce((acc: any, item: any) => acc + item.courses, 0);
+        highest = data.reduce((a: any, b: any) => (a.count > b.count ? a : b));
+        lowest = data.reduce((a: any, b: any) => (a.count < b.count ? a : b));
+    }
 
+    if(isLoading){
+        return (
+            <div>loading...</div>
+        )
+    }
 
     return (
         <div>
@@ -47,12 +60,12 @@ export default function CourseAnalytics() {
             <div className="w-full h-96 mt-10 ">
                 <h2 className="text-xl font-semibold mb-10 text-center">Courses Created (Last 12 Months)</h2>
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={sampleData}>
+                    <LineChart data={data}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                         <XAxis dataKey="month" />
                         <YAxis />
                         <Tooltip />
-                        <Line type="monotone" dataKey="count" fill="#121A3A"  strokeWidth={3} />
+                        <Line type="monotone" dataKey="courses" fill="#121A3A" strokeWidth={3} />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
@@ -76,7 +89,7 @@ export default function CourseAnalytics() {
                         {highest.month}
                     </p>
                     <p className="text-3xl font-bold text-green-600 mt-2">
-                        {highest.count}
+                        {highest.courses}
                     </p>
                 </div>
 
@@ -88,7 +101,7 @@ export default function CourseAnalytics() {
                         {lowest.month}
                     </p>
                     <p className="text-3xl font-bold text-red-600 mt-2">
-                        {lowest.count}
+                        {lowest.courses}
                     </p>
                 </div>
             </div>
