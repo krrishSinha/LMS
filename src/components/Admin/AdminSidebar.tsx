@@ -142,7 +142,7 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/admin/invoices'}>
                                             <FaFileInvoice />
                                             <span className="dark:text-zinc-400"> Invoices </span>
                                         </Link>

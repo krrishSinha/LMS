@@ -13,7 +13,7 @@ import {
 } from "recharts";
 
 
-export default function EnrollmentsAnalytics() {
+export default function EnrollmentsAnalytics({ isDashboard }: any) {
 
     const { data: enrollmentsAnalyticsData, isLoading }: any = useGetEnrollmentsAnalyticsQuery({})
 
@@ -68,7 +68,9 @@ export default function EnrollmentsAnalytics() {
         <div>
 
             <div className="w-full mt-10 ">
-                <h2 className="text-xl font-semibold mb-10 text-center">Enrollments (Last 12 Months)</h2>
+                <h2 className="text-xl font-semibold mb-10 text-center">
+                    {isDashboard ? 'Enrollments Analytics' : 'Enrollments (Last 12 Months)'}
+                </h2>
 
                 <div className="h-96" >
                     <ResponsiveContainer width="100%" height="90%">
@@ -87,30 +89,35 @@ export default function EnrollmentsAnalytics() {
                     </ResponsiveContainer>
                 </div>
 
-                <div className=" grid md:grid-cols-2 gap-5 " >
+                {
+                    !isDashboard &&
 
-                    <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-blue-500">
-                        <h3 className="text-white text-sm uppercase tracking-wide">
-                            Total Enrollments
-                        </h3>
-                        <p className="text-3xl font-bold text-blue-600 mt-2">
-                            {totalEnrollments}
-                        </p>
+                    <div className=" grid md:grid-cols-2 gap-5 " >
+
+                        <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-blue-500">
+                            <h3 className="text-white text-sm uppercase tracking-wide">
+                                Total Enrollments
+                            </h3>
+                            <p className="text-3xl font-bold text-blue-600 mt-2">
+                                {totalEnrollments}
+                            </p>
+                        </div>
+
+                        <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-green-500">
+                            <h3 className="text-white text-sm uppercase tracking-wide">
+                                Peak Month
+                            </h3>
+                            <p className="text-lg font-semibold text-slate-400 mt-1">
+                                {highest.month}
+                            </p>
+                            <p className="text-3xl font-bold text-green-600 mt-2">
+                                {highest.enrollments}
+                            </p>
+                        </div>
+
                     </div>
+                }
 
-                    <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-green-500">
-                        <h3 className="text-white text-sm uppercase tracking-wide">
-                            Peak Month
-                        </h3>
-                        <p className="text-lg font-semibold text-slate-400 mt-1">
-                            {highest.month}
-                        </p>
-                        <p className="text-3xl font-bold text-green-600 mt-2">
-                            {highest.enrollments}
-                        </p>
-                    </div>
-
-                </div>
 
             </div>
         </div>

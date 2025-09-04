@@ -3,7 +3,7 @@ import AdminProtected from '@/hooks/useAdminProtected'
 import AdminSidebar from '@/components/Admin/AdminSidebar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import DashboardHero from '@/components/Admin/DashboardHero'
-import Dashboard from '@/components/Admin/Dashboard'
+import Invoice from '@/components/Admin/Invoices/Invoice'
 
 function page() {
     return (
@@ -24,7 +24,7 @@ function page() {
 
                     <div className='py-10 w-full px-10' >
                         <DashboardHero />
-                        <Dashboard />   
+                        <Invoice isDashboard={true} />
                     </div>
 
                 </div>

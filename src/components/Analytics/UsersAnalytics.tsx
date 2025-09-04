@@ -13,7 +13,7 @@ import {
 } from "recharts";
 
 
-export default function UsersAnalytics() {
+export default function UsersAnalytics({ isDashboard }: any) {
 
     const { data: usersAnalyticsData, isLoading } = useGetUsersAnalyticsQuery({})
 
@@ -66,12 +66,14 @@ export default function UsersAnalytics() {
     }
 
     return (
-        <div>
+        <div className=" grow" >
 
-            <div className="w-full mt-10 ">
-                <h2 className="text-xl font-semibold mb-10 text-center">Users Created (Last 12 Months)</h2>
+            <div className="w-full mt-10">
+                <h2 className="text-xl font-semibold mb-10 text-center">
+                    {isDashboard ? 'Users Analytics' : 'Users Created (Last 12 Months)'}
+                </h2>
 
-                <div className="h-96" >
+                <div className="h-96 w-full" >
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={data}>
                             <defs>
@@ -95,31 +97,31 @@ export default function UsersAnalytics() {
                     </ResponsiveContainer>
                 </div>
 
+                {
+                    !isDashboard &&
+                    <div className="mt-10 grid md:grid-cols-2 gap-5 " >
+                        <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-blue-500">
+                            <h3 className="text-white text-sm uppercase tracking-wide">
+                                Total Users
+                            </h3>
+                            <p className="text-3xl font-bold text-blue-600 mt-2">
+                                {totalUsers}
+                            </p>
+                        </div>
 
-
-
-                <div className="mt-10 grid md:grid-cols-2 gap-5 " >
-                    <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-blue-500">
-                        <h3 className="text-white text-sm uppercase tracking-wide">
-                            Total Users
-                        </h3>
-                        <p className="text-3xl font-bold text-blue-600 mt-2">
-                            {totalUsers}
-                        </p>
+                        <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-green-500">
+                            <h3 className="text-white text-sm uppercase tracking-wide">
+                                Peak Month
+                            </h3>
+                            <p className="text-lg font-semibold text-slate-400 mt-1">
+                                {highest.month}
+                            </p>
+                            <p className="text-3xl font-bold text-green-600 mt-2">
+                                {highest.users}
+                            </p>
+                        </div>
                     </div>
-
-                    <div className="bg-[#121A3A] shadow-md rounded-xl p-6 text-center border-t-4 border-green-500">
-                        <h3 className="text-white text-sm uppercase tracking-wide">
-                            Peak Month
-                        </h3>
-                        <p className="text-lg font-semibold text-slate-400 mt-1">
-                            {highest.month}
-                        </p>
-                        <p className="text-3xl font-bold text-green-600 mt-2">
-                            {highest.users}
-                        </p>
-                    </div>
-                </div>
+                }
 
             </div>
 
