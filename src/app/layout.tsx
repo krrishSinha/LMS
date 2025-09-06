@@ -9,7 +9,7 @@ import { store } from '../redux/store'
 // import { SessionProvider } from "next-auth/react"
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import React from "react";
-import { PrimeReactProvider} from 'primereact/api';
+import { PrimeReactProvider } from 'primereact/api';
 
 // export const metadata: Metadata = {
 //   title: "ELearning",
@@ -23,18 +23,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning  >
+    <html lang="en"   >
       <body className={`  font-poppins  bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black`}>
         <Provider store={store}>
           {/* <SessionProvider> */}
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
-              <Toaster />
-              <PrimeReactProvider>
-                <Custom>
-                  {children}
-                </Custom>
-              </PrimeReactProvider>
-            </ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
+            <Toaster />
+            <PrimeReactProvider>
+              <AppInitializer >
+                {children}
+              </AppInitializer>
+            </PrimeReactProvider>
+          </ThemeProvider>
           {/* </SessionProvider> */}
         </Provider>
       </body>
@@ -44,13 +44,22 @@ export default function RootLayout({
 
 
 
-const Custom = ({ children }: any) => {
-  const { isLoading } = useLoadUserQuery({})
-  return (
-    <>
-      {
-        isLoading ? <p>loading...</p> : <> {children}</>
-      }
-    </>
-  )
+const AppInitializer = ({ children }: any) => {
+
+  const { data, isLoading, error } = useLoadUserQuery({});
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center text-gray-700 dark:text-gray-300">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    console.log("LoadUser error:", error);
+  }
+
+  return <>{children}</>;
+
 }

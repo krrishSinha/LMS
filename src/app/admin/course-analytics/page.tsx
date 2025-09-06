@@ -1,37 +1,10 @@
-import AdminSidebar from '@/components/Admin/AdminSidebar'
-import DashboardHeader from '@/components/Admin/DashboardHeader'
 import CourseAnalytics from '@/components/Analytics/CourseAnalytics'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import AdminProtected from '@/hooks/useAdminProtected'
 import React from 'react'
 
 
 export default async function page() {
     return (
-        <>  
-            <AdminProtected>
-
-                <div className='flex' >
-
-                    {/* sidebar  */}
-                    <div className=''>
-                        <SidebarProvider>
-                            <AdminSidebar />
-                            <main>
-                                <SidebarTrigger />
-                            </main>
-                        </SidebarProvider>
-                    </div>
-
-                    <div className='py-10  w-full px-18' >
-                        <DashboardHeader />
-                       <CourseAnalytics />
-                    </div>
-
-                </div>
-
-            </AdminProtected>
-        </>
+        <CourseAnalytics />
     )
 }
 

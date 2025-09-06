@@ -5,7 +5,7 @@ import ThemeSwitcher from '../ThemeSwitcher'
 import { IoMdNotifications } from "react-icons/io";
 
 
-function DashboardHeader() {
+function    DashboardHeader() {
 
     const [open, setOpen] = useState(false)
 

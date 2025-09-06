@@ -3,7 +3,7 @@ import DashboardHeader from './DashboardHeader'
 
 function DashboardHero() {
   return (
-    <div className='' >
+    <div >
         <DashboardHeader />
     </div>
   )

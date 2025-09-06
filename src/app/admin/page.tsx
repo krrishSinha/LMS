@@ -1,36 +1,10 @@
 import React from 'react'
-import AdminProtected from '@/hooks/useAdminProtected'
-import AdminSidebar from '@/components/Admin/AdminSidebar'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import DashboardHero from '@/components/Admin/DashboardHero'
 import Dashboard from '@/components/Admin/Dashboard'
+import DashboardHeader from '@/components/Admin/DashboardHeader'
 
 function page() {
     return (
-        <>
-            <AdminProtected>
-
-                <div className='flex' >
-
-                    {/* sidebar  */}
-                    <div className=''>
-                        <SidebarProvider>
-                            <AdminSidebar />
-                            <main>
-                                <SidebarTrigger />
-                            </main>
-                        </SidebarProvider>
-                    </div>
-
-                    <div className='py-10 w-full px-10' >
-                        <DashboardHero />
-                        <Dashboard />   
-                    </div>
-
-                </div>
-
-            </AdminProtected>
-        </>
+        <Dashboard />
     )
 }
 

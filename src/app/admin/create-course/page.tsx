@@ -7,30 +7,7 @@ import React from 'react'
 
 function page() {
     return (
-        <>
-            <AdminProtected>
-
-                <div className='flex' >
-
-                    {/* sidebar  */}
-                    <div className=''>
-                        <SidebarProvider>
-                            <AdminSidebar />
-                            <main>
-                                <SidebarTrigger />
-                            </main>
-                        </SidebarProvider>
-                    </div>
-
-                    <div className='py-10 w-full px-5' >
-                        <DashboardHeader />
-                        <CreateCourse />
-                    </div>
-
-                </div>
-
-            </AdminProtected>
-        </>
+        <CreateCourse />
     )
 }
 

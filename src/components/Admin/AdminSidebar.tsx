@@ -307,9 +307,9 @@ export default function AdminSidebar() {
                             <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={'/'}>
                                             <SiSimpleanalytics />
-                                            <span className="dark:text-zinc-400" > Setting  </span>
+                                            <span className="dark:text-zinc-400" > Home  </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>

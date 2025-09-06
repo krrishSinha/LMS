@@ -9,14 +9,38 @@ import jwt from 'jsonwebtoken'
 export async function GET(request: NextRequest) {
     try {
 
-        const userId = request.headers.get('userId');
+        // const userId = request.headers.get('userId');
         const accessToken: any = request.cookies.get('accessToken')?.value
-        
+
+        console.log(accessToken)
+
         try {
             const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN as any);
 
+            const { _id }: any = decode
+
+            const redisUser: any = await redis.get(JSON.stringify(_id))
+
+            const user = redisUser
+
+            
+            if (!user) {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        message: 'User not found'
+                    },
+                    { status: 401 }
+                )
+            }
+
+            return NextResponse.json({
+                success: true,
+                user,
+                accessToken
+            })
+
         } catch (error) {
-            console.log('fwefwefwfwfwef')
             return NextResponse.json(
                 {
                     success: false,
@@ -25,37 +49,6 @@ export async function GET(request: NextRequest) {
                 { status: 401 }
             )
         }
-
-        if (!userId) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: 'User id not found'
-                },
-                { status: 401 }
-            )
-        }
-
-        // get user info from redis DB
-        const redisUser: any = await redis.get(JSON.stringify(userId))
-
-        const user = redisUser
-
-        if (!user) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: 'User not found'
-                },
-                { status: 401 }
-            )
-        }
-
-        return NextResponse.json({
-            success: true,
-            user,
-            accessToken
-        })
 
     } catch (error) {
         console.log(error);

@@ -9,7 +9,7 @@ import Invoice from './Invoices/Invoice';
 
 export default function Dashboard() {
     return (
-        <div className='mt-10' >
+        <div className='' >
 
             <div className='flex gap-10 items-center ' >
                 <UsersAnalytics isDashboard={true} />

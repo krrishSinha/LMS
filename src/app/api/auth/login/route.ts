@@ -39,11 +39,11 @@ export async function POST(request: NextRequest) {
         if (!isPasswordValid) {
             return NextResponse.json(
                 {
-                success: false,
-                message: "Invalid email or password",
-            },
-            {status: 401}
-        );
+                    success: false,
+                    message: "Invalid email or password",
+                },
+                { status: 401 }
+            );
         }
 
         // generate access token
@@ -61,10 +61,10 @@ export async function POST(request: NextRequest) {
         const acessTokenExpiry = 5 * 10 * 1000; // 5 minutes 
         const refreshTokenExpiry = 59 * 10000; //  59 minutes
 
-        const accessTokenOptions = {
+        const accessTokenOptions: any = {
             httpOnly: true,
-            expires: new Date(Date.now() + acessTokenExpiry),
-            maxAge: acessTokenExpiry, // 5 minutes
+            // expires: new Date(Date.now() + acessTokenExpiry),
+            // maxAge: acessTokenExpiry, // 5 minutes
             sameSite: "lax" as "lax",
         };
 
@@ -85,8 +85,13 @@ export async function POST(request: NextRequest) {
         // response.cookies.set("accessToken", accessToken, accessTokenOptions);
         // response.cookies.set("refreshToken", refreshToken, refreshTokenOptions);
 
-        response.cookies.set("accessToken", accessToken);
-        response.cookies.set("refreshToken", refreshToken);
+        response.cookies.set("accessToken", accessToken, {
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 15 * 24 * 60 * 60, // 15 days in seconds
+            path: "/",
+        });
+        // response.cookies.set("refreshToken", refreshToken);
 
         return response;
 
