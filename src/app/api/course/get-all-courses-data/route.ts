@@ -9,10 +9,7 @@ export async function GET(request: NextRequest) {
 
     try {
 
-        const courses = await Course.find().populate({
-            path: "sections.videos",   
-            model: "Video"
-        })
+        const courses = await Course.find().populate('reviews').populate('sections')
 
         return NextResponse.json({
             success: true,

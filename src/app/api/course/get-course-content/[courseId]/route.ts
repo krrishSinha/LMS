@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/db/dbConfig";
-import { Course, Course_Section, Enrollment } from "@/models";
-import { populate } from "dotenv";
+import { Course, Enrollment } from "@/models";
 
 await connectDB() 
 

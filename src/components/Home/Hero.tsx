@@ -6,7 +6,7 @@ import { BiSearch } from "react-icons/bi";
 export default function Hero() {
     return (
         // main div 
-        <div className="w-full md:flex items-center">
+        <div className="w-full md:flex items-center ">
 
             <div className="w-[90%] sm:w-[90%] md:w-[85%] mx-auto lg:h-[calc(100vh-80px)] lg:grid grid-cols-2 items-center sm:space-y-10   " >
                 {/* hero animation div  */}

@@ -1,9 +1,9 @@
 "use client";
 
 import Header from "@/components/Header";
+import Courses from "@/components/Home/Courses";
 import Hero from "@/components/Home/Hero";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 export default function Home() {
 
@@ -15,6 +15,7 @@ export default function Home() {
     <>
       <Header open={open} setOpen={setOpen} activeItem={activeIem} route={route} setRoute={setRoute} />
       <Hero />
+      <Courses />
     </>
   );
 }

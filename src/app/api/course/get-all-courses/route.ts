@@ -4,7 +4,7 @@ import { Course } from "@/models/course.model";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest){
+export async function GET(request: NextRequest) {
 
     await connectDB()
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest){
         //     })
         // }
 
-        const courses = await Course.find().select('-reviews -courseData')
+        const courses = await Course.find().select('-reviews -sections.videos')
 
         // await redis.set('AllCourses', JSON.stringify(courses))
 
@@ -28,14 +28,14 @@ export async function GET(request: NextRequest){
             success: true,
             courses
         })
-        
-    } catch (error:any) {
+
+    } catch (error: any) {
         console.log('error in getting all course');
         return NextResponse.json({
             success: false,
             message: error.message
         })
-        
+
     }
 
 }
