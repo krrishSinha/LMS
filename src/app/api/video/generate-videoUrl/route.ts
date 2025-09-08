@@ -7,6 +7,7 @@ export async function POST(request:NextRequest) {
     try {
        
         const {videoId} = await request.json()
+        console.log(videoId)
         const response = await axios.post(
             `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
             {ttl: 300},
@@ -24,8 +25,8 @@ export async function POST(request:NextRequest) {
     } catch (error:any) {
         console.log(error);
         return NextResponse.json({
-            success: true,
-            message: error.message
+            success: false,
+            message: error
         })
     }
 

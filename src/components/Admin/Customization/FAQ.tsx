@@ -42,9 +42,6 @@ export default function FAQ() {
 
     }, [data, isSuccess, editLayoutData, editLayoutIsSuccess, editLayoutIsLoading])
 
-    console.log(faqs)
-
-
     const handleOpen = (index: any) => {
         setOpenIndex(openIndex == index ? null : index)
     };

@@ -13,8 +13,17 @@ export const enrollmentApi = apiSlice.injectEndpoints({
             })
         }),
 
+        createEnrollment: builder.mutation({
+            query: ({courseData})=>({
+                url: `/checkout`,
+                body: {courseData},
+                method: 'POST',
+                credentials: 'include'
+            })
+        }),
+
     })
 });
 
 
-export const {useGetAllEnrollmentsQuery} = enrollmentApi
+export const {useGetAllEnrollmentsQuery, useCreateEnrollmentMutation } = enrollmentApi

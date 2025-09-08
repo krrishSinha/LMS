@@ -8,7 +8,6 @@ export default function CoursePlayer({ videoUrl, title }: any) {
         playbackInfo: ""
     })
 
-
     useEffect(() => {
 
         axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/video/generate-videoUrl`, {
@@ -17,7 +16,7 @@ export default function CoursePlayer({ videoUrl, title }: any) {
             setVideoData(res.data)
         })
 
-    }, [])
+    }, [videoUrl])
 
 
     return (
@@ -25,7 +24,7 @@ export default function CoursePlayer({ videoUrl, title }: any) {
 
             {
                 videoData.otp && videoData.playbackInfo !== '' && (
-                    <iframe src={`https://player.vdocipher.com/v2/?otp=${videoData?.otp}&playbackInfo=${videoData?.playbackInfo}&player=pu13VWUeVzR2QZkT`} style={{ border: 0, minHeight: "50vh", width: "100%", maxWidth: "100%" }} allowFullScreen={true} allow="encrypted-media"></iframe>
+                    <iframe src={`https://player.vdocipher.com/v2/?otp=${videoData?.otp}&playbackInfo=${videoData?.playbackInfo}&player=pu13VWUeVzR2QZkT`} style={{ border: 0, minHeight: "30vh", width: "25vw", maxWidth: "100%" }} allowFullScreen={true} allow="encrypted-media"></iframe>
                 )
             }
 

@@ -1,5 +1,5 @@
 import CoursePlayer from '@/components/CoursePlayer'
-import Ratings from '@/components/Rating';
+import Ratings from '@/components/Ratings';
 import React from 'react'
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 

@@ -29,9 +29,9 @@ export default function Courses() {
     return (
         <div>
 
-            <div className="w-[90%] sm:w-[90%] md:w-[85%] mx-auto py-10 md:py-10 lg:py-2  "  >
+            <div className="w-[90%] sm:w-[90%] md:w-[85%] mx-auto pt-20 md:pt-10 lg:pt-2  "  >
 
-                <h1 className="text-center text-2xl sm:text-4xl leading-14 font-bold font-josefin " >
+                <h1 className="text-center text-2xl sm:text-4xl leading-10 sm:leading-14 font-bold font-josefin " >
                     Expand Your Career
                     {" "}
                     <span
@@ -42,10 +42,10 @@ export default function Courses() {
                     Opportunity With Our Courses
                 </h1>
 
-                <div className=" py-10 grid grid-cols-4 gap-5 " >
+                <div className=" py-10 grid sm:grid-cols-3 lg:grid-cols-4 gap-5 " >
                     {
                         courses.length > 0 && courses.map((course: any, index: any) => (
-                            <CourseCard key={index} course={course} />
+                            <CourseCard key={index} course={course} isProfile={false} />
                         ))
                     }
 
