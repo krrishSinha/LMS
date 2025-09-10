@@ -9,14 +9,16 @@ import CoursePlayer from "../CoursePlayer"
 import { useSelector } from "react-redux"
 import Link from "next/link"
 import CourseSection from "./CourseSection"
-import { useCreateEnrollmentMutation } from "@/redux/features/enrollment/enrollmentApi"
+import { useCreateCheckoutMutation } from "@/redux/features/enrollment/enrollmentApi";
 
 export default function CourseDetails({ id }: any) {
 
     const { data, isLoading } = useGetCourseQuery(id);
-    const [createEnrollment, { data: enrollmentData, isLoading: enrollmentIsLoading, error }] = useCreateEnrollmentMutation({})
+    const [createCheckout, { data: checkoutData, isLoading: checkoutIsLoading, error: checkoutError }] = useCreateCheckoutMutation({});
 
     const { user } = useSelector((state: any) => state.auth);
+
+    console.log(user)
 
     const [course, setCourse]: any = useState([]);
 
@@ -34,7 +36,7 @@ export default function CourseDetails({ id }: any) {
     }, [data]);
 
 
-    const handleOrder = async (e: any) => {
+    const handlePayment = async (e: any) => {
         // if (user) {
         //     setOpen(true);
         //     console.log('buy now')
@@ -43,19 +45,16 @@ export default function CourseDetails({ id }: any) {
         //     // openAuthModal(true);
         // }    
 
-        const stripe: any = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+        const stripe: any = await loadStripe('pk_test_51S58Q0AV1iXycdESG4yZmvvJa8HUt4RooYpHpORQfycP9BbdGpzzkJvRcpRnPVpTKEIttyf44ZQPAd5rsqb2ChOR00yagl9Kob');
 
-        const courseData = [{
-            title: course.title,
-            price: course.price,
-            quantity: 1
-        }]
+        const userInfo = {
+            _id: user._id,
+            email: user.email
+        }
 
-        const response = await createEnrollment({ courseData })
+        const session: any = await createCheckout({ course, userInfo })
 
-        const id = response.data.id
-
-        const result: any = stripe.redirectToCheckout({ sessionId: id });
+        const result: any = await stripe.redirectToCheckout({ sessionId: session.data.id });
 
         console.log(result)
 
@@ -160,7 +159,7 @@ export default function CourseDetails({ id }: any) {
                                     isPurchased ? (
                                         <Link href={`/course-access/${course._id}`}> Enter to Course     </Link>
                                     ) : (
-                                        <div className="px-6 py-2 bg-[crimson] rounded-full w-fit font-bold cursor-pointer " onClick={handleOrder} >
+                                        <div className="px-6 py-2 bg-[crimson] rounded-full w-fit font-bold cursor-pointer " onClick={handlePayment} >
                                             Buy Now {course?.price}$
                                         </div>
                                     )
