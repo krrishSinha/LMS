@@ -13,7 +13,7 @@ export default function CourseCard({ course, isProfile }: any) {
             <div className="p-2  dark:bg-[#1A202A] rounded border border-slate-200 shadow dark:border-slate-800  " >
                 <Image
                     // src={course?.thumbnail?.url}
-                    src={'https://courses.tutorialswebsite.com/assets/front/img/category/reactjs-banner.jpeg'}
+                    src={course?.thumbnail?.url ? course?.thumbnail?.url : 'https://courses.tutorialswebsite.com/assets/front/img/category/reactjs-banner.jpeg'}
                     alt="course-image"
                     width={500}
                     height={300}

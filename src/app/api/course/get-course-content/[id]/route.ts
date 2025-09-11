@@ -1,45 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/db/dbConfig";
 import { Course, Enrollment } from "@/models";
+import jwt from 'jsonwebtoken'
 
-await connectDB() 
 
-export async function GET(request: NextRequest, context: { params: { courseId: string } }) {
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
 
+    await connectDB()
 
     try {
 
-        const { courseId } = await context.params
+        const { id } = await context.params
 
-        // get userId from headers
-        const userId: any = await request.headers.get('userId')
+        // get userId 
+        const accessToken: any = await request.cookies.get('accessToken')?.value
 
-        const isUserEnrolled:any = await Enrollment.findOne({
-            user: userId,
-            course: courseId
-        }).populate({
-            path: 'course',
-            populate: {
-                path: 'sections',
-                populate: {
-                    path:'videos'
-                }
-            }
-        })
-        .lean()
-        
+        const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN!);
+
+        const { _id }: any = decode;
+
+        const isUserEnrolled: any = await Enrollment.findOne({
+            userId: _id,
+            courseId: id
+        }).populate('courseId').select('-payment_info').lean()
+
         if (!isUserEnrolled) {
             return NextResponse.json({
                 success: false,
                 message: 'User not Enrolled',
             })
-        }
-
-        const fullCourse = isUserEnrolled?.course
+        };
 
         return NextResponse.json({
             success: true,
-            fullCourse
+            course: isUserEnrolled.courseId
         })
 
 

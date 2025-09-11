@@ -1,5 +1,4 @@
 import redis from "@/db/redis";
-import { getAuthenticatedUser } from "@/helpers/getAuthenticatedUser";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
@@ -12,16 +11,15 @@ export async function GET(request: NextRequest) {
         // const userId = request.headers.get('userId');
         const accessToken: any = request.cookies.get('accessToken')?.value
 
-        console.log(accessToken)
-
         try {
             const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN as any);
 
             const { _id }: any = decode
 
-            const redisUser: any = await redis.get(JSON.stringify(_id))
+            const user = await User.findById(_id)
+            // const redisUser: any = await redis.get(JSON.stringify(_id))
 
-            const user = redisUser
+            // const user = redisUser
 
             
             if (!user) {

@@ -18,19 +18,16 @@ export default function CourseDetails({ id }: any) {
 
     const { user } = useSelector((state: any) => state.auth);
 
-    console.log(user)
-
     const [course, setCourse]: any = useState([]);
 
     const dicountPercentenge = ((course?.estimatedPrice - course.price) / course?.estimatedPrice) * 100;
 
     const discountPercentengePrice = dicountPercentenge.toFixed(0);
 
-    const isPurchased = user && user?.enrolledCourses?.find((item: any) => item._id == course._id);
+    const isPurchased = user && user?.enrolledCourses?.find((item: any) => item == course._id);
 
     useEffect(() => {
         if (data) {
-            console.log(data.course);
             setCourse(data?.course)
         };
     }, [data]);
@@ -56,8 +53,6 @@ export default function CourseDetails({ id }: any) {
 
         const result: any = await stripe.redirectToCheckout({ sessionId: session.data.id });
 
-        console.log(result)
-
         if (result.error) {
             console.log(result.error)
         }
@@ -73,7 +68,7 @@ export default function CourseDetails({ id }: any) {
 
         <div className="mt-5" >
 
-            <div className="w-[95%] md:w-[80%] mx-auto" >
+            <div   className="w-[95%] md:w-[80%] mx-auto"  >
 
                 <div className="flex justify-between gap-5" >
 
@@ -157,7 +152,11 @@ export default function CourseDetails({ id }: any) {
                             <div className="mt-4" >
                                 {
                                     isPurchased ? (
-                                        <Link href={`/course-access/${course._id}`}> Enter to Course     </Link>
+                                        <Link href={`/course-access/${course._id}`}
+                                            className="px-6 py-2 bg-[crimson] rounded-full w-fit font-bold cursor-pointer "
+                                        >
+                                            Enter to Course
+                                        </Link>
                                     ) : (
                                         <div className="px-6 py-2 bg-[crimson] rounded-full w-fit font-bold cursor-pointer " onClick={handlePayment} >
                                             Buy Now {course?.price}$

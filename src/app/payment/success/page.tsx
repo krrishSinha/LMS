@@ -1,5 +1,6 @@
 "use client";
 import { useCreateEnrollmentMutation, useGetPaymentInfoQuery } from "@/redux/features/enrollment/enrollmentApi";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -14,7 +15,6 @@ export default function SuccessPage() {
     useEffect(() => {
 
         const createEnrollmentHandler = async (userId: any, courseId: any, payment_info: any) => {
-            console.log(payment_info)
             const result = await createEnrollment({ userId, courseId, payment_info })
             console.log(result)
         }
@@ -38,6 +38,9 @@ export default function SuccessPage() {
                     <p><b>Status:</b> {payment.payment_status}</p>
                     <p><b>Amount Paid:</b> ${payment.amount_total / 100}</p>
                     <p><b>Email:</b> {payment.customer_details.email}</p>
+                    <Link href={`/course-access/${paymentInfoData?.metadata?.courseId}`} >
+                        Enter Course
+                    </Link>
                 </div>
             ) : (
                 <p>Loading payment details...</p>

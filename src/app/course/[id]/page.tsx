@@ -6,9 +6,9 @@ import Header from '@/components/Header'
 import React, { useState } from 'react'
 
 
-export default  function page({ params }: any){
+export default function page({ params }: any){
 
-    const {id} =   params
+    const {id} = params
 
     const [open, setOpen] = useState(false)
     const [activeIem, setActiveItem] = useState(0)

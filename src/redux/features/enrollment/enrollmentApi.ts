@@ -36,7 +36,8 @@ export const enrollmentApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { payment_info },
                 credentials: 'include'
-            })
+            }),
+            invalidatesTags: ['LoadUser']
         })
 
 
