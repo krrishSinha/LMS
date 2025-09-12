@@ -37,7 +37,7 @@ export default  function page({ params }: any) {
 
             <Header open={open} setOpen={setOpen} activeItem={activeIem} route={route} setRoute={setRoute} />
 
-            <CourseAccess id={id} user={user} />
+            <CourseAccess />
 
         </div>
     )
