@@ -9,26 +9,50 @@ import { useEffect, useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { GrFormPreviousLink, GrFormNextLink } from "react-icons/gr";
+import { useAddCommentMutation, useAddReplyInCommentMutation } from "@/redux/features/video/videoApi";
+import { format } from "timeago.js";
+import { FaRegMessage } from "react-icons/fa6";
+import { MdVerified } from "react-icons/md";
 
 export default function CourseAccess() {
     const params = useParams()
     const id = params.id
+    const { user } = useSelector((state: any) => state.auth)
 
     const { data, isLoading, error } = useGetCourseWithDataQuery(id)
-    const { user } = useSelector((state: any) => state.auth)
+
+    const [addComment, { data: addCommentData, error: addCommentError }]: any = useAddCommentMutation({})
+    const [addReplyInComment, { data: addReplyData }]: any = useAddReplyInCommentMutation({})
+
     const [course, setCourse]: any = useState()
     const [active, setActive]: any = useState(0)
     const [activeSection, setActiveSection]: any = useState(0)
     const [activeVideo, setActiveVideo]: any = useState(0)
 
     const [comment, setComment]: any = useState('')
+    const [reply, setReply]: any = useState('')
+    const [replyActive, setReplyActive] = useState(false)
     const [rating, setRating]: any = useState(1)
 
     useEffect(() => {
         if (data) {
             setCourse(data?.course)
+            console.log(data)
         }
     }, [data, id])
+
+    useEffect(() => {
+        if (addCommentData) {
+            console.log(addCommentData)
+            setCourse(addCommentData?.course)
+        }
+
+        if (addReplyData) {
+            console.log(addReplyData)
+            setCourse(addReplyData?.course)
+        }
+
+    }, [addCommentData, addReplyData])
 
     if (isLoading) {
         return <div>loading...</div>
@@ -65,6 +89,20 @@ export default function CourseAccess() {
         } else {
             console.log("No more videos available!");
         }
+    };
+
+
+    const handleComment = async () => {
+        const sectionId = course?.sections[activeSection]._id
+        const videoId = course?.sections[activeSection]?.videos[activeVideo]._id
+        await addComment({ comment, courseId: id, sectionId, videoId })
+        setComment('')
+    };
+
+    const handleReply = async (commentId: any) => {
+        const sectionId = course?.sections[activeSection]._id
+        const videoId = course?.sections[activeSection]?.videos[activeVideo]._id
+        await addReplyInComment({ reply, courseId: id, sectionId, videoId, commentId })
     }
 
     return (
@@ -104,6 +142,7 @@ export default function CourseAccess() {
                             }
                         </div>
 
+                        {/* Video Description */}
                         {
                             active == 0 && (
                                 <div>
@@ -112,6 +151,7 @@ export default function CourseAccess() {
                             )
                         }
 
+                        {/* Video Resouces  */}
                         {
                             active == 1 && (
                                 <div>
@@ -127,11 +167,12 @@ export default function CourseAccess() {
                             )
                         }
 
+                        {/* Video Comments  */}
                         {
                             active == 2 && (
-                                <div className="py-10 border-b-[0.5px] border-slate-600" >
+                                <div className="py-10 " >
 
-                                    <div className="flex gap-5" >
+                                    <div className="flex gap-5 border-b-[0.5px] " >
                                         <Image
                                             src={user?.avatar?.url ? user?.avatar?.url : '/assets/avatar.png'}
                                             alt="few"
@@ -145,13 +186,89 @@ export default function CourseAccess() {
                                     </div>
 
                                     <div className="flex justify-end mt-4" >
-                                        <button className="px-5 py-2 bg-blue-400 rounded-full cursor-pointer" > Submit </button>
+                                        <button className="px-5 py-2 bg-blue-400 rounded-full cursor-pointer" onClick={handleComment} > Submit </button>
+                                    </div>
+
+                                    <div className="w-[100%] mt-5 h-[1px] bg-slate-600 " ></div>
+
+                                    {/* all comments  */}
+                                    <div className="mt-5 " >
+                                        {
+                                            course?.sections[activeSection]?.videos[activeVideo]?.comments?.map((comment: any, index: any) => (
+                                                <div className="flex gap-3" >
+
+                                                    <div>
+                                                        <Image
+                                                            src={comment?.user?.avatar ? comment?.user?.avatar.url : '/assets/avatar.png'}
+                                                            alt="ef"
+                                                            width={30}
+                                                            height={30}
+                                                            className="bg-contain"
+                                                        />
+                                                    </div>
+
+                                                    <div className="  w-full" >
+                                                        <div className="text-xl font-bold" > {comment.user?.name} </div>
+                                                        <div className="text-slate-300"  > {comment.comment} </div>
+                                                        <small className="text-slate-300"> {format(comment.createdAt)}• </small>
+                                                        <div onClick={() => setReplyActive(!replyActive)} className="cursor-pointer mt-1 flex items-center gap-2 " >
+                                                            <span>
+                                                                {!replyActive ? comment.replies.length !== 0 ? 'All Replies' : 'Add Reply' : 'Hide Replies'}
+                                                            </span>
+                                                            <span>
+                                                                <FaRegMessage size={15} />
+                                                            </span>
+                                                            <span> {comment.replies?.length} </span>
+                                                        </div>
+
+                                                        {
+                                                            replyActive &&
+                                                            <div className="mt-2 w-full " >
+                                                                {comment.replies?.map((reply: any, index: any) => (
+                                                                    <div className="flex gap-2 py-2 " >
+                                                                        <div>
+                                                                            <Image
+                                                                                src={reply?.user?.avatar ? reply?.user?.avatar.url : '/assets/avatar.png'}
+                                                                                alt="ef"
+                                                                                width={30}
+                                                                                height={30}
+                                                                                className="bg-contain"
+                                                                            />
+                                                                        </div>
+                                                                        <div>
+                                                                            <div className="flex items-center gap-2" >
+                                                                                {reply.user?.name}
+                                                                                <span> {reply.user?.role == 'admin' && <MdVerified size={15} className="text-blue-500" />} </span>
+                                                                            </div>
+                                                                            <div> {reply.reply} </div>
+                                                                            <div> {format(reply.createdAt)}• </div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                                <div className=" w-full flex justify-between gap-3 mt-2" >
+                                                                    <input
+                                                                        value={reply}
+                                                                        onChange={(e) => setReply(e.target.value)}
+                                                                        type="text"
+                                                                        placeholder="Enter Your Reply..." className="flex-1 outline-none border-b-2 border-slate-200" />
+                                                                    <button className="cursor-pointer" onClick={() => handleReply(comment._id)} > Submit </button>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+
+                                                    </div>
+
+                                                </div>
+                                            ))
+                                        }
                                     </div>
 
                                 </div>
                             )
                         }
 
+                        {/* Video Reviews  */}
                         {
                             active == 3 && (
                                 <div className="py-10 border-b-[0.5px] border-slate-600" >

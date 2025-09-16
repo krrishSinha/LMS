@@ -35,7 +35,7 @@ export default  function page({ params }: any) {
     return (
         <div>
 
-            <Header open={open} setOpen={setOpen} activeItem={activeIem} route={route} setRoute={setRoute} />
+            {/* <Header open={open} setOpen={setOpen} activeItem={activeIem} route={route} setRoute={setRoute} /> */}
 
             <CourseAccess />
 

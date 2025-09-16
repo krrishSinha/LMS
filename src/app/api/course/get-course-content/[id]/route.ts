@@ -22,7 +22,13 @@ export async function GET(request: NextRequest, context: { params: { id: string 
         const isUserEnrolled: any = await Enrollment.findOne({
             userId: _id,
             courseId: id
-        }).populate('courseId').select('-payment_info').lean()
+        }).populate({
+            path: 'courseId',
+            populate: [
+                { path: 'sections.videos.comments.user', select: 'name email avatar' },
+                { path: 'sections.videos.comments.replies.user', select: 'name email role avatar' }
+            ]
+        }).select('-payment_info').lean()
 
         if (!isUserEnrolled) {
             return NextResponse.json({

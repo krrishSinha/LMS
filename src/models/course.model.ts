@@ -11,11 +11,18 @@ const reviewSchema = new mongoose.Schema({
     reply: { type: String }
 });
 
+const commentReplySchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    reply: { type: String },
+    createdAt: { type: Date, default: Date.now, },
+});
 
 const commentSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     comment: { type: String },
-    replies: [Object]
+    replies: [commentReplySchema],
+    createdAt: { type: Date, default: Date.now, },
+    updatedAt: { type: Date, default: Date.now, }
 });
 
 const linkSchema = new mongoose.Schema({

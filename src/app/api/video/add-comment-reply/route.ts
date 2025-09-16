@@ -1,14 +1,19 @@
-import { Comment, Reply } from "@/models";
+import connectDB from "@/db/dbConfig";
+import { Course } from "@/models";
 import { NextRequest, NextResponse } from "next/server";
-
+import jwt from 'jsonwebtoken'
 
 export async function PUT(request: NextRequest) {
 
+    await connectDB()
+    const { reply, courseId, sectionId, videoId, commentId } = await request.json()
+
     try {
 
-        const userId = request.headers.get('userId')
+        const accessToken: any = request.cookies.get('accessToken')?.value
 
-        const { reply, commentId } = await request.json()
+        const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN!)
+        const { _id, name }: any = decode
 
         if (!reply) {
             return NextResponse.json({
@@ -22,34 +27,53 @@ export async function PUT(request: NextRequest) {
                 success: false,
                 message: 'Either Comment has been removed or Invalid Comment Id'
             })
-        }
+        };
 
-        // save comment reply in Reply Model 
-        const savedReply = await Reply.create({
+        const course = await Course.findById(courseId)
+
+        const section = course.sections.find((section: any, index: any) => section._id == sectionId)
+
+        const video = section?.videos.find((video: any, index: any) => video._id == videoId)
+
+        const comment = video?.comments.find((comment: any, index: any) => comment._id == commentId)
+
+        comment.replies.push({
+            user: _id,
             reply,
-            userId,
-            commentId
         });
 
-        // push savedReply._id in Comment Model.replies Array
-        const updatedComment = await Comment.findByIdAndUpdate(commentId, {
-            $push: { replies: savedReply._id }
-        },{new:true});
+        await course.save();
 
-        return NextResponse.json({
-            success: true,
-            message: 'Reply Created',
-            updatedComment
-        });
+        await course.populate([
+            {
+                path: "sections.videos.comments.user",
+                select: 'name email avatar'
+            },
+            {
+                path: "sections.videos.comments.replies.user",
+                select: 'name email role avatar'
+            }
+        ]);
 
+        return NextResponse.json(
+            {
+                success: true,
+                message: 'Reply Created Successfully...',
+                course
+            },
+            { status: 200 }
+        )
 
 
     } catch (error: any) {
-        console.log('error in adding coment reply');
-        return NextResponse.json({
-            success: true,
-            message: error.message
-        })
+        console.log('error in adding comment reply');
+        return NextResponse.json(
+            {
+                success: true,
+                message: error.message
+            },
+            { status: 400 }
+        )
     }
 
 }
