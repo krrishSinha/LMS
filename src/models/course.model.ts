@@ -8,7 +8,10 @@ const reviewSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     rating: { type: Number, default: 0, required: true },
     review: { type: String },
-    reply: { type: String }
+    reply: { type: String },
+    replyBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now, },
+    updatedAt: { type: Date, default: Date.now, }
 });
 
 const commentReplySchema = new mongoose.Schema({

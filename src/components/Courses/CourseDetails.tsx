@@ -28,6 +28,7 @@ export default function CourseDetails({ id }: any) {
 
     useEffect(() => {
         if (data) {
+            console.log(data)
             setCourse(data?.course)
         };
     }, [data]);

@@ -1,33 +1,34 @@
-import { Review } from "@/models";
 import { NextRequest, NextResponse } from "next/server";
-
+import jwt from 'jsonwebtoken'
+import connectDB from "@/db/dbConfig";
+import { Course } from "@/models";
 
 export async function PUT(request: NextRequest) {
 
+    await connectDB()
+
+    const { reviewReply, courseId, reviewId } = await request.json();
+
+    console.log(reviewReply)
+
     try {
+        const accessToken: any = await request.cookies.get('accessToken')?.value
+        const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN!);
+        const { _id }: any = decode;
 
-        const userId = request.headers.get('userId')
-        const { reply, courseReviewId } = await request.json();
+        const course = await Course.findById(courseId);
 
-        if (!userId) {
-            return NextResponse.json({
-                success: false,
-                userId
-            })
-        }
+        let review = course.reviews?.find((review: any) => review._id == reviewId);
 
-        // save reply in Review Model.
-        const updatedReview = await Review.findByIdAndUpdate(courseReviewId, {
-            $set: {
-                creatorReply: reply,
-                courseCreator: userId
-            }
-        })
+        review.reply = reviewReply;
+        review.replyBy = _id;
+
+        await course.save();
 
         return NextResponse.json({
             success: true,
             message: 'Reply Send to User',
-            updatedReview
+            course
         })
 
     } catch (error: any) {

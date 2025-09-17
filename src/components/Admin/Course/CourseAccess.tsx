@@ -2,7 +2,7 @@
 
 import CoursePlayer from "@/components/CoursePlayer";
 import CourseSection from "@/components/Courses/CourseSection";
-import { useGetCourseWithDataQuery } from "@/redux/features/course/courseApi";
+import { useAddReplyInReviewMutation, useAddReviewMutation, useGetCourseWithDataQuery } from "@/redux/features/course/courseApi";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,12 +17,15 @@ import { MdVerified } from "react-icons/md";
 export default function CourseAccess() {
     const params = useParams()
     const id = params.id
-    const { user } = useSelector((state: any) => state.auth)
+    const { user } = useSelector((state: any) => state.auth);
 
-    const { data, isLoading, error } = useGetCourseWithDataQuery(id)
+    const { data, isLoading, error, refetch } = useGetCourseWithDataQuery(id)
 
     const [addComment, { data: addCommentData, error: addCommentError }]: any = useAddCommentMutation({})
     const [addReplyInComment, { data: addReplyData }]: any = useAddReplyInCommentMutation({})
+
+    const [addReview, { data: addReviewData }]: any = useAddReviewMutation({})
+    const [addReplyInReview, { data: addReplyInReviewData }]: any = useAddReplyInReviewMutation({})
 
     const [course, setCourse]: any = useState()
     const [active, setActive]: any = useState(0)
@@ -32,7 +35,11 @@ export default function CourseAccess() {
     const [comment, setComment]: any = useState('')
     const [reply, setReply]: any = useState('')
     const [replyActive, setReplyActive] = useState(false)
+
+    const [review, setReview]: any = useState('')
     const [rating, setRating]: any = useState(1)
+    const [reviewReplyActive, setReviewReplyActive] = useState(false);
+    const [reviewReply, setReviewReply] = useState('')
 
     useEffect(() => {
         if (data) {
@@ -43,16 +50,22 @@ export default function CourseAccess() {
 
     useEffect(() => {
         if (addCommentData) {
-            console.log(addCommentData)
             setCourse(addCommentData?.course)
-        }
+        };
 
         if (addReplyData) {
-            console.log(addReplyData)
             setCourse(addReplyData?.course)
+        };
+
+        if (addReviewData) {
+            refetch()
+        };
+
+        if (addReplyInReview) {
+            refetch()
         }
 
-    }, [addCommentData, addReplyData])
+    }, [addCommentData, addReplyData, addReviewData, addReplyInReview])
 
     if (isLoading) {
         return <div>loading...</div>
@@ -103,6 +116,14 @@ export default function CourseAccess() {
         const sectionId = course?.sections[activeSection]._id
         const videoId = course?.sections[activeSection]?.videos[activeVideo]._id
         await addReplyInComment({ reply, courseId: id, sectionId, videoId, commentId })
+    };
+
+    const handleReview = async () => {
+        await addReview({ rating, review, courseId: id })
+    };
+
+    const handleReplyReview = async (reviewId: any) => {
+        await addReplyInReview({ reviewReply, courseId: id, reviewId });
     }
 
     return (
@@ -271,53 +292,155 @@ export default function CourseAccess() {
                         {/* Video Reviews  */}
                         {
                             active == 3 && (
-                                <div className="py-10 border-b-[0.5px] border-slate-600" >
+                                <div className="py-10" >
+                                    {
+                                        !course?.reviews?.some((review: any) => review.user?._id == user._id) && (
+                                            <div className="pb-5 border-b-[0.5px] border-slate-600" >
 
-                                    <div className="flex gap-5" >
-                                        <Image
-                                            src={user?.avatar?.url ? user?.avatar?.url : '/assets/avatar.png'}
-                                            alt="few"
-                                            className="object-contain self-start "
-                                            width={50}
-                                            height={50}
-                                        />
+                                                <div className="flex gap-5" >
+                                                    <Image
+                                                        src={user?.avatar?.url ? user?.avatar?.url : '/assets/avatar.png'}
+                                                        alt="few"
+                                                        className="object-contain self-start "
+                                                        width={50}
+                                                        height={50}
+                                                    />
 
-                                        <div className="flex-1" >
-                                            <h2>Give Rating *</h2>
+                                                    <div className="flex-1" >
+                                                        <h2>Give Course Review *</h2>
 
-                                            <div className="flex" >
-                                                {[1, 2, 3, 4, 5].map((i) =>
-                                                    rating >= i ? (
-                                                        <AiFillStar
-                                                            key={i}
-                                                            className="mr-1 cursor-pointer"
-                                                            color="rgb(246,186,0)"
-                                                            size={25}
-                                                            onClick={() => setRating(i)}
-                                                        />
-                                                    ) : (
-                                                        <AiOutlineStar
-                                                            key={i}
-                                                            className="mr-1 cursor-pointer"
-                                                            color="rgb(246,186,0)"
-                                                            size={25}
-                                                            onClick={() => setRating(i)}
-                                                        />
-                                                    )
-                                                )}
+                                                        <div className="flex" >
+                                                            {[1, 2, 3, 4, 5].map((i) =>
+                                                                rating >= i ? (
+                                                                    <AiFillStar
+                                                                        key={i}
+                                                                        className="mr-1 cursor-pointer"
+                                                                        color="rgb(246,186,0)"
+                                                                        size={25}
+                                                                        onClick={() => setRating(i)}
+                                                                    />
+                                                                ) : (
+                                                                    <AiOutlineStar
+                                                                        key={i}
+                                                                        className="mr-1 cursor-pointer"
+                                                                        color="rgb(246,186,0)"
+                                                                        size={25}
+                                                                        onClick={() => setRating(i)}
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </div>
+
+                                                        <textarea value={review} onChange={(e) => setReview(e.target.value)} placeholder="Enter your Review"
+                                                            className="border border-slate-300 p-2 rounded field-sizing-content min-h-[20vh] w-full outline-none mt-2" />
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div className="flex justify-end" >
+                                                    <button className="px-5 py-2 bg-blue-400 rounded-full" onClick={handleReview} > Submit </button>
+                                                </div>
+
                                             </div>
+                                        )
+                                    }
 
-                                            <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Enter your comment"
-                                                className="border border-slate-300 p-2 rounded field-sizing-content min-h-[20vh] w-full outline-none mt-2" />
 
-                                        </div>
+                                    {/* all reviews  */}
+                                    <div>
+                                        {
+                                            course?.reviews?.map((review: any) => (
+                                                <div className="flex gap-3 py-4 " >
 
+                                                    <div>
+                                                        <Image
+                                                            src={review?.user?.avatar ? review?.user?.avatar.url : '/assets/avatar.png'}
+                                                            alt="ef"
+                                                            width={30}
+                                                            height={30}
+                                                            className="bg-contain"
+                                                        />
+                                                    </div>
+
+                                                    <div className="  w-full  " >
+                                                        <div className="text-xl font-bold" > {review.user?.name} </div>
+
+                                                        <div className="flex gap-1" >
+                                                            {[1, 2, 3, 4, 5].map((i) =>
+                                                                review.rating >= i ? (
+                                                                    <AiFillStar
+                                                                        key={i}
+                                                                        className="mr-1"
+                                                                        color="rgb(246,186,0)"
+                                                                        size={25}
+                                                                    />
+                                                                ) : (
+                                                                    <AiOutlineStar
+                                                                        key={i}
+                                                                        className="mr-1 "
+                                                                        color="rgb(246,186,0)"
+                                                                        size={25}
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </div>
+
+                                                        <div className="text-slate-300"  > {review.review} </div>
+                                                        <small className="text-slate-300" > {format(review.createdAt)}•  </small>
+
+                                                        {
+                                                            !review.reply &&
+                                                            <>
+                                                                {/* add reply  */}
+                                                                <div className="mt-1" onClick={() => setReviewReplyActive(!reviewReplyActive)} > Add Reply </div>
+
+                                                                {
+                                                                    reviewReplyActive &&
+                                                                    <div className=" flex justify-between gap-3 mt-2" >
+                                                                        <input className="flex-1 border-b border-b-slate-300 outline-none "
+                                                                            value={reviewReply}
+                                                                            onChange={(e) => setReviewReply(e.target.value)}
+                                                                            type="text" placeholder="Enter your Reply..." />
+                                                                        <button onClick={() => handleReplyReview(review._id)} >Submit</button>
+                                                                    </div>
+                                                                }
+                                                            </>
+                                                        }
+
+                                                        {/* review reply  */}
+                                                        {
+                                                            review.reply &&
+                                                            <div className="flex gap-2 mt-2" >
+
+                                                                <div>
+                                                                    <Image
+                                                                        src={review?.replyBy?.avatar ? review?.replyBy?.avatar.url : '/assets/avatar.png'}
+                                                                        alt="ef"
+                                                                        width={30}
+                                                                        height={30}
+                                                                        className="bg-contain"
+                                                                    />
+                                                                </div>
+
+                                                                <div>
+                                                                    <div className="flex items-center gap-2" >
+                                                                        {review.replyBy?.name}
+                                                                        <span> {review.replyBy?.role == 'admin' && <MdVerified size={15} className="text-blue-500" />} </span>
+                                                                    </div>
+                                                                    <div> {review.reply} </div>
+                                                                    <div> {format(review.createdAt)}• </div>
+                                                                </div>
+
+                                                            </div>
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+                                            ))
+                                        }
                                     </div>
-
-                                    <div className="flex justify-end" >
-                                        <button className="px-5 py-2 bg-blue-400 rounded-full" > Submit </button>
-                                    </div>
-
                                 </div>
                             )
                         }
@@ -344,7 +467,7 @@ export default function CourseAccess() {
 
             </div>
 
-        </div>
+        </div >
     )
 
 }

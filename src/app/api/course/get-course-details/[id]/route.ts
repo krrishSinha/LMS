@@ -24,6 +24,12 @@ export async function GET(request: NextRequest, { params }: any) {
         // }
 
         const course = await Course.findById(id)
+            .populate({
+                path: 'reviews',
+                populate: [
+                    { path: 'user', select: 'name email role avatar' }
+                ]
+            })
             .select(
                 "-sections.videos.videoUrl " +
                 "-sections.videos.links " +

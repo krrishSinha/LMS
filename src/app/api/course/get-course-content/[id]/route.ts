@@ -26,7 +26,9 @@ export async function GET(request: NextRequest, context: { params: { id: string 
             path: 'courseId',
             populate: [
                 { path: 'sections.videos.comments.user', select: 'name email avatar' },
-                { path: 'sections.videos.comments.replies.user', select: 'name email role avatar' }
+                { path: 'sections.videos.comments.replies.user', select: 'name email role avatar' },
+                { path: 'reviews.user', select: 'name email role avatar' },
+                { path: 'reviews.replyBy', select: 'name email role avatar' },
             ]
         }).select('-payment_info').lean()
 

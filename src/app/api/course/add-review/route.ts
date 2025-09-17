@@ -1,67 +1,53 @@
-import { Course, Enrollment, Review } from "@/models";
+import connectDB from "@/db/dbConfig";
+import { Course, Enrollment } from "@/models";
 import { NextRequest, NextResponse } from "next/server";
-
+import jwt from 'jsonwebtoken'
 
 export async function POST(request: NextRequest) {
 
+    await connectDB();
+    const { rating, review, courseId } = await request.json();
+
     try {
 
-        const userId = request.headers.get('userId')
-        const { rating, review, courseId } = await request.json();
-        
+        const accessToken: any = await request.cookies.get('accessToken')?.value
+        const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN!);
+        const { _id }: any = decode;
+
         // check if user have purchased course or not 
-        const isUserPurchasedCourse = await Enrollment.findOne({
-            user: userId,
-            course: courseId
+        const isUserEnrolled = await Enrollment.findOne({
+            userId: _id,
+            courseId: courseId
         })
 
-        if(!isUserPurchasedCourse){
+        if (!isUserEnrolled) {
             return NextResponse.json({
                 success: false,
                 message: 'Unauthorised. Please buy the Course to submit Review',
-                isUserPurchasedCourse
             })
-        }
+        };
 
-        if(!userId){
-            return NextResponse.json({
-                success: false,
-                userId
-            })
-        }
+        const course = await Course.findById(isUserEnrolled.courseId)
 
-
-        if (!rating) {
-            return NextResponse.json({
-                success: false,
-                message: 'Rating are required for submitting review'
-            })
-        }
-
-        // save review in Review Model
-        const savedReview: any = await Review.create({
-            userId,
+        await course.reviews.push({
+            user: _id,
             rating,
             review,
-            courseId
         })
 
-        // push saved review in Course Model.reviews Array
-        const updatedCourse = await Course.findByIdAndUpdate(courseId, {
-            $push: { reviews: savedReview._id }
-        });
+        await course.save()
 
         return NextResponse.json({
             success: true,
             message: 'Review Added',
-            updatedCourse
+            course
         })
 
     } catch (error: any) {
         console.log('error in add review');
         return NextResponse.json({
             success: true,
-            message: error.message
+            message: error.message,
         })
     }
 
