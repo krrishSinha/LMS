@@ -10,7 +10,7 @@ export default function ReviewCard({ review }: any) {
             <div className="flex justify-between" >
                 <div className="flex  items-center gap-2" >
                     <Image
-                        src={review.user?.avatar ? review.user?.avatar.url : '/assets/avatar.png'}
+                        src={review.avatar}
                         alt="avatar"
                         width={40}
                         height={40}
@@ -18,8 +18,8 @@ export default function ReviewCard({ review }: any) {
                         className="rounded-full"
                     />
                     <div>
-                        <h2 className="text-sm" > {review.user?.name} </h2>
-                        <p className="text-xs text-[#ffffffab]"> {review.profession ? review.profession : 'Student'} </p>
+                        <h2 className="text-sm" > {review.name} </h2>
+                        <p className="text-xs text-[#ffffffab]"> {review.profession} </p>
                     </div>
                 </div>
 
@@ -29,7 +29,7 @@ export default function ReviewCard({ review }: any) {
             </div>
 
             <div className="mt-4" >
-                {review.comment ? review.comment : review.review}
+                {review.comment}
             </div>
 
         </div>

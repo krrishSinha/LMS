@@ -10,6 +10,7 @@ import { useSelector } from "react-redux"
 import Link from "next/link"
 import CourseSection from "./CourseSection"
 import { useCreateCheckoutMutation } from "@/redux/features/enrollment/enrollmentApi";
+import Image from "next/image";
 
 export default function CourseDetails({ id }: any) {
 
@@ -64,21 +65,24 @@ export default function CourseDetails({ id }: any) {
         return <div>loading...</div>
     }
 
+    const avgRating = course?.reviews?.length > 0 ? course.reviews.reduce((acc: any, r: any) =>
+        acc + r.rating, 0) / course.reviews.length : 0;
+
 
     return (
 
         <div className="mt-5" >
 
-            <div   className="w-[95%] md:w-[80%] mx-auto"  >
+            <div className="w-[95%] md:w-[80%] mx-auto"  >
 
                 <div className="flex justify-between gap-5" >
 
                     <div className=" flex-1" >
                         <h1 className="text-4xl font-bold" > {course.title} </h1>
 
-                        <div className="flex items-center justify-between mt-1 " >
+                        <div className="flex items-center justify-between mt-1 " >  
                             <div className="flex items-center gap-2" >
-                                <Ratings rating={course.ratings} />
+                                <Ratings rating={avgRating} />
                                 {course?.reviews?.length} Reviews
                                 <div> {course?.purchased} Students  </div>
                             </div>
@@ -121,13 +125,40 @@ export default function CourseDetails({ id }: any) {
                         </div>
 
                         <div className="flex items-center gap-2 mt-4" >
-                            <Ratings rating={course.ratings} />
-                            <div className="text-xl" > {course?.ratings?.toFixed(1)} Ratings • {course?.reviews?.length} Reviews </div>
+                            <Ratings rating={avgRating} />
+                            <div className="text-xl" > {avgRating.toFixed(1)} Ratings • {course?.reviews?.length} Reviews </div>
                         </div>
 
                         <div className="mt-4" >
                             {course?.reviews?.length > 0 && [...course.reviews].reverse().map((review: any, index: any) => (
-                                <ReviewCard review={review} key={index} />
+                                <div className="dark:bg-[#151D22] shadow rounded px-3 py-2 border border-[#00000028] dark:border-[#ffffff1d] h-max w-full" >
+
+                                    <div className="flex justify-between" >
+                                        <div className="flex  items-center gap-2" >
+                                            <Image
+                                                src={review.user?.avatar ? review.user?.avatar.url : '/assets/avatar.png'}
+                                                alt="avatar"
+                                                width={40}
+                                                height={40}
+                                                objectFit="contain"
+                                                className="rounded-full"
+                                            />
+                                            <div>
+                                                <h2 className="text-sm" > {review.user?.name} </h2>
+                                                <p className="text-xs text-[#ffffffab]"> {review.profession ? review.profession : 'Student'} </p>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <Ratings rating={review.rating ? review.rating : 5} />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4" >
+                                        {review.comment ? review.comment : review.review}
+                                    </div>
+
+                                </div>
                             ))}
                         </div>
 

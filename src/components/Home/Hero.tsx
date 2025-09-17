@@ -1,6 +1,7 @@
 import { useGetLayoutByTypeQuery } from "@/redux/features/layout/layoutApi";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 
@@ -9,6 +10,9 @@ export default function Hero() {
 
     const { data, isLoading } = useGetLayoutByTypeQuery('banner')
     const [header, setHeader]: any = useState([]);
+    const [search, setSearch] = useState('')
+
+    const router = useRouter()
 
     useEffect(() => {
         if (data) {
@@ -20,6 +24,14 @@ export default function Hero() {
         return (
             <div>loading...</div>
         )
+    };
+
+    const handleSearch = () => {
+        if (search == '') {
+            return
+        } else {
+            router.push(`/courses?title=${search}`)
+        }
     }
 
     return (
@@ -47,8 +59,8 @@ export default function Hero() {
                     </p>
 
                     <div className="relative rounded-md overflow-hidden border border-[#575757] dark:border-none flex items-center justify-between lg:w-[85%] " >
-                        <input type="text" className="w-full py-2 px-2  dark:border-none outline-0  dark:bg-[#575757] dark:text-[#ffffffdd] dark:placeholder:text-[#ffffffdd] font-josefin italic font-[500] text-sm  " placeholder="Search Courses..." />
-                        <div className="absolute right-0 bg-[#51A2FF] text-white  px-2 cursor-pointer h-full flex items-center " ><BiSearch /></div>
+                        <input type="text" className="w-full py-2 px-2  dark:border-none outline-0  dark:bg-[#575757] dark:text-[#ffffffdd] dark:placeholder:text-[#ffffffdd] font-josefin italic font-[500] text-sm  " placeholder="Search Courses..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                        <div className="absolute right-0 bg-[#51A2FF] text-white  px-2 cursor-pointer h-full flex items-center " onClick={handleSearch}><BiSearch /></div>
                     </div>
 
                     <div className="flex items-center gap-2 "  >
