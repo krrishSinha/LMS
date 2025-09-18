@@ -1,50 +1,50 @@
 import redis from "@/db/redis";
-import { getAuthenticatedUser } from "@/helpers/getAuthenticatedUser";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
+import jwt from 'jsonwebtoken'
 
+export async function POST(request: NextRequest) {
 
-export async function POST(request: NextRequest){
+    const accessToken: any = request.cookies.get('accessToken')?.value
+    const { oldPassword, newPassword } = await request.json()
+
     try {
+        const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN as any);
+        const { _id }: any = decode
 
-        const userId: any = request.headers.get('userId');
-
-        if(!userId){
+        if (!_id) {
             return NextResponse.json(
                 {
-                success: false,
-                message: 'Unauthorised'
-            },
-            {status: 401}
-        ) 
+                    success: false,
+                    message: 'Unauthorised'
+                },
+                { status: 401 }
+            )
         };
 
-        const {oldPassword, newPassword} = await request.json()
 
-        if(!oldPassword || !newPassword){
+        if (!oldPassword || !newPassword) {
             return NextResponse.json(
                 {
-                success: false,
-                message: 'All Feilds are required'
-            },
-            {status: 401}
-        ) 
+                    success: false,
+                    message: 'All Feilds are required'
+                },
+                { status: 401 }
+            )
         }
 
-        const user = await User.findById(userId)
+        const user = await User.findById(_id)
 
         const isPasswordMatched = await user.comparePassword(oldPassword)
 
-        console.log(isPasswordMatched)
-
-        if(!isPasswordMatched){
+        if (!isPasswordMatched) {
             return NextResponse.json(
                 {
-                success: false,
-                message: 'Invalid old Password'
-            },
-            {status: 401}
-        )
+                    success: false,
+                    message: 'Invalid old Password'
+                },
+                { status: 401 }
+            )
         };
 
         user.password = newPassword;
@@ -58,15 +58,15 @@ export async function POST(request: NextRequest){
             message: 'Password Changed successfully...'
         })
 
-        
-    } catch (error:any) {
+
+    } catch (error: any) {
         console.log('error in updating password');
         return NextResponse.json(
             {
-            success: 'false',
-            message: error.message
-        },
-        {status: 401}
-    )
+                success: 'false',
+                message: error.message
+            },
+            { status: 401 }
+        )
     }
 }

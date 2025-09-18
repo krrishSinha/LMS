@@ -1,18 +1,13 @@
 'use client'
-import { useGetAllCoursesQuery } from '@/redux/features/course/courseApi'
 import { useGetAllEnrollmentsQuery } from '@/redux/features/enrollment/enrollmentApi'
-import { useGetAllUsersQuery } from '@/redux/features/user/userApi'
 import { format } from 'timeago.js';
 import React, { useEffect, useMemo, useState } from 'react'
 import { MdEmail } from 'react-icons/md'
-
-
+import FullScreenLoader from '@/components/Loader';
 
 export default function Invoice({ isDashboard }: any) {
 
     const { data, isLoading } = useGetAllEnrollmentsQuery({})
-    const { data: usersData, isLoading: usersIsLoading } = useGetAllUsersQuery({})
-    const { data: coursesData, isLoading: coursesIsLoading } = useGetAllCoursesQuery({})
 
     const [invoiceData, setInvoiceData] = useState([]);
     const [search, setSearch] = useState("");
@@ -39,11 +34,23 @@ export default function Invoice({ isDashboard }: any) {
 
         if (data) {
 
-            // const temp = data.enrollments.map((enrollment: any) => {
+            const temp: any = data.enrollments.map((enrollment: any) => {
 
-            //     const user = usersData?.users.find((user: any) => user._id == enrollment.userId);
+                return {
+                    _id: enrollment?._id,
+                    name: enrollment?.userId?.name,
+                    email: enrollment?.userId?.email,
+                    course: enrollment?.courseId?.title,
+                    price: "$" + enrollment?.courseId?.price,
+                    createdAt: format(enrollment.createdAt)
+                }
+            });
 
-            //     const course = coursesData?.courses.map((course: any) => course._id == enrollment.courseId);
+            setInvoiceData(temp)
+
+            // const temp: any = sampleEnrollments.map((enrollment) => {
+            //     const user = sampleUsers.find((u) => u._id === enrollment.userId);
+            //     const course = sampleCourses.find((c) => c._id === enrollment.courseId);
 
             //     return {
             //         ...enrollment,
@@ -52,29 +59,13 @@ export default function Invoice({ isDashboard }: any) {
             //         course: course?.title,
             //         price: "$" + course?.price,
             //         createdAt: format(enrollment.createdAt)
-            //     }
+            //     };
             // });
 
-            // setInvoiceData(temp)
-
-            const temp: any = sampleEnrollments.map((enrollment) => {
-                const user = sampleUsers.find((u) => u._id === enrollment.userId);
-                const course = sampleCourses.find((c) => c._id === enrollment.courseId);
-
-                return {
-                    ...enrollment,
-                    name: user?.name,
-                    email: user?.email,
-                    course: course?.title,
-                    price: "$" + course?.price,
-                    createdAt: format(enrollment.createdAt)
-                };
-            });
-
-            setInvoiceData(temp);
+            // setInvoiceData(temp);
         }
 
-    }, [data, usersData, coursesData]);
+    }, [data]);
 
     // Apply global search
     const filteredData = useMemo(() => {
@@ -91,7 +82,7 @@ export default function Invoice({ isDashboard }: any) {
 
     if (isLoading) {
         return (
-            <div>loading...</div>
+           <FullScreenLoader />
         )
     };
 

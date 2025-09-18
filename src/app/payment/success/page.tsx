@@ -14,12 +14,13 @@ export default function SuccessPage() {
 
     useEffect(() => {
 
-        const createEnrollmentHandler = async (userId: any, courseId: any, payment_info: any) => {
-            const result = await createEnrollment({ userId, courseId, payment_info })
-            console.log(result)
-        }
-
         if (session_id && paymentInfoData) {
+
+            const createEnrollmentHandler = async (userId: any, courseId: any, payment_info: any) => {
+                const result = await createEnrollment({ userId, courseId, payment_info })
+                console.log(result)
+            }
+
             setPayment(paymentInfoData);
             const userId = paymentInfoData?.metadata?.userId
             const courseId = paymentInfoData?.metadata?.courseId

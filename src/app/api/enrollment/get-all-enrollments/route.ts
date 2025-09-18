@@ -7,6 +7,9 @@ export async function GET(request: NextRequest){
     try {
 
         const enrollments = await Enrollment.find()
+        .populate('userId', 'name email enrolledCourses')
+        .populate('courseId', 'title price')
+        .select('-payment_info')
 
         return NextResponse.json({
             success: true,

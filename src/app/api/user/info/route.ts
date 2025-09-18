@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken'
 export async function GET(request: NextRequest) {
     try {
 
-        // const userId = request.headers.get('userId');
         const accessToken: any = request.cookies.get('accessToken')?.value
 
         try {
@@ -16,12 +15,12 @@ export async function GET(request: NextRequest) {
 
             const { _id }: any = decode
 
-            const user = await User.findById(_id)
+            const user = await User.findById(_id).populate('enrolledCourses')
             // const redisUser: any = await redis.get(JSON.stringify(_id))
 
             // const user = redisUser
 
-            
+
             if (!user) {
                 return NextResponse.json(
                     {

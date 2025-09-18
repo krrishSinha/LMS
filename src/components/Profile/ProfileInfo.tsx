@@ -75,9 +75,9 @@ export default function ProfileInfo({ user }: any) {
 
 
     return (
-        <div className=" col-span-3" >
+        <div className=" col-span-3 mb-10" >
 
-            <div className=" flex flex-col items-center gap-5 " >
+            <div className=" flex flex-col md:items-center gap-5 " >
 
                 <div className="flex justify-center " >
                     <div className="relative" >
@@ -109,21 +109,21 @@ export default function ProfileInfo({ user }: any) {
                 </div>
 
 
-                <div className="w-[50%] " >
+                <div className="md:w-[50%] " >
 
                     <form onSubmit={handleSubmit} className="grid gap-4"  >
 
                         <div className="flex flex-col gap-2" >
                             <label htmlFor="fullname">Full Name</label>
-                            <input type="text" id="fullname" value={name} onChange={(e: any) => setName(e.target.value)} className="border outline-none px-2 py-1" />
+                            <input type="text" id="fullname" value={name} onChange={(e: any) => setName(e.target.value)} className="border border-gray-600 outline-none px-2 py-1" />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label htmlFor="">Email Address</label>
-                            <input type="email" readOnly value={user?.email} className="border outline-none px-2 py-1" />
+                            <input type="email" readOnly value={user?.email} className="border border-gray-600 outline-none px-2 py-1" />
                         </div>
 
-                        <input type="submit" value="Update" className="border cursor-pointer px-12 py-1 w-fit mt-2" />
+                        <input type="submit" value="Update" className="bg-[crimson] cursor-pointer px-12 py-1 w-fit mt-2" />
 
                     </form>
 

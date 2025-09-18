@@ -1,8 +1,10 @@
 'use client'
 import CourseCard from '@/components/Courses/CourseCard'
 import Header from '@/components/Header'
+import FullScreenLoader from '@/components/Loader'
 import { useGetAllCoursesQuery } from '@/redux/features/course/courseApi'
 import { useGetLayoutByTypeQuery } from '@/redux/features/layout/layoutApi'
+import { Fullscreen } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -36,11 +38,10 @@ export default function page() {
     }, [data, category, searchTitle]);
 
     if (isLoading && categoriesIsLoading) {
-        return <div>loading...</div>
+        return <FullScreenLoader />
     }
 
     const categories = categoriesData?.layout?.categories || []
-    console.log(courses)
 
     return (
         <div>
@@ -50,8 +51,8 @@ export default function page() {
             <div className='w-[90%] sm:w-[90%] md:w-[85%] mx-auto' >
 
                 {/* categories  */}
-                <div className='flex items-center gap-3 mt-4 ' >
-                    <div className={` ${category == 'All' ? 'bg-[crimson]' : 'bg-[#5050cb]'} w-fit px-3 py-2 rounded-full cursor-pointer`}
+                <div className='flex flex-wrap items-center gap-3 mt-30 ' >
+                    <div className={` ${category == 'All' ? 'bg-[crimson]' : 'bg-[#5050cb]'} text-white w-fit px-3 py-2 rounded-full cursor-pointer`}
                         onClick={() => {
                             setCategory('All')
                             setSearchTitle(null)
@@ -61,7 +62,7 @@ export default function page() {
                     {
                         categories &&
                         categories.map((item: any, index: any) => (
-                            <div className={` ${category == item.title ? 'bg-[crimson]' : 'bg-[#5050cb]'} w-fit px-3 py-2 rounded-full cursor-pointer `}
+                            <div className={` ${category == item.title ? 'bg-[crimson]' : 'bg-[#5050cb]'} text-white  w-fit px-3 py-2 rounded-full cursor-pointer `} key={index}
                                 onClick={() => {
                                     setCategory(item.title)
                                     setSearchTitle(null)
@@ -81,7 +82,7 @@ export default function page() {
                             <div className='grid sm:grid-cols-3 lg:grid-cols-4 gap-5' >
                                 {
                                     courses.map((course: any, index: any) => (
-                                        <CourseCard course={course} />
+                                        <CourseCard course={course} key={index} />
                                     ))
                                 }
                             </div>

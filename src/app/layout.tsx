@@ -10,12 +10,13 @@ import { store } from '../redux/store'
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import React from "react";
 import { PrimeReactProvider } from 'primereact/api';
+import FullScreenLoader from "@/components/Loader";
 
-// export const metadata: Metadata = {
-//   title: "ELearning",
-//   description: "ELearning is a platorm for students to learn and get help from teachers.",
-//   keywords: 'Programming, MERN, React, NextJs, Redux, Machine Learning'
-// };
+ const metadata: Metadata = {
+  title: "ELearning",
+  description: "ELearning is a platorm for students to learn and get help from teachers.",
+  keywords: 'Programming, MERN, React, NextJs, Redux, Machine Learning'
+};
 
 export default function RootLayout({
   children,
@@ -50,9 +51,7 @@ const AppInitializer = ({ children }: any) => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center text-gray-700 dark:text-gray-300">
-        Loading...
-      </div>
+     <FullScreenLoader />
     );
   }
 

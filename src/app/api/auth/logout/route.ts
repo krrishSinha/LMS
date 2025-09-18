@@ -1,9 +1,8 @@
 import redis from "@/db/redis";
-import { isAuthenticated } from "@/middlewares/isAuthenticated";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest,) {
+export async function PUT(request: NextRequest,) {
 
     try {
 

@@ -5,10 +5,10 @@ import { AiOutlineUnorderedList } from "react-icons/ai";
 
 
 
-export default function CourseCard({ course, isProfile }: any) {
+export default function CourseCard({ course }: any) {
 
     return (
-        <Link href={!isProfile ? `course/${course._id}` : `course-access/${course._id}`} >
+        <Link href={`course/${course._id}`}>
 
             <div className="p-2  dark:bg-[#1A202A] rounded border border-slate-200 shadow dark:border-slate-800  " >
                 <Image
@@ -28,10 +28,7 @@ export default function CourseCard({ course, isProfile }: any) {
 
                     <div className="flex items-center justify-between" >
                         <Ratings rating={5} />
-                        <h5
-                            className={`text-black dark:text-[#fff] ${isProfile && "hidden 800px:inline"
-                                }`}
-                        >
+                        <h5  className={`text-black dark:text-[#fff]}`}>
                             {course.purchased} Students
                         </h5>
                     </div>

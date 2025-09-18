@@ -25,6 +25,9 @@ export default function UpdatePassword({ user }: any) {
                 toastId.current = null
             }
             toast.success('Password Updated ✔')
+            setOldPassword('')
+            setNewPassword('')
+            setConfirmNewPassword('')
         }
 
         if (error) {
@@ -53,30 +56,30 @@ export default function UpdatePassword({ user }: any) {
     }
 
     return (
-        <div className=" col-span-3" >
+        <div className=" col-span-3 " >
 
-            <div className="flex justify-center" >
+            <div className="md:flex md:justify-center" >
 
-                <div className="w-[50%] " >
+                <div className="md:w-[50%] " >
 
                     <form onSubmit={handleSubmit} className="grid gap-4"  >
 
                         <div className="flex flex-col gap-2" >
                             <label htmlFor="oldPassword">Old Password</label>
-                            <input type="text" id="oldPassword" value={oldPassword} onChange={(e: any) => setOldPassword(e.target.value)} className="border outline-none px-2 py-1" />
+                            <input type="text" id="oldPassword" value={oldPassword} onChange={(e: any) => setOldPassword(e.target.value)} className="border border-gray-600 outline-none px-2 py-1" />
                         </div>
 
                         <div className="flex flex-col gap-2" >
                             <label htmlFor="newPassword">New Password</label>
-                            <input type="text" id="newPassword" value={newPassword} onChange={(e: any) => setNewPassword(e.target.value)} className="border outline-none px-2 py-1" />
+                            <input type="text" id="newPassword" value={newPassword} onChange={(e: any) => setNewPassword(e.target.value)} className="border border-gray-600 outline-none px-2 py-1" />
                         </div>
 
                         <div className="flex flex-col gap-2" >
                             <label htmlFor="confirmNewPassword">Confirm New Password</label>
-                            <input type="text" id="confirmNewPassword" value={confirmNewPassword} onChange={(e: any) => setConfirmNewPassword(e.target.value)} className="border outline-none px-2 py-1" />
+                            <input type="text" id="confirmNewPassword" value={confirmNewPassword} onChange={(e: any) => setConfirmNewPassword(e.target.value)} className="border border-gray-600 outline-none px-2 py-1" />
                         </div>
 
-                        <input type="submit" value="Submit" className="border cursor-pointer px-12 py-1 w-fit mt-2" />
+                        <input type="submit" value="Submit" className="bg-[crimson] cursor-pointer px-12 py-1 w-fit mt-2" />
 
                     </form>
 

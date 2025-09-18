@@ -11,6 +11,7 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
+import FullScreenLoader from "../Loader";
 
 
 export default function UsersAnalytics({ isDashboard }: any) {
@@ -61,7 +62,7 @@ export default function UsersAnalytics({ isDashboard }: any) {
 
     if (isLoading) {
         return (
-            <div>loading...</div>
+            <FullScreenLoader />
         )
     }
 

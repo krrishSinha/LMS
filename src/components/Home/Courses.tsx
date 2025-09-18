@@ -3,6 +3,8 @@
 import { useGetAllCoursesQuery } from "@/redux/features/course/courseApi"
 import { useEffect, useState } from "react";
 import CourseCard from "../Courses/CourseCard";
+import FullScreenLoader from "../Loader";
+import { useSelector } from "react-redux";
 
 
 export default function Courses() {
@@ -13,7 +15,6 @@ export default function Courses() {
     useEffect(() => {
 
         if (data) {
-            console.log(data?.courses)
             setCourses(data?.courses)
         }
 
@@ -21,7 +22,7 @@ export default function Courses() {
 
     if (isLoading) {
         return (
-            <div>loading...</div>
+            <FullScreenLoader />
         )
     }
 
@@ -45,7 +46,7 @@ export default function Courses() {
                 <div className=" py-10 grid sm:grid-cols-3 lg:grid-cols-4 gap-5 " >
                     {
                         courses.length > 0 && courses.map((course: any, index: any) => (
-                            <CourseCard key={index} course={course} isProfile={false} />
+                            <CourseCard key={index} course={course} />
                         ))
                     }
 

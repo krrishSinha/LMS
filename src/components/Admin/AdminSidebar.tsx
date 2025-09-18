@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Home } from "lucide-react"
 import { IoIosPeople } from "react-icons/io";
 import { FaFileInvoice, FaVideo } from "react-icons/fa";
 import { FaClipboardQuestion, FaUserGroup } from "react-icons/fa6";
@@ -22,6 +22,9 @@ import {
 
 import { useSelector } from "react-redux"
 import Link from "next/link"
+import { useLogoutMutation } from "@/redux/features/api/authApi";
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 // Menu items.
 const items = [
@@ -75,13 +78,28 @@ const items = [
         url: "#",
         icon: Home,
     },
-]
+];
+
+
 
 export default function AdminSidebar() {
 
+    const [logout]: any = useLogoutMutation({});
     const { state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar }: any = useSidebar()
 
     const { user } = useSelector((state: any) => state.auth)
+
+    const logOutHandler: any = async () => {
+        try {
+            const res: any = await logout()
+            toast.success(res.message);
+            redirect('/')
+        } catch (err) {
+            console.log(err);
+            toast.error("Logout failed ❌");
+        }
+    };
+
 
     return (
         <div>
@@ -91,12 +109,12 @@ export default function AdminSidebar() {
                         <SidebarGroupLabel className="text-2xl mb-5 text-white font-bold  flex justify-center" >ELearning</SidebarGroupLabel>
 
                         <div className="flex justify-center flex-col items-center gap-1 " >
-                            <img src={user?.avatar?.url} alt="" className={` ${open ? 'w-20 h-20' : 'w-5 h-5'} rounded-full  `} />
+                            <img src={user?.avatar ? user?.avatar?.url : '/assets/avatar.png'} alt="" className={` ${open ? 'w-20 h-20' : 'w-5 h-5'} rounded-full  `} />
 
                             {
                                 open && (
                                     <>
-                                        <h3 className="text-white " >Krrish Sinha</h3>
+                                        <h3 className="text-white " > {user?.name} </h3>
                                         <h4 className="text-sm text-white" >- Admin</h4>
                                     </>
                                 )
@@ -315,16 +333,16 @@ export default function AdminSidebar() {
                                 </SidebarMenuItem>
                             </SidebarMenu>
 
-                            <SidebarMenu>
+                            {/* <SidebarMenu>
                                 <SidebarMenuItem >
                                     <SidebarMenuButton asChild>
-                                        <Link href={'#'}>
+                                        <Link href={''} onClick={logOutHandler} >
                                             <SiSimpleanalytics />
                                             <span className="dark:text-zinc-400" > Logout  </span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                            </SidebarMenu>
+                            </SidebarMenu> */}
 
                         </SidebarGroupContent>
                     </SidebarGroup>

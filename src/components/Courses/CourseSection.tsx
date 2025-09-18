@@ -25,7 +25,7 @@ export default function CourseSection({ section, user, activeSection, setActiveS
                 <div className="flex justify-between cursor-pointer " onClick={() => handleOpen(section._id)} >
                     <div>
                         <h2 className="text-xl font-semibold" > {section?.title} </h2>
-                        <p className="" > {section?.videos?.length} Lessons &bull; 38 Minutes </p>
+                        <p className="" > {section?.videos?.length} Lessons </p>
                     </div>
                     <div><FaChevronDown size={20} /></div>
                     {/* <div> <FaChevronUp size={20} /> </div> */}
@@ -46,7 +46,7 @@ export default function CourseSection({ section, user, activeSection, setActiveS
 
                                             <div>
                                                 {/* <h2> {section?.videos?.videoLength} </h2> */}
-                                                <h2> 20 Minutes </h2>
+                                                {/* <h2> 20 Minutes </h2> */}
                                             </div>
                                         </div>
                                     ) : (
@@ -58,7 +58,7 @@ export default function CourseSection({ section, user, activeSection, setActiveS
 
                                             <div>
                                                 {/* <h2> {section?.videos?.videoLength} </h2> */}
-                                                <h2> 20 Minutes </h2>
+                                                {/* <h2> 20 Minutes </h2> */}
                                             </div>
                                         </div>
                                     )}

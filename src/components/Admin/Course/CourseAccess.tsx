@@ -127,12 +127,12 @@ export default function CourseAccess() {
     }
 
     return (
-        <div className="mt-5" >
+        <div className="mt-30 mb-10" >
 
-            <div className="w-[95%] md:w-[80%] mx-auto flex gap-20 justify-between " >
+            <div className="w-[95%] md:w-[80%] mx-auto md:flex md:gap-20 md:justify-between" >
 
                 {/* video section  */}
-                <div className=" flex-1 " >
+                <div className=" flex-1 mb-5" >
                     {/* video div  */}
                     <div>
                         <CoursePlayer videoUrl={course?.sections[activeSection]?.videos[activeVideo]?.videoUrl} />
@@ -140,12 +140,12 @@ export default function CourseAccess() {
 
                         {/* video buttons  */}
                         <div className="flex justify-between mt-4" >
-                            <div className={`px-6 py-2 bg-blue-500 rounded-full flex items-center gap-2  ${activeSection === 0 && activeVideo === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`} onClick={handlePrev} >
+                            <div className={`px-6 py-2 bg-blue-500 text-white rounded-full flex items-center gap-2  ${activeSection === 0 && activeVideo === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`} onClick={handlePrev} >
                                 <span><GrFormPreviousLink size={20} /></span>
                                 Prev Video
                             </div>
 
-                            <div className={`px-6 py-2 bg-blue-500 rounded-full flex items-center gap-2 ${activeSection === course?.sections?.length - 1 &&
+                            <div className={`px-6 py-2 bg-blue-500 text-white rounded-full flex items-center gap-2 ${activeSection === course?.sections?.length - 1 &&
                                 activeVideo === course?.sections[activeSection]?.videos?.length - 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                                 onClick={handleNext}>
                                 Next Video
@@ -153,12 +153,12 @@ export default function CourseAccess() {
                             </div>
                         </div>
 
-                        <div className="flex justify-between my-5" >
+                        <div className="flex justify-between my-5 gap-4" >
                             {
                                 ['Overview', 'Resources', 'Comments', 'Reviews'].map((item: any, index: any) => (
                                     <div
                                         onClick={() => setActive(index)}
-                                        className={` ${active == index ? 'text-[crimson]' : ''} cursor-pointer text-xl`} > {item} </div>
+                                        className={` ${active == index ? 'text-[crimson]' : ''} cursor-pointer md:text-xl`} > {item} </div>
                                 ))
                             }
                         </div>
@@ -191,15 +191,15 @@ export default function CourseAccess() {
                         {/* Video Comments  */}
                         {
                             active == 2 && (
-                                <div className="py-10 " >
+                                <div className="py-5 md:py-10 " >
 
                                     <div className="flex gap-5 border-b-[0.5px] " >
                                         <Image
                                             src={user?.avatar?.url ? user?.avatar?.url : '/assets/avatar.png'}
                                             alt="few"
                                             className="object-contain self-start "
-                                            width={50}
-                                            height={50}
+                                            width={30}
+                                            height={30}
                                         />
 
                                         <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Enter your comment"
@@ -207,7 +207,7 @@ export default function CourseAccess() {
                                     </div>
 
                                     <div className="flex justify-end mt-4" >
-                                        <button className="px-5 py-2 bg-blue-400 rounded-full cursor-pointer" onClick={handleComment} > Submit </button>
+                                        <button className="px-5 py-2 bg-blue-400 text-white rounded-full cursor-pointer" onClick={handleComment} > Submit </button>
                                     </div>
 
                                     <div className="w-[100%] mt-5 h-[1px] bg-slate-600 " ></div>
@@ -230,8 +230,8 @@ export default function CourseAccess() {
 
                                                     <div className="  w-full" >
                                                         <div className="text-xl font-bold" > {comment.user?.name} </div>
-                                                        <div className="text-slate-300"  > {comment.comment} </div>
-                                                        <small className="text-slate-300"> {format(comment.createdAt)}• </small>
+                                                        <div className="dark:text-slate-300 text-gray-700 "  > {comment.comment} </div>
+                                                        <small className="dark:text-slate-300 text-gray-700"> {format(comment.createdAt)}• </small>
                                                         <div onClick={() => setReplyActive(!replyActive)} className="cursor-pointer mt-1 flex items-center gap-2 " >
                                                             <span>
                                                                 {!replyActive ? comment.replies.length !== 0 ? 'All Replies' : 'Add Reply' : 'Hide Replies'}
@@ -292,7 +292,7 @@ export default function CourseAccess() {
                         {/* Video Reviews  */}
                         {
                             active == 3 && (
-                                <div className="py-10" >
+                                <div className=" py-5 md:py-10" >
                                     {
                                         !course?.reviews?.some((review: any) => review.user?._id == user._id) && (
                                             <div className="pb-5 border-b-[0.5px] border-slate-600" >
@@ -339,7 +339,7 @@ export default function CourseAccess() {
                                                 </div>
 
                                                 <div className="flex justify-end" >
-                                                    <button className="px-5 py-2 bg-blue-400 rounded-full" onClick={handleReview} > Submit </button>
+                                                    <button className="px-5 py-2 bg-blue-400 text-white rounded-full" onClick={handleReview} > Submit </button>
                                                 </div>
 
                                             </div>
@@ -386,8 +386,8 @@ export default function CourseAccess() {
                                                             )}
                                                         </div>
 
-                                                        <div className="text-slate-300"  > {review.review} </div>
-                                                        <small className="text-slate-300" > {format(review.createdAt)}•  </small>
+                                                        <div className="dark:text-slate-300 text-gray-700"  > {review.review} </div>
+                                                        <small className="dark:text-slate-300 text-gray-700" > {format(review.createdAt)}•  </small>
 
                                                         {
                                                             !review.reply &&

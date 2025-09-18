@@ -19,7 +19,9 @@ const enrollmentSchema = new mongoose.Schema({
     },
     payment_info: {
         type: Object
-    }
+    },
+    createdAt: { type: Date, default: Date.now, },
+    updatedAt: { type: Date, default: Date.now, }
 });
 
 

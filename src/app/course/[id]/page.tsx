@@ -5,7 +5,6 @@ import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import React, { useState } from 'react'
 
-
 export default function page({ params }: any){
 
     const {id} = params
@@ -20,7 +19,7 @@ export default function page({ params }: any){
             <div>
                 <Header open={open} setOpen={setOpen} activeItem={activeIem} route={route} setRoute={setRoute} />
 
-                <CourseDetails id={id}  />
+                <CourseDetails id={id} open={open} setOpen={setOpen} route={route} setRoute={setRoute}  />
 
                 <Footer />
 

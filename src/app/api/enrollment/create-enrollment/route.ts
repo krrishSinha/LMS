@@ -39,24 +39,23 @@ export async function POST(request: NextRequest) {
         };
 
         user?.enrolledCourses.push(course?._id);
+        await user?.save();
+
+        await Notification.create({
+            userId: user?._id,
+            title: "New Order",
+            message: `You have a new order from ${course?.title}`,
+        });
+
+        course.purchased = course.purchased + 1;
+
+        await course.save();
 
         const data: any = {
             courseId: course._id,
             userId: user._id,
             payment_info,
         };
-
-        await user?.save();
-
-        await Notification.create({
-            userId: user?._id,
-            title: "New Order",
-            message: `You have a new order from ${course?.name}`,
-        });
-
-        course.purchased = course.purchased + 1;
-
-        await course.save();
 
         const newEnrollment = await Enrollment.create(data);
 

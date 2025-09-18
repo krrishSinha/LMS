@@ -4,15 +4,15 @@ import { useGetCourseQuery } from "@/redux/features/course/courseApi"
 import { useEffect, useState } from "react"
 import Ratings from "../Ratings"
 import { IoCheckmarkDoneOutline } from "react-icons/io5"
-import ReviewCard from "../ReviewCard"
 import CoursePlayer from "../CoursePlayer"
 import { useSelector } from "react-redux"
 import Link from "next/link"
 import CourseSection from "./CourseSection"
 import { useCreateCheckoutMutation } from "@/redux/features/enrollment/enrollmentApi";
 import Image from "next/image";
+import FullScreenLoader from "../Loader";
 
-export default function CourseDetails({ id }: any) {
+export default function CourseDetails({ id, open, setOpen, route, setRoute }: any) {
 
     const { data, isLoading } = useGetCourseQuery(id);
     const [createCheckout, { data: checkoutData, isLoading: checkoutIsLoading, error: checkoutError }] = useCreateCheckoutMutation({});
@@ -29,40 +29,35 @@ export default function CourseDetails({ id }: any) {
 
     useEffect(() => {
         if (data) {
-            console.log(data)
             setCourse(data?.course)
         };
     }, [data]);
 
 
     const handlePayment = async (e: any) => {
-        // if (user) {
-        //     setOpen(true);
-        //     console.log('buy now')
-        // } else {
-        //     setRoute("Login");
-        //     // openAuthModal(true);
-        // }    
+        if (!user) {
+            setOpen(true);
+        } else {
+            const stripe: any = await loadStripe('pk_test_51S58Q0AV1iXycdESG4yZmvvJa8HUt4RooYpHpORQfycP9BbdGpzzkJvRcpRnPVpTKEIttyf44ZQPAd5rsqb2ChOR00yagl9Kob');
 
-        const stripe: any = await loadStripe('pk_test_51S58Q0AV1iXycdESG4yZmvvJa8HUt4RooYpHpORQfycP9BbdGpzzkJvRcpRnPVpTKEIttyf44ZQPAd5rsqb2ChOR00yagl9Kob');
+            const userInfo = {
+                _id: user._id,
+                email: user.email
+            }
 
-        const userInfo = {
-            _id: user._id,
-            email: user.email
+            const session: any = await createCheckout({ course, userInfo })
+
+            const result: any = await stripe.redirectToCheckout({ sessionId: session.data.id });
+
+            if (result.error) {
+                console.log(result.error)
+            }
+
         }
-
-        const session: any = await createCheckout({ course, userInfo })
-
-        const result: any = await stripe.redirectToCheckout({ sessionId: session.data.id });
-
-        if (result.error) {
-            console.log(result.error)
-        }
-
     }
 
     if (isLoading) {
-        return <div>loading...</div>
+        return <FullScreenLoader />
     }
 
     const avgRating = course?.reviews?.length > 0 ? course.reviews.reduce((acc: any, r: any) =>
@@ -71,16 +66,16 @@ export default function CourseDetails({ id }: any) {
 
     return (
 
-        <div className="mt-5" >
+        <div className="mt-30" >
 
             <div className="w-[95%] md:w-[80%] mx-auto"  >
 
-                <div className="flex justify-between gap-5" >
+                <div className="flex flex-col-reverse  md:flex md:flex-row md:justify-between gap-5" >
 
-                    <div className=" flex-1" >
+                    <div className=" md:w-[70%]  " >
                         <h1 className="text-4xl font-bold" > {course.title} </h1>
 
-                        <div className="flex items-center justify-between mt-1 " >  
+                        <div className="flex items-center justify-between mt-1 " >
                             <div className="flex items-center gap-2" >
                                 <Ratings rating={avgRating} />
                                 {course?.reviews?.length} Reviews
@@ -129,9 +124,9 @@ export default function CourseDetails({ id }: any) {
                             <div className="text-xl" > {avgRating.toFixed(1)} Ratings • {course?.reviews?.length} Reviews </div>
                         </div>
 
-                        <div className="mt-4" >
+                        <div className="my-4 " >
                             {course?.reviews?.length > 0 && [...course.reviews].reverse().map((review: any, index: any) => (
-                                <div className="dark:bg-[#151D22] shadow rounded px-3 py-2 border border-[#00000028] dark:border-[#ffffff1d] h-max w-full" >
+                                <div className="dark:bg-[#151D22] shadow rounded px-3 py-2 border border-[#00000028] dark:border-[#ffffff1d] h-max w-full" key={index} >
 
                                     <div className="flex justify-between" >
                                         <div className="flex  items-center gap-2" >
@@ -145,7 +140,7 @@ export default function CourseDetails({ id }: any) {
                                             />
                                             <div>
                                                 <h2 className="text-sm" > {review.user?.name} </h2>
-                                                <p className="text-xs text-[#ffffffab]"> {review.profession ? review.profession : 'Student'} </p>
+                                                <p className="text-xs "> {review.profession ? review.profession : 'Student'} </p>
                                             </div>
                                         </div>
 
@@ -165,7 +160,7 @@ export default function CourseDetails({ id }: any) {
                     </div>
 
                     {/* DEMO Video div  */}
-                    <div className=" relative">
+                    <div className=" relative flex-1 ">
                         <div className="w-full " >
                             <CoursePlayer videoUrl={course?.demoUrl} />
 
@@ -185,12 +180,12 @@ export default function CourseDetails({ id }: any) {
                                 {
                                     isPurchased ? (
                                         <Link href={`/course-access/${course._id}`}
-                                            className="px-6 py-2 bg-[crimson] rounded-full w-fit font-bold cursor-pointer "
+                                            className="px-6 py-2 bg-[crimson] text-white  rounded-full w-fit font-bold cursor-pointer "
                                         >
                                             Enter to Course
                                         </Link>
                                     ) : (
-                                        <div className="px-6 py-2 bg-[crimson] rounded-full w-fit font-bold cursor-pointer " onClick={handlePayment} >
+                                        <div className="px-6 py-2 bg-[crimson] text-white rounded-full w-fit font-bold cursor-pointer " onClick={handlePayment} >
                                             Buy Now {course?.price}$
                                         </div>
                                     )

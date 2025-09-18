@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import FullScreenLoader from "../Loader";
 
 
 export default function Hero() {
@@ -22,7 +23,7 @@ export default function Hero() {
 
     if (isLoading) {
         return (
-            <div>loading...</div>
+            <FullScreenLoader />
         )
     };
 
@@ -38,7 +39,7 @@ export default function Hero() {
         // main div 
         <div className="w-full md:flex items-center ">
 
-            <div className="w-[90%] sm:w-[90%] md:w-[85%] mx-auto lg:h-[calc(100vh-80px)] lg:grid grid-cols-2 items-center sm:space-y-10 mt-10 md:mt-0  " >
+            <div className="w-[90%] sm:w-[90%] md:w-[85%] mx-auto lg:h-[calc(100vh-80px)] lg:grid grid-cols-2 items-center sm:space-y-10 mt-30 md:mt-20 " >
                 {/* hero animation div  */}
                 {/* <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[600px] 1100px:w-[600px] h-[40vh] left-5 w-[40vh] hero_animation rounded-[50%] 1100px:left-8 1500px:left-14"></div> */}
 

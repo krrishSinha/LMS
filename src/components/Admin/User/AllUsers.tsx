@@ -44,7 +44,6 @@ export default function AllUsers({ type }: any) {
         if (isSuccess && data?.users) {
 
             if (type == 'admin') {
-                console.log('admin')
                 const selectedUser: any = data?.users
                     .filter((user: any) => user.role === "admin") // only admins
                     .map((user: any) => ({
@@ -52,19 +51,18 @@ export default function AllUsers({ type }: any) {
                         name: user.name,
                         email: user.email,
                         role: user.role,
-                        purchased_courses: user.purchasedCourses || 0,
+                        purchased_courses: user.enrolledCourses?.length || 0,
                         joined_at: format(user.createdAt),
                     }));
 
                 setUsers(selectedUser)
             } else {
-                console.log('user')
                 const selectedUser: any = data?.users.map((user: any) => ({
                     id: user._id,
                     name: user.name,
                     email: user.email,
                     role: user.role,
-                    purchased_courses: user.purchasedCourses || 0,
+                    purchased_courses: user.enrolledCourses?.length || 0,
                     joined_at: format(user.createdAt),
                 }))
                 setUsers(selectedUser)

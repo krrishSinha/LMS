@@ -9,7 +9,7 @@ export default function SideBarProfile({ user, active, avatar, setActive, logOut
 
     return (
         // main div 
-        <div className="dark:bg-[#101524] border border-slate-800 shadow-md max-h-fit " >
+        <div className="dark:bg-[#101524] border border-slate-800 shadow-md max-h-fit mb-10" >
 
             <div className={` ${active == 1 ? `dark:bg-slate-800 bg-gray-100` : `bg-transparent`} flex items-center  px-3 py-5 cursor-pointer`}
                 onClick={() => setActive(1)}>

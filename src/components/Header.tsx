@@ -14,19 +14,9 @@ import Image from "next/image";
 
 export default function Header({ open, setOpen, activeItem, route, setRoute }: any) {
 
-    const [active, setActive] = useState(false)
+    const [active, setActive] = useState(true)
     const [openSidebar, setOpenSidebar] = useState(false)
     const { user } = useSelector((state: any) => state.auth)
-
-    if (typeof window !== 'undefined') {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                setActive(true)
-            } else {
-                setActive(false)
-            }
-        })
-    }
 
     const handleClose = (e: any) => {
         if (e.target.id == "screen") {
@@ -36,9 +26,9 @@ export default function Header({ open, setOpen, activeItem, route, setRoute }: a
 
     return (
         <>
-            <div className="w-full relative z-[99999] " >
+            <div className="w-full relative " >
 
-                <div className={`${active ? ' dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500 bg-white' : 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-black dark:border-b dark:border-[#ffffff1c] w-full h-[80px] shadow-md '}`}  >
+                <div className={`${active ? 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500 bg-white' : 'dark:bg-gradient-to-b dark:from-gray-900 dark:to-black dark:border-b dark:border-[#ffffff1c] w-full h-[80px] shadow-md '}`}  >
 
                     <div className=" w-[95%] md:w-[80%] h-full mx-auto">
 
