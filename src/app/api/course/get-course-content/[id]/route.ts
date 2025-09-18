@@ -4,13 +4,13 @@ import { Course, Enrollment } from "@/models";
 import jwt from 'jsonwebtoken'
 
 
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: any ) {
 
     await connectDB()
 
     try {
 
-        const { id } = await context.params
+        const { id } = params;
 
         // get userId 
         const accessToken: any = await request.cookies.get('accessToken')?.value

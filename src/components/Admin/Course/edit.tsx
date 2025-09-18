@@ -2,20 +2,9 @@
 
 import React, { useState } from 'react';
 
-type Video = {
-  title: string;
-  description: string;
-  url: string;
-  links: string[];
-};
-
-type Section = {
-  sectionTitle: string;
-  videos: Video[];
-};
 
 export default function CreateCourse() {
-  const [sections, setSections] = useState<Section[]>([]);
+  const [sections, setSections]: any = useState([]);
 
   const handleAddSection = () => {
     setSections([...sections, { sectionTitle: '', videos: [] }]);
@@ -39,10 +28,10 @@ export default function CreateCourse() {
   };
 
   const handleVideoChange = (
-    sectionIndex: number,
-    videoIndex: number,
-    field: keyof Video,
-    value: string
+    sectionIndex: any,
+    videoIndex: any,
+    field: any,
+    value: any
   ) => {
     const updatedSections = [...sections];
     updatedSections[sectionIndex].videos[videoIndex][field] = value;
@@ -75,7 +64,7 @@ export default function CreateCourse() {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-4">Create Course</h1>
 
-      {sections.map((section, sectionIndex) => (
+      {sections.map((section:any, sectionIndex:any) => (
         <div key={sectionIndex} className="border p-4 mb-6 rounded shadow-sm">
           <label className="block font-semibold mb-2">Section Title</label>
           <input
@@ -88,7 +77,7 @@ export default function CreateCourse() {
             placeholder="Enter section title"
           />
 
-          {section.videos.map((video, videoIndex) => (
+          {section.videos.map((video:any, videoIndex:any) => (
             <div
               key={videoIndex}
               className="border p-3 mb-4 rounded bg-gray-50"
@@ -126,7 +115,7 @@ export default function CreateCourse() {
 
               <div className="mb-2">
                 <p className="font-medium">Video Links:</p>
-                {video.links.map((link, linkIndex) => (
+                {video.links.map((link:any, linkIndex:any) => (
                   <input
                     key={linkIndex}
                     type="text"

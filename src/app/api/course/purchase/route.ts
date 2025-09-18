@@ -4,7 +4,7 @@ import sendEmail, { sendNewEnrollmentMail } from "@/utils/sendMail";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function POST(request: NextRequest, context: { params: { courseId: string } }) {
+export async function POST(request: NextRequest) {
 
     await connectDB()
 
