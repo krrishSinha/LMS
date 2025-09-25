@@ -28,8 +28,8 @@ export default function CourseCard({ course }: any) {
 
                     <div className="flex items-center justify-between" >
                         <Ratings rating={5} />
-                        <h5  className={`text-black dark:text-[#fff]}`}>
-                            {course.purchased} Students
+                        <h5  className={`text-black dark:text-[#fff]`}>
+                            {course?.purchased} Students
                         </h5>
                     </div>
 

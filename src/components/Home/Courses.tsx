@@ -15,6 +15,7 @@ export default function Courses() {
     useEffect(() => {
 
         if (data) {
+            console.log(data)
             setCourses(data?.courses)
         }
 

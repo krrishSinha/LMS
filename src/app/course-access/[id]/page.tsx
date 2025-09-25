@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
 
-export default  function page({ params }: any) {
+export default function page({ params }: any) {
 
     const { id } = params
     const { user } = useSelector((state: any) => state.auth)
@@ -22,9 +22,7 @@ export default  function page({ params }: any) {
             return redirect('/')
         };
 
-        const isPurchased = user?.enrolledCourses?.find(
-            (course: any) => course == id
-        );
+        const isPurchased = user && user?.enrolledCourses.map((item: any) => item._id.includes(params.id));
 
         if (!isPurchased) {
             return redirect('/')

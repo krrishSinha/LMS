@@ -31,9 +31,9 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem >
             <Toaster />
             <PrimeReactProvider>
-              <AppInitializer >
+              {/* <AppInitializer > */}
                 {children}
-              </AppInitializer>
+              {/* </AppInitializer> */}
             </PrimeReactProvider>
           </ThemeProvider>
           {/* </SessionProvider> */}
