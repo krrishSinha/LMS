@@ -1,7 +1,7 @@
 "use client";
 import { loadStripe } from "@stripe/stripe-js";
 import { useGetCourseQuery } from "@/redux/features/course/courseApi"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import Ratings from "../Ratings"
 import { IoCheckmarkDoneOutline } from "react-icons/io5"
 import CoursePlayer from "../CoursePlayer"
@@ -11,10 +11,11 @@ import CourseSection from "./CourseSection"
 import { useCreateCheckoutMutation } from "@/redux/features/enrollment/enrollmentApi";
 import Image from "next/image";
 import FullScreenLoader from "../Loader";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 export default function CourseDetails({ id, open, setOpen, route, setRoute }: any) {
-    const params = useParams()
+    const pathname = usePathname();
+    const courseId = pathname.split("/").pop();
 
     const { data, isLoading } = useGetCourseQuery(id);
     const [createCheckout, { data: checkoutData, isLoading: checkoutIsLoading, error: checkoutError }] = useCreateCheckoutMutation({});
@@ -28,7 +29,7 @@ export default function CourseDetails({ id, open, setOpen, route, setRoute }: an
 
     const discountPercentengePrice = dicountPercentenge.toFixed(0);
 
-    const isPurchased = user && user?.enrolledCourses.map((item: any) => item._id.includes(params.id));
+    const isPurchased = user && user?.enrolledCourses.map((item: any) => item._id.includes(courseId));
 
     console.log(isPurchased)
 
