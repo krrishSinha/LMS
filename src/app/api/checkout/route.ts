@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
                 email: userInfo.email,
                 courseId: course._id
             },
-            success_url: `http://localhost:3000/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `http://localhost:3000`,
+            success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}`,
         });
 
         return NextResponse.json(
