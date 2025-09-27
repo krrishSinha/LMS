@@ -16,12 +16,13 @@ import { useParams, usePathname } from "next/navigation";
 export default function CourseDetails({ id, open, setOpen, route, setRoute }: any) {
     const pathname = usePathname();
     const courseId = pathname.split("/").pop();
+    // const courseId = 'fuwefehf'
 
     const { data, isLoading } = useGetCourseQuery(id);
     const [createCheckout, { data: checkoutData, isLoading: checkoutIsLoading, error: checkoutError }] = useCreateCheckoutMutation({});
 
     const { user } = useSelector((state: any) => state.auth);
-    console.log(user)
+    // console.log(user.enrolledCourses)
 
     const [course, setCourse]: any = useState([]);
 
@@ -29,8 +30,7 @@ export default function CourseDetails({ id, open, setOpen, route, setRoute }: an
 
     const discountPercentengePrice = dicountPercentenge.toFixed(0);
 
-    const isPurchased = user && user?.enrolledCourses.map((item: any) => item._id.includes(courseId));
-
+    const isPurchased = user && user?.enrolledCourses?.some((item: any) => item._id == courseId);
     console.log(isPurchased)
 
     useEffect(() => {

@@ -22,7 +22,7 @@ export default function page({ params }: any) {
             return redirect('/')
         };
 
-        const isPurchased = user && user?.enrolledCourses.map((item: any) => item._id.includes(params.id));
+        const isPurchased = user && user?.enrolledCourses?.some((item: any) => item._id == id);
 
         if (!isPurchased) {
             return redirect('/')
